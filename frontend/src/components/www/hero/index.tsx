@@ -1,5 +1,9 @@
 import {Button, rem, Text, Title} from "@mantine/core"
 
+export const BoldWord = ({word}: { word: string }) => (<Title
+    order={2} fw={550} size={rem(38)} mb={16} lh={1.2}
+    c="skyBlue" className={"inline"}>{word}</Title>)
+
 const Hero = () => {
     return (
         <section className="container h-[calc(100vh-112px)] flex flex-col justify-center text-center">

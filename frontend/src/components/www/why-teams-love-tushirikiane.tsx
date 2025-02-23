@@ -22,7 +22,7 @@ const statsData: { number: number | string, description: string }[] = [
 const StatCard: React.FC<{ number: number | string, description: string }> = ({number, description}) => {
     return (
         <div className="flex flex-col py-8">
-            <Text size={rem(60)}>
+            <Text size={rem(60)} c={"skyBlue"} >
                 {`${number} %`}
             </Text>
             <Text lineClamp={3} size={rem(16)} mt={12} >{description}</Text>

@@ -1,13 +1,16 @@
 import {rem, Text, Title} from "@mantine/core"
 import Image from "next/image";
 import React from "react";
+import {BoldWord} from "@/components/www/hero";
 
 const OrganizeTasksPrioritizeGoalsAndGetThingsDone = () => {
     return (
         <section className="container mt-40">
-            <Title order={2} fw={550} size={rem(38)} mb={16} lh={1.2}>Organize tasks, prioritize <br/>goals and <span className="text-blue-600">get things done</span></Title>
+            <Title order={2} fw={550} size={rem(38)} mb={16} lh={1.2}>Organize tasks, prioritize <br/>goals
+                and <BoldWord word={"get things done"}/> </Title>
             <Text c="dimmed">
-                Streamline your workflow with powerful intuitive tools that ensure your team <br/>stays organized and focused
+                Streamline your workflow with powerful intuitive tools that ensure your team <br/>stays organized and
+                focused
                 on their tasks
             </Text>
             <div className="grid grid-cols-3 gap-40 mt-8">

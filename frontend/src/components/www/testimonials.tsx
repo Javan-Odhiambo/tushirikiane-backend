@@ -1,11 +1,12 @@
 import {Title, Text, rem} from "@mantine/core"
 import Image from "next/image";
+import {BoldWord} from "@/components/www/hero";
 
 const Testimonials = () => {
     return (
         <section className="container mt-40">
-            <Title order={2} fw={550} size={rem(38)} mb={16} lh={1.2}>One time payment, <span
-                className="text-blue-600">lifetime</span><br/> productivity </Title>
+            <Title order={2} fw={550} size={rem(38)} mb={16} lh={1.2}>One time payment, <BoldWord word={"lifetime"}/>
+                <br/> productivity </Title>
             <Text c="dimmed">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus
                 ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent
