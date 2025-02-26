@@ -1,10 +1,13 @@
+'use client'
 import {Title, Text, rem} from "@mantine/core"
 import {BoldWord} from "@/components/www/hero";
+import {useMediaQuery} from "@mantine/hooks";
 
 const OneTimePaymentLifetimeProductivity = () => {
+    const isMobile = useMediaQuery("(max-width: 720px)")
     return (
         <section className="container mt-40">
-            <Title order={2} fw={550} size={rem(38)} mb={16} lh={1.2}>One time payment, <BoldWord word={"lifetime"}/>
+            <Title order={2} fw={550} size={rem(isMobile?22:38)} mb={isMobile?10:16} lh={1.2}>One time payment, <BoldWord word={"lifetime"}/>
                 <br/> productivity </Title>
             <Text c="dimmed">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus

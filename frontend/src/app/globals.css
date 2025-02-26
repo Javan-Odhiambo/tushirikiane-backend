@@ -21,5 +21,6 @@ body {
 }
 
 .container {
-  @apply max-w-6xl mx-auto;
+  @apply max-w-6xl mx-auto px-2;
+
 }
