@@ -1,6 +1,6 @@
 import WhyTeamsLoveUs from "@/components/www/why-teams-love-tushirikiane";
-import Header from "../components/www/header";
-import Hero from "../components/www/hero";
+import Header from "../../components/www/header";
+import Hero from "../../components/www/hero";
 import OrganizeTasksPrioritizeGoalsAndGetThingsDone
     from "@/components/www/organize-tasks-prioritize-goals-and-get-things-done";
 import OneTimePaymentLifetimeProductivity from "@/components/www/one-time-payment-lifetime-productivity";
