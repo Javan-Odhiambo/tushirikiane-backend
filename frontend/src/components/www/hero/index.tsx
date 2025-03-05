@@ -49,6 +49,8 @@ const Hero = () => {
           lock-ins—just one-time access and full control over your workflow.
         </Text>
         <div>
+
+          {/* TODO: convert this to a reusable component */}
           <Anchor component={Link} href={URLS.signUp}>
             <Button
               size={isMobile ? "sm" : "xl"}
