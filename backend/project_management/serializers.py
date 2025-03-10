@@ -1,0 +1,143 @@
+from rest_framework import serializers
+
+from .models import (
+    Workspace,
+    Board,
+    WorkspaceMember,
+    Task,
+    TaskAssignee,
+    TaskLabel,
+    TaskList,
+    Invite,
+    Label,
+    CheckListItem,
+)
+
+# Create serializers for all the models
+
+
+# Drf model serializer for Workspace
+class WorkspaceSerializer(serializers.ModelSerializer):
+    owner = serializers.PrimaryKeyRelatedField(read_only=True)
+
+    class Meta:
+        model = Workspace
+        fields = ["id", "created_at", "updated_at", "name", "owner"]
+
+
+# DRF model serializer
+class WorkspaceMemberSerializer(serializers.ModelSerializer):
+    workspace = serializers.PrimaryKeyRelatedField(read_only=True)
+    # TODO: add a custom field to get the member's details
+    member = serializers.PrimaryKeyRelatedField(read_only=True)
+
+    class Meta:
+        model = WorkspaceMember
+        fields = ["id", "created_at", "updated_at", "workspace", "member"]
+
+
+# DRF Board model serializer
+class BoardSerializer(serializers.ModelSerializer):
+    workspace_id = serializers.PrimaryKeyRelatedField(queryset=Workspace.objects.all(), source="workspace")
+    position = serializers.IntegerField(default=0)
+
+    class Meta:
+        model = Board
+        fields = ["id", "created_at", "updated_at", "name", "description", "workspace_id", "position"]
+
+
+
+# DRF Task model serializer
+class TaskSerializer(serializers.ModelSerializer):
+    assignees = serializers.PrimaryKeyRelatedField(
+        many=True, queryset=TaskAssignee.objects.all(), source="taskassignee_set"
+    )
+    labels = serializers.PrimaryKeyRelatedField(
+        many=True, queryset=TaskLabel.objects.all(), source="tasklabel_set"
+    )
+
+    class Meta:
+        model = Task
+        fields = [
+            "id",
+            "created_at",
+            "updated_at",
+            "name",
+            "description",
+            "due_date",
+            "task_list",
+            "position",
+            "is_completed",
+            "assignees",
+            "labels",
+        ]
+
+
+# DRF TaskAssignee model serializer
+class TaskAssigneeSerializer(serializers.ModelSerializer):
+    task = serializers.PrimaryKeyRelatedField(queryset=Task.objects.all())
+    assignee = serializers.PrimaryKeyRelatedField(
+        queryset=WorkspaceMember.objects.all()
+    )
+
+    class Meta:
+        model = TaskAssignee
+        fields = ["id", "created_at", "updated_at", "task", "assignee"]
+
+
+# DRF TaskLabel model serializer
+class TaskLabelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TaskLabel
+        fields = ["id", "created_at", "updated_at", "task", "label"]
+
+
+# DRF TaskList model serializer
+class TaskListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TaskList
+        fields = [
+            "id",
+            "created_at",
+            "updated_at",
+            "name",
+            "board",
+            "position",
+            "description",
+        ]
+
+
+# DRF Invite model serializer
+class InviteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Invite
+        fields = [
+            "id",
+            "created_at",
+            "updated_at",
+            "workspace",
+            "recipient_email",
+            "sender",
+        ]
+
+
+# DRF Label model serializer
+class LabelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Label
+        fields = ["id", "created_at", "updated_at", "name", "color"]
+
+
+# DRF CheckListItem model serializer
+class CheckListItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CheckListItem
+        fields = [
+            "id",
+            "created_at",
+            "updated_at",
+            "task",
+            "name",
+            "is_completed",
+            "due_at",
+        ]

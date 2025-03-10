@@ -1,75 +1,47 @@
+import uuid
 from django.db import models
 from django.utils import timezone
 
+
 class CustomManager(models.Manager):
     """
-    Custom manager to filter out deleted objects and order by descending ID.
+    Custom manager to filter out deleted objects and order by creation date.
 
     Methods:
-        get_queryset(): Returns a queryset filtered to exclude deleted objects and ordered by descending ID.
+        get_queryset(): Returns a queryset ordered by creation date.
     """
 
     def get_queryset(self):
         """
-        Returns a queryset of objects that are not marked as deleted, ordered by descending ID.
-        Overrides the default `get_queryset` method to filter out objects where `is_deleted` is True and orders the results by the `id` field in descending order.
-        Returns:
-            QuerySet: A Django QuerySet of objects that are not marked as deleted, ordered by descending ID."""
-        return super().get_queryset().filter(is_deleted=False).order_by("-id")
+        Returns a queryset of objects that are ordered by creation date.
+
+        Overrides the default `get_queryset` method to order the results by the `created_at` field in ascending order.
+
+        QuerySet: A Django QuerySet of objects that are not marked as deleted, ordered by creation date.
+        """
+        return super().get_queryset().order_by("created_at")
 
 
 # Create your models here.
 class BaseModel(models.Model):
     """
-    BaseModel is an abstract base class for Django models that provides soft delete functionality.
+    BaseModel is an abstract base class that provides common fields and functionality for other models.
     Attributes:
-        is_deleted (BooleanField): Indicates whether the record is soft deleted. Defaults to False.
-        created_at (DateTimeField): The timestamp when the record was created. Defaults to the current time.
-        updated_at (DateTimeField): The timestamp when the record was last updated. Automatically updated to the current time.
-        deleted_at (DateTimeField): The timestamp when the record was soft deleted. Can be null or blank.
-    Managers:
-        objects (CustomManager): Custom manager that can be used to filter out soft deleted records.
-        all_objects (Manager): Default manager that includes all records, including soft deleted ones.
-    Methods:
-        delete(using=None, keep_parents=False):
-            Soft deletes the record by setting the is_deleted attribute to True and saving the record.
-        hard_delete(using=None, keep_parents=False):
-            Permanently deletes the record from the database.
+        id (UUIDField): Primary key for the model, automatically generated as a UUID.
+        created_at (DateTimeField): Timestamp indicating when the record was created.
+        updated_at (DateTimeField): Timestamp indicating when the record was last updated.
+        objects (CustomManager): Custom manager for handling model queries.
+        all_objects (Manager): Default manager for handling model queries.
+    Meta:
+        abstract (bool): Indicates that this is an abstract base class and should not be used to create database tables.
     """
-    is_deleted = models.BooleanField(default=False)
-    created_at = models.DateTimeField(default=timezone.now)
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    created_at = models.DateTimeField(editable=False, auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    deleted_at = models.DateTimeField(null=True, blank=True)
 
     objects = CustomManager()
-    all_objects = models.Manager()
+    # all_objects = models.Manager() //Not needed as we are using CustomManager
 
     class Meta:
         abstract = True
-
-    def delete(self, using=None, keep_parents=False):
-        """
-        Marks the object as deleted by setting the `is_deleted` attribute to True
-        and updating the `deleted_at` timestamp to the current time.
-
-        Args:
-            using (str, optional): The database alias to use. Defaults to None.
-            keep_parents (bool, optional): Whether to keep the parent records. Defaults to False.
-        """
-        self.is_deleted = True
-        self.deleted_at = timezone.now()
-        self.save()
-
-    def hard_delete(self, using=None, keep_parents=False):
-        """
-        Permanently deletes the instance from the database.
-
-        This method overrides the default delete method to perform a hard delete,
-        which means the instance is completely removed from the database without
-        any soft delete or archiving.
-
-        Args:
-            using (str, optional): The database alias to use for the deletion. Defaults to None.
-            keep_parents (bool, optional): Whether to keep the parent instances. Defaults to False.
-        """
-        super().delete(using=using, keep_parents=keep_parents)

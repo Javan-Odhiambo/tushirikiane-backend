@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+from datetime import timedelta
 from pathlib import Path
 
 from decouple import Csv, config
@@ -45,6 +45,7 @@ INSTALLED_APPS = [
 
     "accounts",
     "core",
+    "project_management",
 
 ]
 
@@ -145,7 +146,7 @@ MEDIA_ROOT = BASE_DIR / "media"
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 
 AUTH_USER_MODEL = "accounts.CustomUser"
@@ -162,7 +163,7 @@ else:
 
 # Rest framework settings
 REST_FRAMEWORK = {
-    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+    # "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
@@ -196,10 +197,11 @@ DJOSER = {
     },
     "HIDE_USERS": True,
     "TOKEN_MODEL": None,
-    "ACTIVATION_URL": "#/activate/{uid}/{token}",
-    "USER_CREATE_PASSWORD_RETYPE": True,
 }
-
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+}
 
 # Email settings
 if DEBUG:

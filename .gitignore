@@ -8,6 +8,8 @@ staticfiles/
 .venv
 venv
 .vscode
+TushirikianeVenv/
+
 
 # Next.js
 node_modules/
@@ -31,3 +33,7 @@ yarn-error.log*
 nosetests.xml
 coverage.xml
 *.log
+
+# ide
+.idea/
+.vscode/
