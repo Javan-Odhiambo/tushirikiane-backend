@@ -5,7 +5,7 @@ import { Anchor, Button, Flex, Stack, Text, TextInput } from "@mantine/core";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import AuthFormWrapper from "./auth-form-wrapper";
+import AuthFormWrapper from "./AuthFormWrapper";
 import { URLS } from "@/lib/urls";
 import { forgotPasswordSchema } from "@/lib/schema";
 import { FcLeft } from "react-icons/fc";
