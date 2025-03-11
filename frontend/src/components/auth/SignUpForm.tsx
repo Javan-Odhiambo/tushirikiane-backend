@@ -1,42 +1,38 @@
 "use client";
-import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { authApi } from "@/lib/kyInstance";
 import { signUpSchema } from "@/lib/schema";
+import { URLS } from "@/lib/urls";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  Button,
-  Stack,
-  TextInput,
-  PasswordInput,
-  Text,
-  Flex,
   Anchor,
+  Button,
+  Flex,
+  PasswordInput,
+  Stack,
+  Text,
+  TextInput,
 } from "@mantine/core";
+import { useMutation } from "@tanstack/react-query";
 import Link from "next/link";
-import { URLS } from "@/lib/urls";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 import AuthFormWrapper from "./AuthFormWrapper";
-import { authApi } from "@/lib/kyInstance";
 
 type T_SignUpSchema = z.infer<typeof signUpSchema>;
 
 export interface AuthResponse {
-  accessToken: string;
-  user: {
-    id: string;
-    name: string;
-    email: string;
-  };
+  id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
 }
 
-const signUp = async (data: {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-}): Promise<AuthResponse> => {
-  return await authApi.post("auth/signup", { json: data }).json<AuthResponse>();
+const signUp = async (data: T_SignUpSchema): Promise<AuthResponse> => {
+  return await authApi
+    .post(URLS.apiSignUp, { json: data })
+    .json<AuthResponse>();
 };
 
 const SignupForm = () => {
@@ -47,15 +43,41 @@ const SignupForm = () => {
     formState: { errors },
   } = useForm<T_SignUpSchema>({
     resolver: zodResolver(signUpSchema),
+    defaultValues: {
+      email: "some@mail.com",
+      first_name: "some some",
+      last_name: "some some",
+      password: "helloWorld@2024",
+      re_password: "helloWorld@2024",
+    },
   });
 
   const mutation = useMutation({
     mutationFn: signUp,
-    onSuccess: (data) => {
-      localStorage.setItem("token", data.accessToken);
+    onSuccess: async (data) => {
+      toast.success(
+        `Welcome ${data.email}! Please be patient as we redirect you to the dashboard.`
+      );
       router.push(URLS.dashboard);
     },
-    onError: (error) => console.error("Signup failed", error),
+    onError: async (error: any) => {
+      let errorMessage = "Signup failed. Please try again.";
+
+      try {
+        if (error.response) {
+          const errorData = await error.response.json();
+
+          errorMessage = Object.entries(errorData)
+            .map(([_, messages]) => `${(messages as string[]).join(", ")}`)
+            .join(" | ");
+        }
+      } catch (err) {
+        console.error("Error parsing backend response:", err);
+      }
+
+      toast.error(errorMessage);
+      console.error("Signup failed", errorMessage);
+    },
   });
 
   const onSubmit = (values: T_SignUpSchema) => mutation.mutate(values);
@@ -67,14 +89,14 @@ const SignupForm = () => {
           <TextInput
             required
             label="First Name"
-            {...register("firstName")}
-            error={errors.firstName?.message}
+            {...register("first_name")}
+            error={errors.first_name?.message}
           />
           <TextInput
             required
             label="Last Name"
-            {...register("lastName")}
-            error={errors.lastName?.message}
+            {...register("last_name")}
+            error={errors.last_name?.message}
           />
           <TextInput
             required
@@ -91,8 +113,8 @@ const SignupForm = () => {
           <PasswordInput
             required
             label="Confirm Password"
-            {...register("confirmPassword")}
-            error={errors.confirmPassword?.message}
+            {...register("re_password")}
+            error={errors.re_password?.message}
           />
         </Stack>
 

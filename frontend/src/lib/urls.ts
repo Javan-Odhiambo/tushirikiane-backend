@@ -7,6 +7,7 @@ export const URLS = {
   dashboard: "/dashboard",
 
   // backend
-  apiSignIn: "/jwt/create/",
-  apiLoggedInUser: "/users/me/",
+  apiSignIn: "jwt/create",
+  apiLoggedInUser: "users/me",
+  apiSignUp: "users/",
 };
