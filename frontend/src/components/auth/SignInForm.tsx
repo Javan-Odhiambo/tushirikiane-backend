@@ -1,7 +1,7 @@
 "use client";
 
 import { useMutation } from "@tanstack/react-query";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -24,6 +24,8 @@ import { toast } from "sonner";
 type T_SignInSchema = z.infer<typeof signInSchema>;
 
 const SignInForm = () => {
+  const { update: updateSession } = useSession();
+
   const router = useRouter();
   const {
     register,
@@ -33,7 +35,6 @@ const SignInForm = () => {
     resolver: zodResolver(signInSchema),
   });
 
-  // ✅ React Query Mutation for sign-in
   const mutation = useMutation({
     mutationFn: async (values: T_SignInSchema) => {
       const result = await signIn("credentials", {
@@ -48,16 +49,15 @@ const SignInForm = () => {
 
       return result;
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success("Successfully signed in");
+      await updateSession();
       router.push(URLS.dashboard);
     },
     onError: (error) => {
       console.error("Login failed", error);
       toast.error(
-        `Login failed: ${
-          error instanceof Error ? error.message : "Unknown error"
-        }`
+        `Sorry, your credentials were incorrect. Please double-check your credentials.`
       );
     },
   });

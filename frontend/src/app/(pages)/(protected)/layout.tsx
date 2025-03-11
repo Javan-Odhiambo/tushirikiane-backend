@@ -1,7 +1,7 @@
+import AppShellWrapper from "@/components/core/AppShellWrapper";
 import Providers from "@/components/core/Providers";
 import getSession from "@/lib/get-session";
 import { URLS } from "@/lib/urls";
-import "@/styles/globals.css";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { redirect } from "next/navigation";
 
@@ -15,10 +15,9 @@ export default async function ProtectedLayout({
     redirect(URLS.signIn);
   }
 
-  // TODO: add app layout here
   return (
     <Providers>
-      {children}
+      <AppShellWrapper>{children}</AppShellWrapper>
       <ReactQueryDevtools initialIsOpen={false} />
     </Providers>
   );

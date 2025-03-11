@@ -1,3 +1,4 @@
+// TODO: clean this file, remove logs
 import NextAuth, { NextAuthConfig } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { serverApi } from "./kyInstance";

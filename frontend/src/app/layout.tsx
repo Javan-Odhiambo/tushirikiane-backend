@@ -8,8 +8,6 @@ import "@mantine/notifications/styles.css";
 import Providers from "@/components/core/Providers";
 import { ColorSchemeScript, mantineHtmlProps } from "@mantine/core";
 import React from "react";
-import SignOutButton from "@/components/auth/SignOutButton";
-import { auth } from "@/lib/auth";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,8 +30,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await auth();
-
   return (
     <html lang="en" {...mantineHtmlProps}>
       <head>
@@ -42,11 +38,7 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Providers>
-          <SignOutButton />
-          {session?.accessToken ?? "NONE"}
-          {children}
-        </Providers>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

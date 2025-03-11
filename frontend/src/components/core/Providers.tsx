@@ -9,6 +9,7 @@ import {
   createTheme,
   MantineProvider,
 } from "@mantine/core";
+import { SessionProvider } from "next-auth/react";
 
 const skyBlue: MantineColorsTuple = [
   "#e1f8ff",
@@ -43,13 +44,15 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <MantineProvider theme={theme}>
-      <QueryClientProvider client={queryClient}>
-        <NuqsAdapter>
-          <Toaster richColors />
-          {children}
-          <ReactQueryDevtools initialIsOpen={false} />
-        </NuqsAdapter>
-      </QueryClientProvider>
+      <SessionProvider>
+        <QueryClientProvider client={queryClient}>
+          <NuqsAdapter>
+            <Toaster richColors />
+            {children}
+            <ReactQueryDevtools initialIsOpen={false} />
+          </NuqsAdapter>
+        </QueryClientProvider>
+      </SessionProvider>
     </MantineProvider>
   );
 }
