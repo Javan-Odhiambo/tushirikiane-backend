@@ -85,7 +85,7 @@ const SignInForm = () => {
 
         <Flex justify="space-between" mt="xl" align="center">
           <Text size="sm">
-            Don't have an account?{" "}
+            Don&apos;t have an account?{" "}
             <Anchor component={Link} href={URLS.signUp} size="sm">
               Sign up
             </Anchor>
