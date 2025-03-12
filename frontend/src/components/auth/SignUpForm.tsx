@@ -43,13 +43,6 @@ const SignupForm = () => {
     formState: { errors },
   } = useForm<T_SignUpSchema>({
     resolver: zodResolver(signUpSchema),
-    defaultValues: {
-      email: "some@mail.com",
-      first_name: "some some",
-      last_name: "some some",
-      password: "helloWorld@2024",
-      re_password: "helloWorld@2024",
-    },
   });
 
   const mutation = useMutation({

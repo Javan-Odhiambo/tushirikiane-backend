@@ -1,8 +1,27 @@
+import { Flex, Title, TitleOrder } from "@mantine/core";
+import Image from "next/image";
 import React from "react";
 
-const SiteLogo = () => {
-  // TODO: change this to the actual logo
-  return <div>TUSHIRIKIANE LOGO</div>;
+interface SiteLogoProps {
+  titleOrder?: TitleOrder;
+  logoDimensions?: number;
+}
+
+const SiteLogo: React.FC<SiteLogoProps> = ({
+  titleOrder = 1,
+  logoDimensions = 28,
+}) => {
+  return (
+    <Flex gap={"sm"}>
+      <Image
+        src={"/core/logo.svg"}
+        alt="Site logo"
+        width={logoDimensions}
+        height={logoDimensions}
+      />
+      <Title order={titleOrder}>Tushirikiane</Title>
+    </Flex>
+  );
 };
 
 export default SiteLogo;
