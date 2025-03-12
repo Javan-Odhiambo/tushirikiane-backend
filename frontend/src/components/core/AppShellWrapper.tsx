@@ -1,10 +1,11 @@
 "use client";
 
-import { AppShell, Burger, Group, Skeleton } from "@mantine/core";
+import { AppShell, Burger, Button, Group, Skeleton } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import React, { ReactNode } from "react";
-import SignOutButton from "../auth/SignOutButton";
 import SiteLogo from "./SiteLogo";
+import ProfileDropdown from "./ProfileDropdown";
+import { IconBell } from "@tabler/icons-react";
 
 interface AppShellWrapperProps {
   children: ReactNode;
@@ -25,7 +26,7 @@ const AppShellWrapper: React.FC<AppShellWrapperProps> = ({ children }) => {
       padding="md"
     >
       <AppShell.Header>
-        <Group h="100%" px="md" justify="space-between" align="center" w="100%">
+        <Group h="100%" px="md" justify="space-between" align="center" w="100%" >
           <Group align="center">
             <Burger
               opened={mobileOpened}
@@ -41,9 +42,15 @@ const AppShellWrapper: React.FC<AppShellWrapperProps> = ({ children }) => {
             />
             <SiteLogo />
           </Group>
-          <SignOutButton />
+          <Group>
+            <Button unstyled>
+              <IconBell />
+            </Button>
+            <ProfileDropdown/>
+          </Group>
         </Group>
       </AppShell.Header>
+
       <AppShell.Navbar p="md">
         {Array(15)
           .fill(0)
