@@ -39,7 +39,7 @@ const ProfileDropdown = () => {
           onClick={() => signOut({ callbackUrl: URLS.signIn })}
           leftSection={<IconLogout size={14} />}
         >
-          Logout
+          Signout
         </Menu.Item>
       </Menu.Dropdown>
     </Menu>
