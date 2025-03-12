@@ -11,8 +11,8 @@ interface TokenResponse {
 
 interface UserResponse {
   id: string;
-  firstName: string;
-  lastName: string;
+  first_name: string;
+  last_name: string;
   email: string;
   phone?: string;
   isEmailVerified: boolean;
@@ -63,8 +63,8 @@ const authOptions: NextAuthConfig = {
           // Return complete user object with tokens
           return {
             id: userData.id,
-            firstName: userData.firstName,
-            lastName: userData.lastName,
+            firstName: userData.first_name,
+            lastName: userData.last_name,
             email: userData.email,
             phone: userData.phone,
             isEmailVerified: userData.isEmailVerified,
