@@ -8,7 +8,7 @@ interface SiteLogoProps {
 }
 
 const SiteLogo: React.FC<SiteLogoProps> = ({
-  titleOrder = 1,
+  titleOrder = 2,
   logoDimensions = 28,
 }) => {
   return (
