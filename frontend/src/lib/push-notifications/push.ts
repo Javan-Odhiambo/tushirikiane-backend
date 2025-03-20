@@ -1,7 +1,5 @@
 import { urlBase64ToUint8Array } from "./utils";
 
-import { PushSubscription } from "web-push";
-
 const SERVICE_WORKER_FILE_PATH = "./sw.js";
 
 export function notificationUnsupported(): boolean {
@@ -42,6 +40,7 @@ async function subscribe(
     );
     return;
   }
+
   navigator.serviceWorker.ready
     .then((registration: ServiceWorkerRegistration) => {
       console.info("Service Worker is ready: ", registration);
@@ -51,8 +50,9 @@ async function subscribe(
       });
     })
     .then((subscription: PushSubscription) => {
+      // <-- FIXED HERE
       console.info("Created subscription Object: ", subscription);
-      submitSubscription(subscription).then((_) => {
+      submitSubscription(subscription).then(() => {
         onSubscribe(subscription);
       });
     })

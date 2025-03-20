@@ -7,7 +7,6 @@ import {
   registerAndSubscribe,
   sendWebPush,
 } from "./push";
-import { PushSubscription } from "web-push";
 import { Button } from "@mantine/core";
 
 export default function PushManager() {

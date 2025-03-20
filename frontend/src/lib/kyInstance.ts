@@ -33,7 +33,7 @@ export const protectedApi = baseApi.extend({
 });
 
 export const serverApi = {
-  async post(url: string, options: any) {
+  async post(url: string, options: { json: unknown }) {
     const response = await fetch(`${AUTH_API_PREFIX_URL}${url}/`, {
       method: "POST",
       headers: {
@@ -53,7 +53,7 @@ export const serverApi = {
     };
   },
 
-  async get(url: string, options: any) {
+  async get(url: string, options?: { token?: string }) {
     const headers: Record<string, string> = {
       "Content-Type": "application/json",
     };

@@ -1,16 +1,15 @@
 "use client";
 import {
-  Box,
+  Button,
   Center,
+  Divider,
+  Group,
   Paper,
   PaperProps,
-  Text,
-  Group,
-  Divider,
-  Button,
+  Text
 } from "@mantine/core";
-import { FcGoogle } from "react-icons/fc";
 import { ReactNode } from "react";
+import { FcGoogle } from "react-icons/fc";
 
 interface AuthFormWrapperProps extends PaperProps {
   children: ReactNode;

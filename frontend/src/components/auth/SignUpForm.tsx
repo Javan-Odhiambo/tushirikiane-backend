@@ -53,19 +53,18 @@ const SignupForm = () => {
       );
       router.push(URLS.dashboard);
     },
-    onError: async (error: any) => {
+    onError: async (error: unknown) => {
       let errorMessage = "Signup failed. Please try again.";
 
-      try {
-        if (error.response) {
-          const errorData = await error.response.json();
-
+      if (error instanceof Response) {
+        try {
+          const errorData = await error.json();
           errorMessage = Object.entries(errorData)
-            .map(([_, messages]) => `${(messages as string[]).join(", ")}`)
+            .map(([, messages]) => `${(messages as string[]).join(", ")}`)
             .join(" | ");
+        } catch (err) {
+          console.error("Error parsing backend response:", err);
         }
-      } catch (err) {
-        console.error("Error parsing backend response:", err);
       }
 
       toast.error(errorMessage);
