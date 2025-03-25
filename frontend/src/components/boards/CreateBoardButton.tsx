@@ -2,8 +2,8 @@
 
 import { ActionIcon } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconPlus } from "@tabler/icons-react";
 import CreateBoardFormModal from "./CreateBoardFormModal";
+import { IconLibrary } from "../core/IconsLibrary";
 
 const CreateBoardButton = () => {
   const [opened, { open, close }] = useDisclosure(false);
@@ -11,7 +11,7 @@ const CreateBoardButton = () => {
   return (
     <>
       <ActionIcon variant="subtle" onClick={open}>
-        <IconPlus />
+        <IconLibrary.Create />
       </ActionIcon>
 
       <CreateBoardFormModal opened={opened} close={close} />

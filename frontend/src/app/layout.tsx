@@ -4,6 +4,7 @@ import "./globals.css";
 
 import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
+import '@mantine/tiptap/styles.css';
 
 import Providers from "@/components/core/Providers";
 import { ColorSchemeScript, mantineHtmlProps } from "@mantine/core";
