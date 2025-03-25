@@ -33,3 +33,18 @@ export const resetPasswordSchema = z
 export const forgotPasswordSchema = z.object({
   email: z.string().email("Please enter a valid email"),
 });
+
+export const createBoardSchema = z.object({
+  visibility: z.string({
+    required_error: "Select who this board will be visible to",
+  }),
+  name: z.string({
+    required_error: "Please provide a name for your board",
+  }),
+  description: z.string({
+    required_error: "Please provide a name for your board",
+  }),
+  inviteMembers: z.array(z.number()),
+});
+
+export type T_CreateBoardSchema = z.infer<typeof createBoardSchema>;
