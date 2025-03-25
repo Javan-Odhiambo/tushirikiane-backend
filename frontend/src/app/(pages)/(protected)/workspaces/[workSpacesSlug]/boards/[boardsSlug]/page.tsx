@@ -1,9 +1,7 @@
+import SecondaryHeader from "@/components/boards/SecondaryHeader";
 import AddList from "@/components/lists/AddList";
 import List from "@/components/lists/List";
 import { Flex, ScrollArea } from "@mantine/core";
-import SecondaryHeader from "@/components/boards/SecondaryHeader";
-import CardDetailModal from "@/components/cards/CardDetailModal";
-import React from "react";
 
 const BoardsSlugPage = () => {
   return (

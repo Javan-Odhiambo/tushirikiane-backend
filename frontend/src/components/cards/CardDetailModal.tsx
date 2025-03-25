@@ -73,7 +73,7 @@ const CardDetailModal = () => {
           <Divider size={"lg"} />
           <Box>
             {M_Tasks.map((t) => (
-              <Group justify="space-between">
+              <Group justify="space-between" key={t.id}>
                 <Group>
                   <StatusCheckBox
                     handleOnChange={() => handleOnTaskStatusChange("")}

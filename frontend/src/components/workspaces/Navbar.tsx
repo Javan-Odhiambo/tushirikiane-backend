@@ -1,6 +1,5 @@
 "use client";
 
-import { useParams, usePathname } from "next/navigation";
 import { URLS } from "@/lib/urls";
 import { Button, Group, Menu, Stack, Text } from "@mantine/core";
 import {
@@ -12,6 +11,7 @@ import {
   IconUsers,
 } from "@tabler/icons-react";
 import Link from "next/link";
+import { useParams, usePathname } from "next/navigation";
 import CreateBoardButton from "../boards/CreateBoardButton";
 
 const mainMenuItems = [
@@ -73,7 +73,7 @@ const WorkspaceMainMenuCard = () => {
 };
 
 const WorkSpacesMenu = () => {
-  const { workSpacesSlug, boardsSlug } = useParams<{
+  const { workSpacesSlug } = useParams<{
     workSpacesSlug: string;
     boardsSlug: string;
   }>();
