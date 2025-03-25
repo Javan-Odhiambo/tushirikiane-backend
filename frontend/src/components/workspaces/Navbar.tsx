@@ -12,6 +12,7 @@ import {
   IconUsers,
 } from "@tabler/icons-react";
 import Link from "next/link";
+import CreateBoardButton from "../boards/CreateBoardButton";
 
 const mainMenuItems = [
   { icon: <IconHome size={18} />, label: "Home", href: URLS.workspaces },
@@ -122,7 +123,10 @@ const WorkspaceBoards = () => {
 
   return (
     <Stack>
-      <Text size="xs">BOARDS</Text>
+      <Group justify="space-between">
+        <Text size="xs">BOARDS</Text>
+        <CreateBoardButton />
+      </Group>
       {mockBoards.map((board, index) => {
         const isActive = boardsSlug === board.slug;
 
