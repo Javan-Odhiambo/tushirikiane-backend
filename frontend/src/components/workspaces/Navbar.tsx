@@ -72,10 +72,13 @@ const WorkspaceMainMenuCard = () => {
 };
 
 const WorkSpacesMenu = () => {
-  const { workSpaceSlug } = useParams<{ workSpaceSlug: string }>();
+  const { workSpacesSlug, boardsSlug } = useParams<{
+    workSpacesSlug: string;
+    boardsSlug: string;
+  }>();
 
   const activeWorkSpace = mockWorkSpaces.find(
-    (workSpace) => workSpace.slug === workSpaceSlug
+    (workSpace) => workSpace.slug === workSpacesSlug
   );
 
   return (
@@ -83,14 +86,14 @@ const WorkSpacesMenu = () => {
       <Menu.Target>
         <Button variant="light" w="100%">
           <Group w="100%" justify="space-between">
-            <Text>{activeWorkSpace ? activeWorkSpace.name : "Workspaces"}</Text>
+            <Text>{workSpacesSlug ? activeWorkSpace?.name : "Workspaces"}</Text>
             <IconChevronDown size={16} />
           </Group>
         </Button>
       </Menu.Target>
       <Menu.Dropdown>
         {mockWorkSpaces.map((workSpace) => {
-          const isActive = workSpace.slug === workSpaceSlug;
+          const isActive = workSpacesSlug === workSpace.slug;
 
           return (
             <Menu.Item
@@ -112,32 +115,28 @@ const WorkSpacesMenu = () => {
 };
 
 const WorkspaceBoards = () => {
-  const { workSpaceSlug, boardsSlug } = useParams<{
-    workSpaceSlug: string;
+  const { workSpacesSlug, boardsSlug } = useParams<{
+    workSpacesSlug: string;
     boardsSlug: string;
   }>();
-
-  const p = useParams<{ workSpaceSlug: string }>();
-
-  console.log(p);
 
   return (
     <Stack>
       <Text size="xs">BOARDS</Text>
-      {mockBoards.map((item, index) => {
-        const isActive = boardsSlug === item.slug;
+      {mockBoards.map((board, index) => {
+        const isActive = boardsSlug === board.slug;
 
         return (
           <Button
             key={index}
             component={Link}
-            href={URLS.boardsSlug(workSpaceSlug, item.slug)}
+            href={URLS.boardsSlug(workSpacesSlug, board.slug)}
             variant={isActive ? "filled" : "light"}
             fullWidth
             justify="start"
             leftSection={<IconLayout />}
           >
-            <Text fw={isActive ? 700 : 400}>{item.name}</Text>
+            <Text fw={isActive ? 700 : 400}>{board.name}</Text>
           </Button>
         );
       })}
