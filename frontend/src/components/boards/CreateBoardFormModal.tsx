@@ -46,7 +46,7 @@ const CreateBoardFormModal: React.FC<CreateBoardFormModalProps> = ({
               <Select
                 {...field}
                 label="Board Visibility"
-                placeholder="Select visibility"
+                placeholder="Select who can see your board"
                 data={[
                   { value: "public", label: "Public - Anyone can see" },
                   { value: "private", label: "Private - Only invited members" },
@@ -66,7 +66,7 @@ const CreateBoardFormModal: React.FC<CreateBoardFormModalProps> = ({
             label="Board Name"
             {...form.register("name")}
             error={form.formState.errors.name?.message}
-            description="Enter a unique name for the board."
+            description="Enter a name for the board."
           />
 
           <Textarea
@@ -84,7 +84,7 @@ const CreateBoardFormModal: React.FC<CreateBoardFormModalProps> = ({
               <MultiSelect
                 {...field}
                 label="Invite Members"
-                placeholder="Select members to invite"
+                placeholder="Invite members of your workspace to join the board"
                 data={[
                   { value: "1", label: "Alice" },
                   { value: "2", label: "Bob" },
