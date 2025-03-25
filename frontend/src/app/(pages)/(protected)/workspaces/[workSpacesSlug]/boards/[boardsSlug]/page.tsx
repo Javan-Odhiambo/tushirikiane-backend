@@ -1,7 +1,22 @@
+import AddList from "@/components/lists/AddList";
+import List from "@/components/lists/List";
+import { Flex, ScrollArea } from "@mantine/core";
 import React from "react";
 
 const BoardsSlugPage = () => {
-  return <div></div>;
+  return (
+    <ScrollArea scrollbars="x">
+      <Flex bg="gray.1" h="calc(100vh - 64px)" p={16} gap="lg">
+        <List />
+        <List />
+        <List />
+        <List />
+        <List />
+        <List />
+        <AddList />
+      </Flex>
+    </ScrollArea>
+  );
 };
 
 export default BoardsSlugPage;
