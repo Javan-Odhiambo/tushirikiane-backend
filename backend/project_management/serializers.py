@@ -38,7 +38,7 @@ class WorkspaceMemberSerializer(serializers.ModelSerializer):
 
 # DRF Board model serializer
 class BoardSerializer(serializers.ModelSerializer):
-    workspace_id = serializers.PrimaryKeyRelatedField(queryset=Workspace.objects.all(), source="workspace")
+    workspace_id = serializers.PrimaryKeyRelatedField(queryset=Workspace.objects.all())
     position = serializers.IntegerField(default=0)
 
     class Meta:
