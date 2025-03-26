@@ -19,7 +19,16 @@ export const URLS = {
     `/workspaces/${workspacesSlug}/boards/${slug}`,
 
   // BACKEND
+  // auth
+  // * DO NOT ADD 'auth/' PREFIX HERE, IT WILL BE DONE FOR YOU
   apiSignIn: "jwt/create",
   apiLoggedInUser: "users/me",
   apiSignUp: "users/",
+  apiRefreshToken: "jwt/refresh",
+
+  // workspaces
+  apiWorkSpaces: "workspaces/",
+
+  // boards
+  apiBoards: (workSpaceSlug: string) => `workspaces/${workSpaceSlug}/boards/`,
 };

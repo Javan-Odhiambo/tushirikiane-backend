@@ -1,6 +1,6 @@
-// TODO: clean this file, remove logs
 import NextAuth, { NextAuthConfig } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { jwtDecode } from "jwt-decode";
 import { serverApi } from "./kyInstance";
 import { URLS } from "./urls";
 
@@ -17,7 +17,11 @@ interface UserResponse {
   phone?: string;
   isEmailVerified: boolean;
   isPhoneVerified: boolean;
-  // Add any other fields your API returns
+}
+
+interface JwtPayload {
+  exp: number;
+  [key: string]: any;
 }
 
 const authOptions: NextAuthConfig = {
@@ -34,33 +38,28 @@ const authOptions: NextAuthConfig = {
           throw new Error("Missing email or password");
         }
         try {
-          // Step 1: Get the token response
+          // Get tokens
           const tokenResponse = await serverApi.post(URLS.apiSignIn, {
             json: credentials,
           });
           const tokenData: TokenResponse =
             await tokenResponse.json<TokenResponse>();
 
-          console.log("Token data:", tokenData);
-
           if (!tokenData.access || !tokenData.refresh) {
             throw new Error("Invalid token response");
           }
 
-          // Step 2: Fetch user data using the access token
+          // Get user data
           const userResponse = await serverApi.get(URLS.apiLoggedInUser, {
             token: tokenData.access,
           });
           const userData: UserResponse =
             await userResponse.json<UserResponse>();
 
-          console.log("User data:", userData);
-
           if (!userData.id) {
             throw new Error("Invalid user data");
           }
 
-          // Return complete user object with tokens
           return {
             id: userData.id,
             firstName: userData.first_name,
@@ -71,7 +70,9 @@ const authOptions: NextAuthConfig = {
             isPhoneVerified: userData.isPhoneVerified,
             accessToken: tokenData.access,
             refreshToken: tokenData.refresh,
-            emailVerified: userData.isEmailVerified ? new Date() : null, // Required for NextAuth types
+            accessTokenExpires:
+              jwtDecode<JwtPayload>(tokenData.access).exp * 1000,
+            emailVerified: userData.isEmailVerified ? new Date() : null,
           };
         } catch (error) {
           console.error("Login error:", error);
@@ -81,25 +82,57 @@ const authOptions: NextAuthConfig = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
+      // Initial sign in
       if (user) {
         return {
           ...token,
-          id: user.id,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          email: user.email,
-          phone: user.phone,
-          isEmailVerified: user.isEmailVerified,
-          isPhoneVerified: user.isPhoneVerified,
-          accessToken: user.accessToken,
-          refreshToken: user.refreshToken,
+          ...user,
         };
       }
-      return token;
+
+      // Handle session updates
+      if (trigger === "update" && session?.accessToken) {
+        return {
+          ...token,
+          accessToken: session.accessToken,
+          refreshToken: session.refreshToken,
+          accessTokenExpires:
+            jwtDecode<JwtPayload>(session.accessToken).exp * 1000,
+        };
+      }
+
+      // Return previous token if it's still valid
+      if (Date.now() < (token.accessTokenExpires as number)) {
+        return token;
+      }
+
+      // Token is expired, try to refresh it
+      try {
+        const response = await serverApi.post(URLS.apiRefreshToken, {
+          json: { refresh: token.refreshToken },
+        });
+
+        const refreshedTokens: TokenResponse = await response.json();
+
+        if (!refreshedTokens.access) {
+          throw new Error("Refresh failed");
+        }
+
+        const decoded = jwtDecode<JwtPayload>(refreshedTokens.access);
+
+        return {
+          ...token,
+          accessToken: refreshedTokens.access,
+          accessTokenExpires: decoded.exp * 1000,
+          refreshToken: refreshedTokens.refresh ?? token.refreshToken,
+        };
+      } catch (error) {
+        console.error("Error refreshing token:", error);
+        return { ...token, error: "RefreshAccessTokenError" };
+      }
     },
     async session({ session, token }) {
-      // Include all required AdapterUser properties
       session.user = {
         id: token.id as string,
         firstName: token.firstName as string,
@@ -108,7 +141,6 @@ const authOptions: NextAuthConfig = {
         phone: token.phone as string | undefined,
         isEmailVerified: token.isEmailVerified as boolean,
         isPhoneVerified: token.isPhoneVerified as boolean,
-        // Add these required properties
         emailVerified: token.isEmailVerified ? new Date() : null,
         accessToken: token.accessToken as string,
         refreshToken: token.refreshToken as string,
@@ -116,6 +148,7 @@ const authOptions: NextAuthConfig = {
 
       session.accessToken = token.accessToken as string;
       session.refreshToken = token.refreshToken as string;
+
       return session;
     },
   },
