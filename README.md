@@ -36,6 +36,7 @@ venv\Scripts\activate # For windows users
 pip install -r requirements.txt
 
 # Migrate the database
+python manage.py makemigrations
 python manage.py migrate
 ```
 
@@ -54,6 +55,21 @@ To start the backend server, run the following command in the terminal.
 cd tushirikiane/backend
 python manage.py runserver
 ```
+
+OR
+Want  a one-liner instead?
+
+For Linux users:
+```bash
+git clone https://github.com/AquaTwin/tushirikiane.git && cd tushirikiane/frontend && npm install && cd ../backend && python -m venv venv && source venv/bin/activate && pip install -r requirements.txt && python manage.py makemigrations && python manage.py migrate
+```
+
+For Windows users:
+```bash
+git clone https://github.com/AquaTwin/tushirikiane.git && cd tushirikiane/frontend && npm install && cd ../backend && python -m venv venv && venv\Scripts\activate && pip install -r requirements.txt && python manage.py makemigrations && python manage.py migrate
+```
+
+
 
 ## Project Structure
 

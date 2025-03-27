@@ -89,27 +89,23 @@ class TaskListViewSet(viewsets.ModelViewSet):
 
 # TaskAssigneeViewSet,
 class TaskAssigneeViewSet(viewsets.ModelViewSet):
-	serializer_class = TaskAssigneeSerializer
-	queryset = TaskAssignee.objects.all()
-
+    serializer_class = TaskSerializer
+    queryset = Task.objects.all()
 
 # CheckListItemViewSet,
 class CheckListItemViewSet(viewsets.ModelViewSet):
-	serializer_class = CheckListItemSerializer
-	queryset = CheckListItem.objects.all()
-
+    serializer_class = TaskSerializer
+    queryset = Task.objects.all()
 
 # LabelViewSet,
 class LabelViewSet(viewsets.ModelViewSet):
-	serializer_class = LabelSerializer
-	queryset = Label.objects.all()
-
+    serializer_class = TaskSerializer
+    queryset = Task.objects.all()
 
 # TaskLabelViewSet,
 class TaskLabelViewSet(viewsets.ModelViewSet):
-	serializer_class = TaskLabelSerializer
-	queryset = TaskLabel.objects.all()
-
+    serializer_class = TaskSerializer
+    queryset = Task.objects.all()
 
 # InviteViewSet,
 class InviteViewSet(viewsets.ModelViewSet):

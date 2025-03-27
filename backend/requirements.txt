@@ -6,3 +6,5 @@ djangorestframework-simplejwt==5.3.1
 djoser==2.3.1
 Markdown==3.7
 python-decouple==3.8
+drf-nested-routers==0.94.1
+gunicorn==23.0.0
