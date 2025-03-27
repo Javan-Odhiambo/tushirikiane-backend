@@ -23,10 +23,11 @@ pip install -r requirements.txt
 python manage.py migrate
 python manage.py collectstatic --noinput
 
-# Start Gunicorn (Instead of Daphne)
-pm2 restart tushirikiane_backend || pm2 start venv/bin/gunicorn --name "tushirikiane_backend" --interpreter python3.12 -- \
+# Start Gunicorn
+pm2 restart tushirikiane_backend || pm2 start /home/ubuntu/projects/tushirikiane/backend/venv/bin/python3.12 --name tushirikiane_backend \
+    -- /home/ubuntu/projects/tushirikiane/backend/venv/bin/gunicorn \
+    --workers 3 \
     --bind 0.0.0.0:8000 \
-    --workers 4 \
     config.wsgi:application
 
 # Deploy Frontend (using the frontend directory directly)
@@ -42,4 +43,3 @@ echo "🔄 Restarting Nginx..."
 sudo systemctl restart nginx
 
 echo "✅ Deployment completed successfully!"
-    
