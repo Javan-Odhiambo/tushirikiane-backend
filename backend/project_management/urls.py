@@ -1,9 +1,9 @@
-from django.urls import path, include
+from django.urls import include, path
 from rest_framework import routers
-from rest_framework_nested.routers import NestedSimpleRouter 
+from rest_framework_nested.routers import NestedSimpleRouter
 
-from .views import WorkspaceViewSet, TaskViewSet, BoardViewSet, TaskListViewSet, LabelViewSet, WorkspaceMemberViewSet, TaskAssigneeViewSet, CheckListItemViewSet, TaskLabelViewSet, InviteViewSet
-
+from .views import BoardViewSet, CheckListItemViewSet, InviteViewSet, LabelViewSet, TaskAssigneeViewSet, \
+	TaskLabelViewSet, TaskListViewSet, TaskViewSet, WorkspaceMemberViewSet, WorkspaceViewSet
 
 """
 URL configuration for the project_management app.
@@ -15,14 +15,14 @@ Routes:
     - /workspaces/
     - /labels/
 - Nested routes:
-    - /workspaces/{workspace_pk}/members/
-    - /workspaces/{workspace_pk}/boards/
-    - /workspaces/{workspace_pk}/invites/
-    - /workspaces/{workspace_pk}/boards/{board_pk}/task-lists/
-    - /workspaces/{workspace_pk}/boards/{board_pk}/task-lists/{tasklist_pk}/tasks/
-    - /workspaces/{workspace_pk}/boards/{board_pk}/task-lists/{tasklist_pk}/tasks/{task_pk}/assignees/
-    - /workspaces/{workspace_pk}/boards/{board_pk}/task-lists/{tasklist_pk}/tasks/{task_pk}/checklist-items/
-    - /workspaces/{workspace_pk}/boards/{board_pk}/task-lists/{tasklist_pk}/tasks/{task_pk}/labels/
+    - /workspaces/{workspace_pk_slug}/members/
+    - /workspaces/{workspace_pk_slug}/boards/
+    - /workspaces/{workspace_pk_slug}/invites/
+    - /workspaces/{workspace_pk_slug}/boards/{board_pk}/task-lists/
+    - /workspaces/{workspace_pk_slug}/boards/{board_pk}/task-lists/{tasklist_pk}/tasks/
+    - /workspaces/{workspace_pk_slug}/boards/{board_pk}/task-lists/{tasklist_pk}/tasks/{task_pk}/assignees/
+    - /workspaces/{workspace_pk_slug}/boards/{board_pk}/task-lists/{tasklist_pk}/tasks/{task_pk}/checklist-items/
+    - /workspaces/{workspace_pk_slug}/boards/{board_pk}/task-lists/{tasklist_pk}/tasks/{task_pk}/labels/
 """
 
 app_name = "project_management"

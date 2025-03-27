@@ -210,6 +210,7 @@ if DEBUG:
 else:
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
+TEST_RUNNER = "core.custom_test_runner.CustomTestRunner"
 
 EMAIL_USE_TLS = config("EMAIL_USE_TLS", default=True, cast=bool)
 EMAIL_HOST = config("EMAIL_HOST", default="smtp.gmail.com")
