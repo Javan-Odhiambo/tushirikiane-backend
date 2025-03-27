@@ -33,4 +33,4 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 		return self.email
 
 
-post_save.connect(create_default_workspace, sender=CustomUser)
+post_save.connect(create_default_workspace, sender=CustomUser, dispatch_uid="create_default_workspace")

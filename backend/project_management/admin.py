@@ -7,12 +7,14 @@ from project_management.models import Board, CheckListItem, Invite, Label, Task,
 
 @admin.register(Workspace)
 class WorkspaceAdmin(admin.ModelAdmin):
-	list_display = ["id", "name", "owner", "created_at"]
+	list_display = ["id", "name", "owner", "created_at", "slug"]
+	readonly_fields = ["slug"]
 
 
 @admin.register(Board)
 class BoardAdmin(admin.ModelAdmin):
-	list_display = ["id", "name", "workspace", "position"]
+	list_display = ["id", "name", "workspace", "position", "slug"]
+	readonly_fields = ["slug"]
 
 
 @admin.register(Task)
