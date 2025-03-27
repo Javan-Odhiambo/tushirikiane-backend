@@ -1,19 +1,18 @@
 "use client";
 
-import { I_GetWorkspaceResponse } from "@/lib/interfaces";
+import { I_GetWorkspaceResponse as WorkSpaceCardProps } from "@/lib/interfaces";
 import { URLS } from "@/lib/urls";
 import { useWorkSpaces } from "@/providers/WorkSpacesProvider";
 import {
   Anchor,
   AvatarGroup,
-  Button,
   Card,
   Center,
   Group,
   Skeleton,
   Stack,
   Text,
-  Title,
+  Title
 } from "@mantine/core";
 import Link from "next/link";
 import React from "react";
@@ -56,7 +55,6 @@ const WorkSpacesContainer = () => {
   );
 };
 
-interface WorkSpaceCardProps extends I_GetWorkspaceResponse {}
 
 const WorkSpaceCard: React.FC<WorkSpaceCardProps> = ({ id, name }) => {
   return (

@@ -56,6 +56,7 @@ const CreateWorkSpaceFormModal: React.FC<CreateWorkSpaceFormModalProps> = ({
         inputRef.current.value = "";
       }
     } catch (error) {
+      console.error(error);
       form.setError("inviteEmails", {
         type: "manual",
         message: "Please enter a valid email address",

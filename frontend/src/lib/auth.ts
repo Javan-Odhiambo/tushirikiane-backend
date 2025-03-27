@@ -1,6 +1,6 @@
+import { jwtDecode } from "jwt-decode";
 import NextAuth, { NextAuthConfig } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { jwtDecode } from "jwt-decode";
 import { serverApi } from "./kyInstance";
 import { URLS } from "./urls";
 
@@ -21,7 +21,7 @@ interface UserResponse {
 
 interface JwtPayload {
   exp: number;
-  [key: string]: any;
+  [key: string]: string | number | boolean | object | null | undefined;
 }
 
 const authOptions: NextAuthConfig = {

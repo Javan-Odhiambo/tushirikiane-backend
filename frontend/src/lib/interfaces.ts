@@ -46,10 +46,14 @@ export interface I_CreateWorkSpaceInput {
   name: string;
 }
 
-export interface I_CreateWorkSpaceResponse {}
+export interface I_CreateWorkSpaceResponse {
+  name: string;
+}
 
 export interface I_InviteEmailsInput {
   emails: string[];
 }
 
-export interface I_InviteEmailsResponse {}
+export interface I_InviteEmailsResponse {
+  success: boolean;
+}

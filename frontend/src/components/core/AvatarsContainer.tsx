@@ -12,6 +12,7 @@ const AvatarsContainer: React.FC<AvatarsContainerProps> = ({
   workSpaceSlug,
 }) => {
   // TODO: __k add fetching of workspace members here
+  console.log(workSpaceSlug);
 
   return (
     <Avatar.Group>
