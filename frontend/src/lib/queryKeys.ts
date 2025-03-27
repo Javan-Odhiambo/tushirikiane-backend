@@ -1,4 +1,4 @@
 export const QUERY_KEYS = {
   workspaces: "workSpaces",
-  boards: "boards",
+  boards: (workSpaceSlug: string) => `${workSpaceSlug}-boards`,
 };

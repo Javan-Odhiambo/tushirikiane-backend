@@ -1,17 +1,19 @@
 "use client";
 
+import { useCreateBoard } from "@/lib/mutations";
 import { T_CreateBoardSchema } from "@/lib/schema";
 import {
+  Button,
   Modal,
+  MultiSelect,
+  Select,
   Stack,
   Textarea,
   TextInput,
-  MultiSelect,
-  Select,
-  Button,
 } from "@mantine/core";
+import { useParams } from "next/navigation";
 import React from "react";
-import { useForm, Controller } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 
 interface CreateBoardFormModalProps {
   opened: boolean;
@@ -22,6 +24,19 @@ const CreateBoardFormModal: React.FC<CreateBoardFormModalProps> = ({
   opened,
   close,
 }) => {
+  const { workSpacesSlug } = useParams<{
+    workSpacesSlug: string;
+    boardsSlug: string;
+  }>();
+
+  const { mutate: createBoard, isPending } = useCreateBoard(
+    workSpacesSlug,
+    () => {
+      close();
+      form.reset();
+    }
+  );
+
   const form = useForm<T_CreateBoardSchema>({
     defaultValues: {
       name: "",
@@ -32,7 +47,7 @@ const CreateBoardFormModal: React.FC<CreateBoardFormModalProps> = ({
   });
 
   const handleOnSubmit = (values: T_CreateBoardSchema) => {
-    console.log(values);
+    createBoard({ ...values, workspace_id: workSpacesSlug });
   };
 
   return (
@@ -101,7 +116,9 @@ const CreateBoardFormModal: React.FC<CreateBoardFormModalProps> = ({
             )}
           />
 
-          <Button type="submit">Create Board</Button>
+          <Button type="submit" loading={isPending}>
+            Create Board
+          </Button>
         </Stack>
       </form>
     </Modal>

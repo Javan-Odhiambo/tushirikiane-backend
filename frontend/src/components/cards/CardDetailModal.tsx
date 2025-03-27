@@ -1,5 +1,6 @@
 "use client";
 
+import { M_Tasks } from "@/lib/mockData";
 import {
   ActionIcon,
   Badge,
@@ -11,12 +12,17 @@ import {
   Text,
   Title,
 } from "@mantine/core";
+import { useParams } from "next/navigation";
 import AvatarsContainer from "../core/AvatarsContainer";
 import { IconLibrary } from "../core/IconsLibrary";
 import StatusCheckBox from "../core/StatusCheckBox";
-import { M_People, M_Tasks } from "@/lib/mockData";
 
 const CardDetailModal = () => {
+  const { workSpacesSlug } = useParams<{
+    workSpacesSlug: string;
+    boardsSlug: string;
+  }>();
+
   const handleOnTaskDelete = (taskId: string) => {
     console.log(`Deleted task with ID ${taskId}`);
   };
@@ -45,7 +51,7 @@ const CardDetailModal = () => {
         <Group justify="space-between" align="center">
           <Stack>
             <Text>Members</Text>
-            <AvatarsContainer people={M_People} />
+            <AvatarsContainer workSpaceSlug={workSpacesSlug} />
           </Stack>
 
           <Stack>

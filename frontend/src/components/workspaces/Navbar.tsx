@@ -1,6 +1,8 @@
 "use client";
 
 import { URLS } from "@/lib/urls";
+import { BoardsProvider, useBoards } from "@/providers/BoardsProvider";
+import { useWorkSpaces } from "@/providers/WorkSpacesProvider";
 import { Button, Group, Menu, Skeleton, Stack, Text } from "@mantine/core";
 import {
   IconCalendar,
@@ -13,8 +15,6 @@ import {
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import CreateBoardButton from "../boards/CreateBoardButton";
-import { useWorkSpaces } from "@/providers/WorkSpacesProvider";
-import { useBoards } from "@/providers/BoardsProvider";
 
 const mainMenuItems = [
   { icon: <IconHome size={18} />, label: "Home", href: URLS.workspaces },
@@ -24,12 +24,19 @@ const mainMenuItems = [
 ];
 
 const Navbar = () => {
+  const { workSpacesSlug } = useParams<{
+    workSpacesSlug: string;
+    boardsSlug: string;
+  }>();
+
   return (
-    <Stack>
-      <WorkSpacesMenu />
-      <WorkspaceMainMenuCard />
-      <WorkspaceBoards />
-    </Stack>
+    <BoardsProvider>
+      <Stack>
+        <WorkSpacesMenu />
+        <WorkspaceMainMenuCard />
+        {workSpacesSlug && <WorkspaceBoards />}
+      </Stack>
+    </BoardsProvider>
   );
 };
 

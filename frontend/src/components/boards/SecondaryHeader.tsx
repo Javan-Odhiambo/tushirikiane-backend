@@ -1,13 +1,20 @@
+"use client";
 
 import { Button, Group, Text } from "@mantine/core";
 import { IconBrandTrello, IconShare, IconTable } from "@tabler/icons-react";
+import { useParams } from "next/navigation";
 import AvatarsContainer from "../core/AvatarsContainer";
 import FilterIcon from "../core/FilterIcon";
-import { M_People } from "@/lib/mockData";
 
 const SecondaryHeader = () => {
+  const { workSpacesSlug } = useParams<{
+    workSpacesSlug: string;
+    boardsSlug: string;
+  }>();
+
   return (
     // TODO: make this responsive
+
     <Group
       align="center"
       justify="space-between"
@@ -32,7 +39,7 @@ const SecondaryHeader = () => {
       <Group>
         <FilterIcon />
         {/* TODO: fetch board people and pass here */}
-        <AvatarsContainer people={M_People} />
+        <AvatarsContainer workSpaceSlug={workSpacesSlug} />
         <Button leftSection={<IconShare />} variant="subtle">
           Invite
         </Button>

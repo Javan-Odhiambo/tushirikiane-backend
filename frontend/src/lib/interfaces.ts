@@ -9,14 +9,30 @@ export interface I_LoginResponse {
   message: string;
 }
 
-export interface I_WorkspaceResponse {
+export interface I_GetWorkspaceResponse {
   id: string;
   created_at: string;
   updated_at: string;
   name: string;
 }
 
-export interface I_BoardResponse {
+export interface I_GetBoardResponse {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+  description: string;
+  workspace_id: string;
+  position: number;
+}
+
+export interface I_CreateBoardInput {
+  name: string;
+  description: string;
+  workspace_id: string;
+}
+
+export interface I_CreateBoardResponse {
   id: string;
   created_at: string;
   updated_at: string;
