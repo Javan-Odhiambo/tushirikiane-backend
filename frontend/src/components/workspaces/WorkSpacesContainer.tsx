@@ -4,20 +4,21 @@ import { I_GetWorkspaceResponse } from "@/lib/interfaces";
 import { URLS } from "@/lib/urls";
 import { useWorkSpaces } from "@/providers/WorkSpacesProvider";
 import {
-    Anchor,
-    AvatarGroup,
-    Button,
-    Card,
-    Center,
-    Group,
-    Skeleton,
-    Stack,
-    Text,
-    Title,
+  Anchor,
+  AvatarGroup,
+  Button,
+  Card,
+  Center,
+  Group,
+  Skeleton,
+  Stack,
+  Text,
+  Title,
 } from "@mantine/core";
 import Link from "next/link";
 import React from "react";
 import AvatarsContainer from "../core/AvatarsContainer";
+import CreateWorkSpaceButton from "./CreateWorkSpaceButton";
 
 const WorkSpacesContainer = () => {
   const { data: workSpaces, isPending } = useWorkSpaces();
@@ -49,9 +50,7 @@ const WorkSpacesContainer = () => {
         )}
 
         {/* Create Workspace Button */}
-        <Button component={Link} href="/create-workspace" variant="light">
-          + Create Workspace
-        </Button>
+        <CreateWorkSpaceButton />
       </Stack>
     </Center>
   );

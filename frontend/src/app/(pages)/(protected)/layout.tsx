@@ -1,5 +1,4 @@
 import AppShellWrapper from "@/components/core/AppShellWrapper";
-import Providers from "@/components/core/Providers";
 import getSession from "@/lib/get-session";
 import { URLS } from "@/lib/urls";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -16,9 +15,9 @@ export default async function ProtectedLayout({
   }
 
   return (
-    <Providers>
+    <>
       <AppShellWrapper>{children}</AppShellWrapper>
       <ReactQueryDevtools initialIsOpen={false} />
-    </Providers>
+    </>
   );
 }

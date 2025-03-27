@@ -1,8 +1,7 @@
-import { redirect } from "next/navigation";
-import Providers from "@/components/core/Providers";
-import { URLS } from "@/lib/urls";
-import React from "react";
 import { auth } from "@/lib/auth";
+import { URLS } from "@/lib/urls";
+import { redirect } from "next/navigation";
+import React from "react";
 
 const AuthLayout = async ({
   children,
@@ -15,11 +14,7 @@ const AuthLayout = async ({
     redirect(URLS.dashboard);
   }
 
-  return (
-    <>
-      <Providers>{children}</Providers>
-    </>
-  );
+  return <>{children}</>;
 };
 
 export default AuthLayout;

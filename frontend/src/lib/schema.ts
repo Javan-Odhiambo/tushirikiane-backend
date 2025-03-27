@@ -46,5 +46,12 @@ export const createBoardSchema = z.object({
   }),
   inviteMembers: z.array(z.number()),
 });
-
 export type T_CreateBoardSchema = z.infer<typeof createBoardSchema>;
+
+export const createWorkSpaceSchema = z.object({
+  name: z.string({
+    required_error: "Please provide the name for your workspace",
+  }),
+  inviteEmails: z.array(z.string().email()),
+});
+export type T_CreateWorkSpaceSchema = z.infer<typeof createWorkSpaceSchema>;

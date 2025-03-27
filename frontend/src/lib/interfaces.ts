@@ -41,3 +41,15 @@ export interface I_CreateBoardResponse {
   workspace_id: string;
   position: number;
 }
+
+export interface I_CreateWorkSpaceInput {
+  name: string;
+}
+
+export interface I_CreateWorkSpaceResponse {}
+
+export interface I_InviteEmailsInput {
+  emails: string[];
+}
+
+export interface I_InviteEmailsResponse {}
