@@ -34,7 +34,7 @@ jobs:
       - name: Install frontend dependencies
         run: |
           cd frontend
-          npm install
+          npm install --legacy-peer-deps
 
       - name: Run frontend build (as test)
         run: |
@@ -69,7 +69,8 @@ jobs:
       - name: Install Frontend Dependencies (Build)
         run: |
           cd frontend
-          npm install
+          npm install --legacy-peer-deps
+
 
       - name: Build Next.js Frontend
         run: |
