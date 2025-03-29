@@ -1,9 +1,9 @@
 import ky from "ky";
 
-const AUTH_API_PREFIX_URL = `${process.env.NEXT_PUBLIC_BASE_BACKEND_URL}/auth/`;
+const AUTH_API_PREFIX_URL = `${process.env.NEXT_PUBLIC_BASE_API_URL}/auth/`;
 
 const baseApi = ky.create({
-  prefixUrl: process.env.NEXT_PUBLIC_BASE_BACKEND_URL,
+  prefixUrl: process.env.NEXT_PUBLIC_BASE_API_URL,
   timeout: 10000,
 });
 
