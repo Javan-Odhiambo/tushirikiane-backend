@@ -47,14 +47,14 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "corsheaders.middleware.CorsMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
 
@@ -154,12 +154,16 @@ AUTH_USER_MODEL = "accounts.CustomUser"
 SITE_ID = 1
 
 # CORS
+
 if DEBUG:
     CORS_ORIGIN_ALLOW_ALL = True
 else:
     CORS_ALLOWED_ORIGINS = config(
-        "CORS_ALLOWED_ORIGINS", default="http://127.0.0.1:3000, http://localhost:3000", cast=Csv()
+        "CORS_ALLOWED_ORIGINS",
+        default="https://3.84.124.185,http://localhost:3000",
+        cast=Csv(),
     )
+    CORS_ALLOW_CREDENTIALS = True
 
 
 # Rest framework settings
