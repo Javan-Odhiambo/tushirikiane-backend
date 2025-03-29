@@ -52,7 +52,7 @@ const SignInForm = () => {
     onSuccess: async () => {
       toast.success("Successfully signed in");
       await updateSession();
-      router.push(URLS.dashboard);
+      router.push(URLS.workspaces);
     },
     onError: (error) => {
       console.error("Login failed", error);
