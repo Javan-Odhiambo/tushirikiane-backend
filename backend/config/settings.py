@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
+
 from datetime import timedelta
 from pathlib import Path
 
@@ -26,7 +27,6 @@ SECRET_KEY = config("SECRET_KEY", default="django-insecure-#!q5HGFHSGFHJSvs")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DEBUG", default=True, cast=bool)
 
-ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="127.0.0.1, localhost", cast=Csv())
 
 # Application definition
 
@@ -37,16 +37,13 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
     "corsheaders",
     "django_filters",
     "rest_framework",
     "djoser",
-
     "accounts",
     "core",
     "project_management",
-
 ]
 
 MIDDLEWARE = [
@@ -58,8 +55,10 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "corsheaders.middleware.CorsMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
 
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="127.0.0.1, localhost", cast=Csv())
 CORS_ORIGIN_ALLOW_ALL = config("CORS_ORIGIN_ALLOW_ALL", default=True, cast=bool)
 
 ROOT_URLCONF = "config.urls"
@@ -159,7 +158,7 @@ if DEBUG:
     CORS_ORIGIN_ALLOW_ALL = True
 else:
     CORS_ALLOWED_ORIGINS = config(
-        "CORS_ALLOWED_ORIGINS", default="https://example.com", cast=Csv()
+        "CORS_ALLOWED_ORIGINS", default="http://127.0.0.1:3000, http://localhost:3000", cast=Csv()
     )
 
 # Rest framework settings
