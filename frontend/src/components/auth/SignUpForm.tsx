@@ -51,7 +51,7 @@ const SignupForm = () => {
       toast.success(
         `Welcome ${data.email}! Please be patient as we redirect you to the dashboard.`
       );
-      router.push(URLS.dashboard);
+      router.push(URLS.workspaces);
     },
     onError: async (error: unknown) => {
       let errorMessage = "Signup failed. Please try again.";
