@@ -43,6 +43,7 @@ export const serverApi = {
     });
 
     if (!response.ok) {
+      console.error(response);
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
 
