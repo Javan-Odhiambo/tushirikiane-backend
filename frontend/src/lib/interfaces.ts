@@ -11,6 +11,7 @@ export interface I_LoginResponse {
 
 export interface I_GetWorkspaceResponse {
   id: string;
+  slug: string;
   created_at: string;
   updated_at: string;
   name: string;
@@ -18,6 +19,7 @@ export interface I_GetWorkspaceResponse {
 
 export interface I_GetBoardResponse {
   id: string;
+  slug: string;
   created_at: string;
   updated_at: string;
   name: string;

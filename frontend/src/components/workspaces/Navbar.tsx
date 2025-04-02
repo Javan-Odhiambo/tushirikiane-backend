@@ -153,13 +153,13 @@ const WorkspaceBoards = () => {
             </Skeleton>
           ))
         : boards?.map((board) => {
-            const isActive = boardsSlug === board?.id;
+            const isActive = boardsSlug === board?.slug;
 
             return (
               <Button
                 key={board.id}
                 component={Link}
-                href={URLS.boardsSlug(workSpacesSlug, board?.id)}
+                href={URLS.boardsSlug(workSpacesSlug, board?.slug)}
                 variant={isActive ? "filled" : "light"}
                 fullWidth
                 justify="start"
