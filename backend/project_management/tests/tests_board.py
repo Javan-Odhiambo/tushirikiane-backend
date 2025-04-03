@@ -79,6 +79,21 @@ class BoardViewSetTestCase(APITestCase):
 		self.assertEqual(board1.data['position'], 2)
 		self.assertEqual(board2.data['position'], 3)
 
+	def test_board_fetching_by_workspace_slug_or_id(self):
+		"""
+		Test fetching boards in a workspace
+		"""
+		self.client.force_authenticate(user=self.user1)
+		response1 = self.client.get(f'/api/workspaces/{self.workspace1.id}/boards/')
+		response2 = self.client.get(f'/api/workspaces/{self.workspace1.slug}/boards/')
+
+		print(response2.data)
+		print(response2)
+		self.assertEqual(response1.status_code, status.HTTP_200_OK)
+		self.assertEqual(response2.status_code, status.HTTP_200_OK)
+
+		self.assertEqual(response1.data, response2.data)
+
 	def test_cannot_create_board_in_non_existent_workspace(self):
 		"""
 		Test creating a board in a non-existent workspace

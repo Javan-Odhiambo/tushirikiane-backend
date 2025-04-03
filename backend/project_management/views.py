@@ -95,14 +95,15 @@ class BoardViewSet(viewsets.ModelViewSet):
 		if self.request.user.is_anonymous:
 			return Board.objects.none()
 
-		# If no workspace id is provided in the url, don't return any boards
-		workspace_pk = self.kwargs.get("workspace_pk_slug", None)
+		# If no workspace id is not provided in the url, don't return any boards
+		workspace_pk = self.kwargs.get("pk_slug")
 		if not workspace_pk:
 			return Board.objects.none()
 
 		# If a workspace Id/slug name was provided, return the boards in that workspace
-		if Workspace.objects.filter(id=workspace_pk).exists():
-			return Board.objects.filter(workspace_id=workspace_pk)
+		workspace = Workspace.objects.get_by_id_or_slug_or_404(workspace_pk)
+		if workspace:
+			return Board.objects.filter(workspace=workspace)
 
 		return Board.objects.filter(
 			models.Q(workspace__members__member=self.request.user) |
