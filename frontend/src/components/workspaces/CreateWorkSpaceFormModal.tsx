@@ -90,7 +90,7 @@ const CreateWorkSpaceFormModal: React.FC<CreateWorkSpaceFormModalProps> = ({
     }
   };
 
-  const onSubmit = (values: T_CreateWorkSpaceSchema) => {
+  const handleOnSubmit = (values: T_CreateWorkSpaceSchema) => {
     createWorkSpace(values);
   };
 
@@ -101,7 +101,7 @@ const CreateWorkSpaceFormModal: React.FC<CreateWorkSpaceFormModalProps> = ({
       title="Create New Workspace"
       centered
     >
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form onSubmit={form.handleSubmit(handleOnSubmit)}>
         <Stack>
           <TextInput
             withAsterisk

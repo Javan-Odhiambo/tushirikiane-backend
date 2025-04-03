@@ -5,6 +5,8 @@ import {
   I_CreateBoardResponse,
   I_CreateWorkSpaceInput,
   I_CreateWorkSpaceResponse,
+  I_GetBoardResponse,
+  I_GetWorkspaceResponse,
 } from "./interfaces";
 import { protectedApi } from "./kyInstance";
 import { QUERY_KEYS } from "./queryKeys";
@@ -58,7 +60,7 @@ export const useCreateWorkSpace = (
     onSuccess: (newWorkSpace) => {
       queryClient.setQueryData<I_CreateWorkSpaceResponse[]>(
         [QUERY_KEYS.workspaces],
-        (oldWorkSpaces = []) => [...oldWorkSpaces, newWorkSpace]
+        (oldWorkSpaces = []) => [newWorkSpace, ...oldWorkSpaces]
       );
       toast.success("Workspace created successfully.");
       onSuccess?.();
@@ -66,6 +68,64 @@ export const useCreateWorkSpace = (
     onError: (error) => {
       console.error("Error creating workspace", error);
       toast.error("Failed to create workspace. Please try again");
+      onError?.();
+    },
+  });
+};
+
+export const useDeleteWorkSpace = (
+  workspaceSlug: string,
+  onSuccess?: () => void,
+  onError?: () => void
+) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async () => {
+      await protectedApi.delete(URLS.apiWorkSpacesDetail(workspaceSlug));
+    },
+    onSuccess: () => {
+      queryClient.setQueryData<I_GetWorkspaceResponse[]>(
+        [QUERY_KEYS.workspaces],
+        (oldWorkSpaces = []) =>
+          oldWorkSpaces.filter((ws) => ws.slug !== workspaceSlug)
+      );
+
+      toast.success("Workspace deleted successfully.");
+      onSuccess?.();
+    },
+    onError: (error) => {
+      console.error("Delete failed:", error);
+      toast.error("Failed to delete workspace. Please try again.");
+      onError?.();
+    },
+  });
+};
+
+export const useDeleteBoard = (
+  workspaceSlug: string,
+  boardSlug: string,
+  onSuccess?: () => void,
+  onError?: () => void
+) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async () => {
+      await protectedApi.delete(URLS.apiBoardsDetail(workspaceSlug, boardSlug));
+    },
+    onSuccess: () => {
+      queryClient.setQueryData<I_GetBoardResponse[]>(
+        [QUERY_KEYS.boards],
+        (oldBoards = []) => oldBoards.filter((b) => b.slug !== boardSlug)
+      );
+
+      toast.success("Board deleted successfully.");
+      onSuccess?.();
+    },
+    onError: (error) => {
+      console.error("Delete failed:", error);
+      toast.error("Failed to delete board. Please try again.");
       onError?.();
     },
   });

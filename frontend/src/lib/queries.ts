@@ -10,8 +10,8 @@ export const useGetWorkSpaces = () => {
     queryFn: async (): Promise<I_GetWorkspaceResponse[]> => {
       return await protectedApi.get(URLS.apiWorkSpaces).json();
     },
-    // staleTime: 60000,
-    // refetchOnWindowFocus: true,
+    staleTime: 60000,
+    refetchOnWindowFocus: true,
   });
 };
 
@@ -21,7 +21,7 @@ export const useGetBoards = (workSpaceSlug: string) => {
     queryFn: async (): Promise<I_GetBoardResponse[]> => {
       return await protectedApi.get(URLS.apiBoards(workSpaceSlug)).json();
     },
-    // staleTime: 60000,
-    // refetchOnWindowFocus: true,
+    staleTime: 60000,
+    refetchOnWindowFocus: true,
   });
 };
