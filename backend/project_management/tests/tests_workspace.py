@@ -137,6 +137,25 @@ class WorkspaceTestCase(APITestCase):
 		# Should see 3workspaces - the user has access to
 		self.assertEqual(len(response.data), 3)
 
+	def test_fetching_members_of_workspace(self):
+		"""
+		Test that a user can fetch members of a workspace they belong to
+		"""
+		self.client.force_authenticate(user=self.user2)
+
+		# Add user2 as a member to user1's workspace
+		WorkspaceMember.objects.create(
+			workspace=self.workspace1,
+			member=self.user2
+		)
+		response = self.client.get(f'/api/workspaces/{self.workspace1.id}/members/')
+
+		self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+		# Should see 1 member - user 2
+		self.assertEqual(len(response.data), 1)
+
+
 	def test_cannot_access_others_workspace(self):
 		"""
 		Test that a user cannot access a workspace they don't own or belong to

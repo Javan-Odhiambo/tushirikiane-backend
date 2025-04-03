@@ -40,8 +40,6 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
 
 	@action(detail=True, methods=["post"])
 	def invite(self, request, *args, **kwargs):
-		# TODO: Add permission checking
-
 		workspace = self.get_object()
 
 		# Check that user is a workspace owner
@@ -65,6 +63,13 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
 
 		return Response({"message": "Invites sent successfully."}, status=status.HTTP_201_CREATED)
 
+	@action(detail=True, methods=["get"])
+	def members(self, request, *args, **kwargs):
+		workspace = self.get_object()
+
+		members = WorkspaceMember.objects.filter(workspace=workspace)
+		serializer = WorkspaceMemberSerializer(members, many=True)
+		return Response(serializer.data)
 
 @api_view(http_method_names=["POST"])
 def accept_workspace_invite(request, *args, **kwargs):
