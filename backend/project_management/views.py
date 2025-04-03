@@ -7,7 +7,7 @@ from rest_framework.exceptions import NotFound
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from project_management.emails import BoardInviteEmail
+from project_management.emails import BoardInviteEmail, WorkspaceInviteEmail
 from .models import Board, BoardInvite, BoardMember, Task, TaskList, Workspace, WorkspaceInvite, WorkspaceMember
 from .permissions import IsMemberReadOrOwnerFull
 from .serializers import BoardSerializer, EmailInviteSerializer, InviteSerializer, InviteTokenSerializer, \
@@ -69,8 +69,14 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
 					"recipient_email": email,
 					"sender": request.user,
 			}
+			# Check if the user is already a member of the workspace or invite already exists
+			if WorkspaceMember.objects.filter(workspace=workspace,
+											  member__email=email).exists() or WorkspaceInvite.objects.filter(
+				workspace=workspace, recipient_email=email).exists():
+				continue
+
 			invite_obj = WorkspaceInvite.objects.create(**invite_data)
-			BoardInviteEmail(request=request, context={"token": invite_obj.token}).send(to=[email])
+			WorkspaceInviteEmail(request=request, context={"token": invite_obj.token}).send(to=[email])
 
 		return Response({"message": "Invites sent successfully."}, status=status.HTTP_201_CREATED)
 
@@ -200,6 +206,11 @@ class BoardViewSet(viewsets.ModelViewSet):
 					"recipient_email": email,
 					"sender": request.user,
 			}
+			# Check if the user is already a member of the board or invite already exists
+			if BoardMember.objects.filter(board=board, member__email=email).exists() or BoardInvite.objects.filter(
+					board=board, recipient_email=email).exists():
+				continue
+
 			invite_obj = BoardInvite.objects.create(**invite_data)
 			BoardInviteEmail(request=request, context={"token": invite_obj.token}).send(to=[email])
 

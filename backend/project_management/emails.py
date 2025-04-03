@@ -9,8 +9,7 @@ class BoardInviteEmail(BaseEmailMessage):
 		context = super().get_context_data()
 
 		user = context.get("user")
-		# TODO: Generate Token
-		context["token"] = "token"
+		context["token"] = context.get("token")
 		context["url"] = settings.PROJECT_MANAGEMENT.get("URLS").get("accept_board_invite").format(**context)
 		return context
 
@@ -22,7 +21,6 @@ class WorkspaceInviteEmail(BaseEmailMessage):
 		context = super().get_context_data()
 
 		user = context.get("user")
-		# TODO: Generate Token
-		context["token"] = "token"
+		context["token"] = context.get("token")
 		context["url"] = settings.PROJECT_MANAGEMENT.get("URLS").get("accept_workspace_invite").format(**context)
 		return context
