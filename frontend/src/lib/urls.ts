@@ -28,7 +28,11 @@ export const URLS = {
 
   // workspaces
   apiWorkSpaces: "workspaces/",
+  apiWorkSpacesDetail: (workspaceSlug: string) =>
+    `workspaces/${workspaceSlug}/`,
 
   // boards
   apiBoards: (workSpaceSlug: string) => `workspaces/${workSpaceSlug}/boards/`,
+  apiBoardsDetail: (workSpaceSlug: string, boardSlug: string) =>
+    `workspaces/${workSpaceSlug}/boards/${boardSlug}/`,
 };

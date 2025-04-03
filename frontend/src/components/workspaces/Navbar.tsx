@@ -15,6 +15,8 @@ import {
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import CreateBoardButton from "../boards/CreateBoardButton";
+import DeleteWorkSpaceButton from "./DeleteWorkSpaceButton";
+import DeleteBoardButton from "../boards/DeleteBoardButton";
 
 const mainMenuItems = [
   { icon: <IconHome size={18} />, label: "Home", href: URLS.workspaces },
@@ -76,7 +78,7 @@ const WorkSpacesMenu = () => {
   }>();
 
   const activeWorkSpace = workSpaces?.find(
-    (workSpace) => workSpace?.id === workSpacesSlug
+    (workSpace) => workSpace?.slug === workSpacesSlug
   );
 
   return (
@@ -120,6 +122,7 @@ const WorkSpacesMenu = () => {
               );
             })}
       </Menu.Dropdown>
+      <DeleteWorkSpaceButton />
     </Menu>
   );
 };
@@ -156,17 +159,20 @@ const WorkspaceBoards = () => {
             const isActive = boardsSlug === board?.slug;
 
             return (
-              <Button
-                key={board.id}
-                component={Link}
-                href={URLS.boardsSlug(workSpacesSlug, board?.slug)}
-                variant={isActive ? "filled" : "light"}
-                fullWidth
-                justify="start"
-                leftSection={<IconLayout />}
-              >
-                <Text fw={isActive ? 700 : 400}>{board.name}</Text>
-              </Button>
+              <>
+                <Button
+                  key={board.slug}
+                  component={Link}
+                  href={URLS.boardsSlug(workSpacesSlug, board?.slug)}
+                  variant={isActive ? "filled" : "light"}
+                  fullWidth
+                  justify="start"
+                  leftSection={<IconLayout />}
+                >
+                  <Text fw={isActive ? 700 : 400}>{board.name}</Text>
+                </Button>
+                <DeleteBoardButton boardSlug={board.slug} />
+              </>
             );
           })}
     </Stack>
