@@ -38,6 +38,17 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
 		# Automatically set the owner to the current user when creating a workspace
 		serializer.save(owner=self.request.user)
 
+	def destroy(self, request, *args, **kwargs):
+		workspace = self.get_object()
+
+		if workspace.owner != request.user:
+			return response.Response("You can't delete this workspace", status=403)
+
+		serializer = self.get_serializer(instance=workspace)
+		workspace.delete()
+
+		return response.Response(data=serializer.data, status=status.HTTP_204_NO_CONTENT)
+
 	@action(detail=True, methods=["post"])
 	def invite(self, request, *args, **kwargs):
 		workspace = self.get_object()
@@ -71,6 +82,7 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
 		serializer = WorkspaceMemberSerializer(members, many=True)
 		return Response(serializer.data)
 
+
 @api_view(http_method_names=["POST"])
 def accept_workspace_invite(request, *args, **kwargs):
 	serializer = InviteTokenSerializer(data=request.data)
@@ -95,13 +107,14 @@ def accept_workspace_invite(request, *args, **kwargs):
 class BoardViewSet(viewsets.ModelViewSet):
 	serializer_class = BoardSerializer
 	permission_classes = [IsAuthenticated]
+	lookup_field = "pk_slug"
 
 	def get_queryset(self):
 		if self.request.user.is_anonymous:
 			return Board.objects.none()
 
 		# If no workspace id is not provided in the url, don't return any boards
-		workspace_pk = self.kwargs.get("pk_slug")
+		workspace_pk = self.kwargs.get("workspace_pk_slug")
 		if not workspace_pk:
 			return Board.objects.none()
 
@@ -114,6 +127,11 @@ class BoardViewSet(viewsets.ModelViewSet):
 			models.Q(workspace__members__member=self.request.user) |
 			models.Q(workspace__owner=self.request.user)
 		).distinct().order_by("position")
+
+	def get_object(self):
+		# Get the board by id or slug
+		pk = self.kwargs.get("pk_slug")
+		return Board.objects.get_by_id_or_slug_or_404(pk, queryset=self.get_queryset())
 
 	def create(self, request, *args, **kwargs):
 		workspace_pk = self.kwargs.get("workspace_pk_slug")
@@ -142,6 +160,7 @@ class BoardViewSet(viewsets.ModelViewSet):
 		return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 	def update(self, request, *args, **kwargs):
+		# TODO: Check this
 		partial = kwargs.pop("partial", False)
 		instance = self.get_object()
 		serializer = self.get_serializer(instance, data=request.data, partial=partial)
@@ -149,6 +168,17 @@ class BoardViewSet(viewsets.ModelViewSet):
 		self.perform_update(serializer)
 
 		return Response(serializer.data)
+
+	def destroy(self, request, *args, **kwargs):
+		board = self.get_object()
+
+		if board.workspace.owner != request.user:
+			return response.Response("You can't delete this board", status=403)
+
+		serializer = self.get_serializer(instance=board)
+		board.delete()
+
+		return response.Response(data=serializer.data, status=status.HTTP_204_NO_CONTENT)
 
 	@action(detail=True, methods=["post"])
 	def invite(self, request, *args, **kwargs):

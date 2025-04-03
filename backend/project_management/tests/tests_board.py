@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 from accounts.models import CustomUser
-from project_management.models import Board, BoardInvite, Workspace
+from project_management.models import Board, BoardInvite, Workspace, WorkspaceMember
 
 
 class BoardViewSetTestCase(APITestCase):
@@ -57,6 +57,58 @@ class BoardViewSetTestCase(APITestCase):
 		self.assertEqual(response.data["id"], str(board.id))
 		self.assertEqual(response.data["name"], "new name")
 
+	def test_retrieve_board(self):
+		"""
+		Test retrieving a board
+		"""
+		self.client.force_authenticate(user=self.user1)
+
+		response = self.client.get(f"/api/workspaces/{self.workspace1.id}/boards/{self.board1.id}/")
+		response1 = self.client.get(f"/api/workspaces/{self.workspace1.slug}/boards/{self.board1.slug}/")
+
+		self.assertEqual(response.status_code, status.HTTP_200_OK)
+		self.assertEqual(response1.status_code, status.HTTP_200_OK)
+		self.assertEqual(response.data["id"], str(self.board1.id))
+		self.assertEqual(response.data["name"], self.board1.name)
+		self.assertEqual(response.data["id"], response1.data["id"])
+
+	def test_delete_board(self):
+		"""
+		Test deleting a board
+		"""
+		self.client.force_authenticate(user=self.user1)
+
+		response = self.client.delete(f"/api/workspaces/{self.workspace1.id}/boards/{self.board1.id}/")
+
+		self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+		self.assertEqual(response.data["slug"], self.board1.slug)
+
+		# Check if the board is deleted
+		response = self.client.get(f"/api/workspaces/{self.workspace1.id}/boards/{self.board1.id}/")
+		self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+	# Test that a user cannot delete a board they don't own
+	def test_cannot_delete_others_board(self):
+		"""
+		Test that a user cannot delete a board they don't own
+		"""
+		user2 = CustomUser.objects.create_user(
+			email="user2@mai.com",
+			password="<PASSWORD>"
+		)
+
+		WorkspaceMember.objects.create(member=user2, workspace=self.workspace1)
+		self.client.force_authenticate(user=user2)
+
+		response = self.client.delete(f"/api/workspaces/{self.workspace1.id}/boards/{self.board1.id}/")
+
+		self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+		# Check if the board is not deleted
+		response = self.client.get(f"/api/workspaces/{self.workspace1.id}/boards/{self.board1.id}/")
+		self.assertEqual(response.status_code, status.HTTP_200_OK)
+
 	def test_board_positioning(self):
 		"""
 		Test that boards are automatically positioned
@@ -87,8 +139,6 @@ class BoardViewSetTestCase(APITestCase):
 		response1 = self.client.get(f'/api/workspaces/{self.workspace1.id}/boards/')
 		response2 = self.client.get(f'/api/workspaces/{self.workspace1.slug}/boards/')
 
-		print(response2.data)
-		print(response2)
 		self.assertEqual(response1.status_code, status.HTTP_200_OK)
 		self.assertEqual(response2.status_code, status.HTTP_200_OK)
 
@@ -148,6 +198,7 @@ class BoardViewSetTestCase(APITestCase):
 		pass
 
 	# 	Board Invites and acceptance
+
 	def test_can_invite_people_to_board(self):
 		"""
 		Test inviting people to a board
@@ -195,8 +246,8 @@ class BoardViewSetTestCase(APITestCase):
 		# Simulate accepting the invite
 		# Get token from the database
 		token = BoardInvite.objects.get(recipient_email="user2@test.com").token
-
 		self.client.logout()
+
 		self.client.force_authenticate(user=user2)
 		response = self.client.post(f'/api/boards/accept/', data={
 				"token": token

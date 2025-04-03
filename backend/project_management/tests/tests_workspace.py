@@ -155,6 +155,43 @@ class WorkspaceTestCase(APITestCase):
 		# Should see 1 member - user 2
 		self.assertEqual(len(response.data), 1)
 
+	# test only owner can delete a workspace
+	def test_delete_workspace(self):
+		"""
+		Test that a user can delete a workspace they own
+		"""
+		self.client.force_authenticate(user=self.user1)
+
+		response = self.client.delete(f'/api/workspaces/{self.workspace1.id}/')
+		self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+		# Check that the response contains the deleted workspace data
+		self.assertEqual(response.data["slug"], str(self.workspace1.slug))
+
+		# Check that the workspace no longer exists
+		response = self.client.get(f'/api/workspaces/{self.workspace1.id}/')
+		self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+	# Test that a user cannot delete a workspace they don't own
+	def test_cannot_delete_others_workspace(self):
+		"""
+		Test that a user cannot delete a workspace they don't own
+		"""
+		self.client.force_authenticate(user=self.user2)
+		# Add user2 as a member to user1's workspace
+		WorkspaceMember.objects.create(
+			workspace=self.workspace1,
+			member=self.user2
+		)
+
+		response = self.client.delete(f'/api/workspaces/{self.workspace1.id}/')
+
+		self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+		# Check that the workspace does still exists
+
+		response = self.client.get(f'/api/workspaces/{self.workspace1.id}/')
+		self.assertEqual(response.status_code, status.HTTP_200_OK)
+		self.assertEqual(response.data['id'], str(self.workspace1.id))
 
 	def test_cannot_access_others_workspace(self):
 		"""

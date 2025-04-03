@@ -4,7 +4,7 @@ from django.db import models
 from django.utils.text import slugify
 
 from core.models import BaseModel
-from project_management.managers import CustomWorkspaceManager
+from project_management.managers import CustomBoardManager, CustomWorkspaceManager
 
 app_label = "project_management"
 
@@ -74,6 +74,8 @@ class Board(BaseModel):
 	workspace = models.ForeignKey(Workspace, on_delete=models.CASCADE, related_name="boards")
 	position = models.PositiveIntegerField()
 	slug = models.CharField(max_length=255, default="", blank=True)
+
+	objects = CustomBoardManager()
 
 	def __str__(self):
 		"""
