@@ -1,10 +1,11 @@
 from uuid import uuid4
 
-from accounts.models import CustomUser
 from django.utils.text import slugify
-from project_management.models import Workspace, WorkspaceMember
 from rest_framework import status
 from rest_framework.test import APITestCase
+
+from accounts.models import CustomUser
+from project_management.models import Workspace, WorkspaceInvite, WorkspaceMember
 
 
 class WorkspaceTestCase(APITestCase):
@@ -145,3 +146,57 @@ class WorkspaceTestCase(APITestCase):
 		response = self.client.get(f'/api/workspaces/{self.workspace2.id}/')
 
 		self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+	def test_can_invite_people_to_workspace(self):
+		"""
+		Test inviting people to a workspace
+		"""
+
+		self.client.force_authenticate(user=self.user1)
+
+		response = self.client.post(f'/api/workspaces/{self.workspace1.id}/invite/', {
+				"emails": ["hello@mail.com", "another@mail.com"],
+		})
+		self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+	def test_can_invite_people_to_workspace_only_if_owner(self):
+		"""
+		Test that a user can only invite people to a workspace if they are the owner
+		"""
+		user2 = CustomUser.objects.create_user(
+			email="email@mail.com",
+			password="testpass123")
+
+		WorkspaceMember.objects.create(workspace=self.workspace1, member=user2)
+
+		self.client.force_authenticate(user=user2)
+
+		response = self.client.post(f'/api/workspaces/{self.workspace1.id}/invite/', {
+				"emails": ["someemail@mail.com"],
+		})
+
+		self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+	def test_can_accept_workspace_invite(self):
+		"""
+		Test accepting a workspace invite
+		"""
+		self.client.force_authenticate(user=self.user1)
+
+		response = self.client.post(f'/api/workspaces/{self.workspace1.id}/invite/', {
+				"emails": ["user2@test.com"]
+		})
+		self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+		self.client.logout()
+
+		# Simulate accepting the invite
+		# Get token from the database
+		token = WorkspaceInvite.objects.get(recipient_email="user2@test.com").token
+
+		self.client.force_authenticate(user=self.user2)
+		response = self.client.post(f'/api/workspaces/accept/', data={
+				"token": token
+		}, format="json")
+
+		self.assertEqual(response.status_code, status.HTTP_201_CREATED)

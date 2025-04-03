@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import (Board, CheckListItem, Invite, Label, Task, TaskAssignee, TaskLabel, TaskList, Workspace,
+from .models import (Board, CheckListItem, Label, Task, TaskAssignee, TaskLabel, TaskList, Workspace, WorkspaceInvite,
 					 WorkspaceMember)
 
 
@@ -29,8 +29,8 @@ class WorkspaceMemberSerializer(serializers.ModelSerializer):
 
 # DRF Board model serializer
 class BoardSerializer(serializers.ModelSerializer):
-	workspace = serializers.PrimaryKeyRelatedField(read_only=True)
-	position = serializers.IntegerField(default=0)
+	workspace = serializers.PrimaryKeyRelatedField(queryset=Workspace.objects.all(), required=False)
+	position = serializers.IntegerField(required=False)
 
 	class Meta:
 		model = Board
@@ -100,7 +100,7 @@ class TaskListSerializer(serializers.ModelSerializer):
 # DRF Invite model serializer
 class InviteSerializer(serializers.ModelSerializer):
 	class Meta:
-		model = Invite
+		model = WorkspaceInvite
 		fields = [
 				"id",
 				"created_at",
@@ -131,3 +131,14 @@ class CheckListItemSerializer(serializers.ModelSerializer):
 				"is_completed",
 				"due_at",
 		]
+
+
+class EmailInviteSerializer(serializers.Serializer):
+	emails = serializers.ListField(
+		child=serializers.EmailField(),
+		required=True
+	)
+
+
+class InviteTokenSerializer(serializers.Serializer):
+	token = serializers.UUIDField(required=True)
