@@ -2,8 +2,9 @@ from django.urls import include, path
 from rest_framework import routers
 from rest_framework_nested.routers import NestedSimpleRouter
 
-from .views import BoardViewSet, CheckListItemViewSet, InviteViewSet, LabelViewSet, TaskAssigneeViewSet, \
-	TaskLabelViewSet, TaskListViewSet, TaskViewSet, WorkspaceMemberViewSet, WorkspaceViewSet
+from .views import BoardViewSet, CheckListItemViewSet, InviteViewSet, LabelViewSet, \
+	TaskLabelViewSet, TaskListViewSet, TaskViewSet, WorkspaceMemberViewSet, WorkspaceViewSet, accept_board_invite, \
+	accept_workspace_invite
 
 """
 URL configuration for the project_management app.
@@ -48,9 +49,8 @@ board_tasklist_router.register(r'task-lists', TaskListViewSet, basename='board-t
 tasklist_task_router = NestedSimpleRouter(board_tasklist_router, r'task-lists', lookup='tasklist')
 tasklist_task_router.register(r'tasks', TaskViewSet, basename='tasklist-task')
 
-# Nested router for Task -> Assignees
-task_assignee_router = NestedSimpleRouter(tasklist_task_router, r'tasks', lookup='task')
-task_assignee_router.register(r'assignees', TaskAssigneeViewSet, basename='task-assignee')
+# # Nested router for Task -> Assignees
+# task_assignee_router = NestedSimpleRouter(tasklist_task_router, r'tasks', lookup='task')
 
 # Nested router for Task -> Checklist Items
 task_checklist_router = NestedSimpleRouter(tasklist_task_router, r'tasks', lookup='task')
@@ -65,16 +65,18 @@ workspace_invite_router = NestedSimpleRouter(router, r'workspaces', lookup='work
 workspace_invite_router.register(r'invites', InviteViewSet, basename='workspace-invite')
 
 urlpatterns = [
-    # Base routes
-    path('', include(router.urls)),
+		path('boards/accept/', accept_board_invite, name='board-accept'),
+		path('workspaces/accept/', accept_workspace_invite, name='workspace-accept'),
 
-    # Nested routes
-    path('', include(workspace_member_router.urls)),
-    path('', include(workspace_board_router.urls)),
-    path('', include(board_tasklist_router.urls)),
-    path('', include(tasklist_task_router.urls)),
-    path('', include(task_assignee_router.urls)),
-    path('', include(task_checklist_router.urls)),
-    path('', include(task_label_router.urls)),
-    path('', include(workspace_invite_router.urls)),
+		# Base routes
+		path('', include(router.urls)),
+
+		# Nested routes
+		path('', include(workspace_member_router.urls)),
+		path('', include(workspace_board_router.urls)),
+		path('', include(board_tasklist_router.urls)),
+		path('', include(tasklist_task_router.urls)),
+		path('', include(task_checklist_router.urls)),
+		path('', include(task_label_router.urls)),
+		path('', include(workspace_invite_router.urls)),
 ]

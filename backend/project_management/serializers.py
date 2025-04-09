@@ -1,10 +1,15 @@
 from rest_framework import serializers
 
-from .models import (Board, CheckListItem, Invite, Label, Task, TaskAssignee, TaskLabel, TaskList, Workspace,
-					 WorkspaceMember)
+from accounts.models import CustomUser
+from .models import (Board, CheckListItem, Label, Task, TaskAssignee, TaskLabel, TaskList, Workspace, WorkspaceInvite,
+                     WorkspaceMember)
 
 
 # Create serializers for all the models
+class MemberSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = CustomUser
+		fields = ["id", "first_name", "middle_name", "last_name"]
 
 
 # Drf model serializer for Workspace
@@ -19,18 +24,27 @@ class WorkspaceSerializer(serializers.ModelSerializer):
 # DRF model serializer
 class WorkspaceMemberSerializer(serializers.ModelSerializer):
 	workspace = serializers.PrimaryKeyRelatedField(read_only=True)
-	# TODO: add a custom field to get the member's details
-	member = serializers.PrimaryKeyRelatedField(read_only=True)
+	member = MemberSerializer(read_only=True)
 
 	class Meta:
 		model = WorkspaceMember
 		fields = ["id", "created_at", "updated_at", "workspace", "member"]
 
 
+# DRF model serializer
+class BoardMemberSerializer(serializers.ModelSerializer):
+	board = serializers.PrimaryKeyRelatedField(read_only=True)
+	member = MemberSerializer(read_only=True)
+
+	class Meta:
+		model = WorkspaceMember
+		fields = ["id", "created_at", "updated_at", "board", "member"]
+
+
 # DRF Board model serializer
 class BoardSerializer(serializers.ModelSerializer):
-	workspace = serializers.PrimaryKeyRelatedField(read_only=True)
-	position = serializers.IntegerField(default=0)
+	workspace = serializers.PrimaryKeyRelatedField(queryset=Workspace.objects.all(), required=False)
+	position = serializers.IntegerField(required=False)
 
 	class Meta:
 		model = Board
@@ -66,9 +80,7 @@ class TaskSerializer(serializers.ModelSerializer):
 # DRF TaskAssignee model serializer
 class TaskAssigneeSerializer(serializers.ModelSerializer):
 	task = serializers.PrimaryKeyRelatedField(queryset=Task.objects.all())
-	assignee = serializers.PrimaryKeyRelatedField(
-		queryset=WorkspaceMember.objects.all()
-	)
+	assignee = MemberSerializer(read_only=True)
 
 	class Meta:
 		model = TaskAssignee
@@ -84,8 +96,11 @@ class TaskLabelSerializer(serializers.ModelSerializer):
 
 # DRF TaskList model serializer
 class TaskListSerializer(serializers.ModelSerializer):
+	board = serializers.PrimaryKeyRelatedField(read_only=True)
+
 	class Meta:
 		model = TaskList
+		read_only_fields = ["id", "created_at", "updated_at", "position"]
 		fields = [
 				"id",
 				"created_at",
@@ -100,7 +115,7 @@ class TaskListSerializer(serializers.ModelSerializer):
 # DRF Invite model serializer
 class InviteSerializer(serializers.ModelSerializer):
 	class Meta:
-		model = Invite
+		model = WorkspaceInvite
 		fields = [
 				"id",
 				"created_at",
@@ -131,3 +146,14 @@ class CheckListItemSerializer(serializers.ModelSerializer):
 				"is_completed",
 				"due_at",
 		]
+
+
+class EmailInviteSerializer(serializers.Serializer):
+	emails = serializers.ListField(
+		child=serializers.EmailField(),
+		required=True
+	)
+
+
+class InviteTokenSerializer(serializers.Serializer):
+	token = serializers.UUIDField(required=True)
