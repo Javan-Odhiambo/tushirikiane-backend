@@ -1,16 +1,20 @@
+from uuid import UUID
+
 from django.contrib.auth.base_user import BaseUserManager
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, ValidationError as DjangoValidationError
 from django.db import models
 from rest_framework import response, status, viewsets
 from rest_framework.decorators import action, api_view
-from rest_framework.exceptions import NotFound
+from rest_framework.exceptions import NotFound, PermissionDenied, ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from project_management.emails import BoardInviteEmail, WorkspaceInviteEmail
+from .mixin import PositionReorderMixin
 from .models import Board, BoardInvite, BoardMember, Task, TaskList, Workspace, WorkspaceInvite, WorkspaceMember
-from .permissions import IsMemberReadOrOwnerFull
-from .serializers import BoardSerializer, EmailInviteSerializer, InviteSerializer, InviteTokenSerializer, \
+from .permissions import IsMemberReadOrOwnerFull, IsTaskListOwnerOrBoardMember, IsWorkspaceOwnerOrBoardMember
+from .serializers import BoardMemberSerializer, BoardSerializer, EmailInviteSerializer, InviteSerializer, \
+	InviteTokenSerializer, \
 	TaskListSerializer, TaskSerializer, \
 	WorkspaceMemberSerializer, \
 	WorkspaceSerializer
@@ -148,7 +152,7 @@ class BoardViewSet(viewsets.ModelViewSet):
 			return response.Response("Workspace does not exist", status=400)
 
 		# TODO: Check if the user is a member of the workspace
-		if not workspace.members.filter(member=request.user).exists() and workspace.owner != request.user:
+		if not (workspace.members.filter(member=request.user).exists() or workspace.owner == request.user):
 			return response.Response("You are not a member of this workspace", status=403)
 
 		last_position = Board.objects.filter(workspace=workspace).aggregate(models.Max("position"))["position__max"]
@@ -216,6 +220,15 @@ class BoardViewSet(viewsets.ModelViewSet):
 
 		return Response({"message": "Invites sent successfully."}, status=status.HTTP_201_CREATED)
 
+	@action(detail=True, methods=["get"])
+	def members(self, request, *args, **kwargs):
+		# TODO: Add tests for this
+		board = self.get_object()
+
+		members = BoardMember.objects.filter(board=board)
+		serializer = BoardMemberSerializer(members, many=True)
+		return Response(serializer.data)
+
 
 @api_view(["POST"])
 def accept_board_invite(request, *args, **kwargs):
@@ -242,11 +255,69 @@ def accept_board_invite(request, *args, **kwargs):
 class TaskViewSet(viewsets.ModelViewSet):
 	serializer_class = TaskSerializer
 	queryset = Task.objects.all()
+	permission_classes = (IsWorkspaceOwnerOrBoardMember, IsAuthenticated)
 
 
-class TaskListViewSet(viewsets.ModelViewSet):
+class TaskListViewSet(viewsets.ModelViewSet, PositionReorderMixin):
 	serializer_class = TaskListSerializer
-	queryset = TaskList.objects.all()
+	permission_classes = (IsAuthenticated, IsWorkspaceOwnerOrBoardMember)
+
+	def get_permissions(self):
+		if self.action in ["update", "partial_update", "destroy"]:
+			return [IsAuthenticated(), IsTaskListOwnerOrBoardMember()]
+		return super().get_permissions()
+
+	def get_queryset(self):
+		board_id = self.kwargs["board_pk_slug"]
+		board = Board.objects.get_by_id_or_slug_or_404(board_id)
+
+		user = self.request.user
+		if board.workspace.owner != user and not board.members.filter(member=user).exists():
+			raise PermissionDenied("You are not a member of this board.")
+
+		return TaskList.objects.filter(board=board)
+
+	def create(self, request, *args, **kwargs):
+		serializer = self.get_serializer(data=request.data)
+		serializer.is_valid(raise_exception=True)
+
+		board_id = self.kwargs["board_pk_slug"]
+		board = Board.objects.get_by_id_or_slug_or_404(board_id)
+
+		max_position = TaskList.objects.filter(board=board).aggregate(models.Max("position"))["position__max"] or 0
+		serializer.save(board=board, position=max_position + 1)
+
+		return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+	@action(detail=False, methods=["patch"])
+	def reorder(self, request, *args, **kwargs):
+		ordered_ids = request.data.get("ordered_ids")
+		if not isinstance(ordered_ids, list):
+			return Response({"error": "ordered_ids must be a list."}, status=400)
+
+		board_pk_slug = self.kwargs["board_pk_slug"]
+
+		board = Board.objects.get_by_id_or_slug_or_404(board_pk_slug)
+
+		try:
+			task_lists = TaskList.objects.filter(board=board, id__in=ordered_ids)
+		except DjangoValidationError:
+			return Response({"error": "ordered_ids must be a UUID."}, status=400)
+
+		existing_ids = set(task_lists.values_list("id", flat=True))
+		ordered_ids_uuid = map(UUID, ordered_ids)
+		submitted_ids = set(ordered_ids_uuid)
+
+		if existing_ids != submitted_ids:
+			raise ValidationError({
+					"ordered_ids": (
+							"Mismatch between submitted IDs and existing task lists. "
+							f"Expected: {sorted(existing_ids)}, got: {sorted(submitted_ids)}"
+					)
+			})
+
+		self.reorder_queryset(task_lists, ordered_ids)
+		return Response({"status": "reordered"}, status=status.HTTP_200_OK)
 
 
 # TaskAssigneeViewSet,

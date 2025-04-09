@@ -32,6 +32,16 @@ class WorkspaceMemberSerializer(serializers.ModelSerializer):
 		fields = ["id", "created_at", "updated_at", "workspace", "member"]
 
 
+# DRF model serializer
+class BoardMemberSerializer(serializers.ModelSerializer):
+	board = serializers.PrimaryKeyRelatedField(read_only=True)
+	member = MemberSerializer(read_only=True)
+
+	class Meta:
+		model = WorkspaceMember
+		fields = ["id", "created_at", "updated_at", "board", "member"]
+
+
 # DRF Board model serializer
 class BoardSerializer(serializers.ModelSerializer):
 	workspace = serializers.PrimaryKeyRelatedField(queryset=Workspace.objects.all(), required=False)
@@ -89,8 +99,11 @@ class TaskLabelSerializer(serializers.ModelSerializer):
 
 # DRF TaskList model serializer
 class TaskListSerializer(serializers.ModelSerializer):
+	board = serializers.PrimaryKeyRelatedField(read_only=True)
+
 	class Meta:
 		model = TaskList
+		read_only_fields = ["id", "created_at", "updated_at", "position"]
 		fields = [
 				"id",
 				"created_at",

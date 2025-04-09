@@ -260,6 +260,7 @@ class TaskLabel(BaseModel):
 		return f"{self.label} assigned to {self.task}"
 
 
+# TODO: Combine WorkspaceInvite and BoardInvite into a single Invite model
 class WorkspaceInvite(BaseModel):
 	"""
 	Invite model to represent an invitation to join a workspace.
