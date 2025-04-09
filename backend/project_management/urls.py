@@ -2,7 +2,7 @@ from django.urls import include, path
 from rest_framework import routers
 from rest_framework_nested.routers import NestedSimpleRouter
 
-from .views import BoardViewSet, CheckListItemViewSet, InviteViewSet, LabelViewSet, \
+from .views import BoardViewSet, CheckListItemViewSet, LabelViewSet, \
 	TaskLabelViewSet, TaskListViewSet, TaskViewSet, WorkspaceMemberViewSet, WorkspaceViewSet, accept_board_invite, \
 	accept_workspace_invite
 
@@ -60,10 +60,6 @@ task_checklist_router.register(r'checklist-items', CheckListItemViewSet, basenam
 task_label_router = NestedSimpleRouter(tasklist_task_router, r'tasks', lookup='task')
 task_label_router.register(r'labels', TaskLabelViewSet, basename='task-label')
 
-# Nested router for Workspace -> Invites
-workspace_invite_router = NestedSimpleRouter(router, r'workspaces', lookup='workspace')
-workspace_invite_router.register(r'invites', InviteViewSet, basename='workspace-invite')
-
 urlpatterns = [
 		path('boards/accept/', accept_board_invite, name='board-accept'),
 		path('workspaces/accept/', accept_workspace_invite, name='workspace-accept'),
@@ -78,5 +74,4 @@ urlpatterns = [
 		path('', include(tasklist_task_router.urls)),
 		path('', include(task_checklist_router.urls)),
 		path('', include(task_label_router.urls)),
-		path('', include(workspace_invite_router.urls)),
 ]
