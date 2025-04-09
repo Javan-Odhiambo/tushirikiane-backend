@@ -4,6 +4,8 @@ import {
   I_CreateWorkSpaceInput,
   I_CreateWorkSpaceResponse,
   I_GetWorkspaceResponse,
+  I_InviteToWorkSpaceInput,
+  I_InviteToWorkSpaceResponse,
 } from "../interfaces";
 import { protectedApi } from "../kyInstance";
 import { QUERY_KEYS } from "../queryKeys";
@@ -69,11 +71,30 @@ export const useDeleteWorkSpace = (
 };
 
 export const useInviteToWorkSpace = (
-  workspaceSlug: string,
+  workspaceId: string,
   onSuccess?: () => void,
   onError?: () => void
 ) => {
-  const queryClient = useQueryClient();
-
-  return useMutation({});
+  return useMutation({
+    mutationFn: async (
+      values: I_InviteToWorkSpaceInput
+    ): Promise<I_InviteToWorkSpaceResponse> => {
+      return await protectedApi
+        .post(URLS.apiInviteToWorkSpace(workspaceId), {
+          json: values,
+        })
+        .json();
+    },
+    onSuccess: () => {
+      toast.success("Workspace invites sent successfully.");
+      onSuccess?.();
+    },
+    onError: (error: unknown) => {
+      console.error("Error sending workspace invites", error);
+      toast.error(
+        "Failed to invite emails to this workspace. Please try again."
+      );
+      onError?.();
+    },
+  });
 };

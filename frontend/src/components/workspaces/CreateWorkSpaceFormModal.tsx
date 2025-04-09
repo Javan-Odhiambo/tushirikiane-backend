@@ -1,6 +1,6 @@
 "use client";
 
-import { useCreateWorkSpace } from "@/lib/mutations";
+import { useCreateWorkSpace } from "@/lib/mutations/workspaces";
 import { createWorkSpaceSchema, T_CreateWorkSpaceSchema } from "@/lib/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Modal, Stack, Text, TextInput } from "@mantine/core";
@@ -60,6 +60,7 @@ const CreateWorkSpaceFormModal: React.FC<CreateWorkSpaceFormModalProps> = ({
             label="Invite Emails"
             emails={form.watch("emails")}
             onChange={handleOnEmailsChange}
+            disabled={isPending}
             error={form.formState.errors.emails?.message as string}
           />
 

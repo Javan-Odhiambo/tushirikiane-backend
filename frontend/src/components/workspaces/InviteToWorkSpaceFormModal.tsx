@@ -1,7 +1,9 @@
 "use client";
 
+import { useInviteToWorkSpace } from "@/lib/mutations/workspaces";
 import { T_Z_EmailsSchema } from "@/lib/schema";
 import { Button, Group, Modal } from "@mantine/core";
+import { useParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import EmailPillsMultiInput from "../core/EmailPillsMultiInput";
 
@@ -14,15 +16,24 @@ const InviteToWorkSpaceFormModal: React.FC<InviteToWorkSpaceFormModalProps> = ({
   opened,
   close,
 }) => {
+  const { workSpacesSlug } = useParams<{
+    workSpacesSlug: string;
+    boardsSlug: string;
+  }>();
+
   const form = useForm<T_Z_EmailsSchema>({
     defaultValues: {
       emails: [],
     },
   });
 
-  const handleOnSubmit = (values: T_Z_EmailsSchema) => {
-    console.log(values);
-  };
+  const { mutate: inviteToWorkSpace, isPending } = useInviteToWorkSpace(
+    workSpacesSlug,
+    () => {
+      form.reset();
+      close();
+    }
+  );
 
   const handleOnCancel = () => {
     form.reset();
@@ -35,6 +46,10 @@ const InviteToWorkSpaceFormModal: React.FC<InviteToWorkSpaceFormModalProps> = ({
     });
   };
 
+  const handleOnSubmit = (values: T_Z_EmailsSchema) => {
+    inviteToWorkSpace(values);
+  };
+
   return (
     <Modal
       opened={opened}
@@ -44,6 +59,7 @@ const InviteToWorkSpaceFormModal: React.FC<InviteToWorkSpaceFormModalProps> = ({
     >
       <form onSubmit={form.handleSubmit(handleOnSubmit)}>
         <EmailPillsMultiInput
+          disabled={isPending}
           label="Invite Emails"
           emails={form.watch("emails")}
           onChange={handleOnEmailsChange}
@@ -51,10 +67,17 @@ const InviteToWorkSpaceFormModal: React.FC<InviteToWorkSpaceFormModalProps> = ({
         />
 
         <Group justify="right" mt="md">
-          <Button onClick={handleOnCancel} color="red" variant="outline">
+          <Button
+            onClick={handleOnCancel}
+            color="red"
+            variant="outline"
+            disabled={isPending}
+          >
             Cancel
           </Button>
-          <Button type="submit">Invite</Button>
+          <Button type="submit" loading={isPending}>
+            Invite
+          </Button>
         </Group>
       </form>
     </Modal>

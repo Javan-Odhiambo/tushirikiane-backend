@@ -9,6 +9,7 @@ const emailSchema = z.string().email();
 interface EmailPillsMultiInputProps {
   label: string;
   placeholder?: string;
+  disabled: boolean;
   emails: string[];
   onChange: (emails: string[]) => void;
   error?: string;
@@ -19,6 +20,7 @@ const EmailPillsMultiInput: React.FC<EmailPillsMultiInputProps> = ({
   label,
   placeholder = "Enter an email (Press Enter or , to add)",
   emails,
+  disabled,
   onChange,
   error,
   helperText = true,
@@ -69,6 +71,7 @@ const EmailPillsMultiInput: React.FC<EmailPillsMultiInputProps> = ({
       <PillsInput
         label={label}
         error={error}
+        disabled={disabled}
       >
         {emails.map((email) => (
           <Pill

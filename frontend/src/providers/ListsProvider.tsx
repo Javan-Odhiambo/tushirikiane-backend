@@ -1,6 +1,6 @@
 "use client";
 
-import { useGetWorkSpaces } from "@/lib/queries";
+import { useGetWorkSpaces } from "@/lib/queries/workspaces";
 import React, { createContext, ReactNode, useContext } from "react";
 
 const WorkSpacesContext = createContext<
