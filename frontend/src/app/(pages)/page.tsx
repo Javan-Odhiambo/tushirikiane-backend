@@ -8,14 +8,14 @@ import OneTimePaymentLifetimeProductivity from "@/components/www/one-time-paymen
 import StayOnTopOfYourTasksEffortlessly from "@/components/www/stay-on-top-of-your-tasks-effortlessly";
 import Testimonials from "@/components/www/testimonials";
 import { URLS } from "@/lib/urls";
+import ReadytoWork from "@/components/www/ready-to-work";
+import Footer from "@/components/www/footer";
 
 export default async function Home() {
   const session = await auth();
-
   if (session) {
     redirect(URLS.dashboard);
   }
-
   return (
     <>
       <Header />
@@ -26,6 +26,8 @@ export default async function Home() {
         <OneTimePaymentLifetimeProductivity />
         <StayOnTopOfYourTasksEffortlessly />
         <Testimonials />
+        <ReadytoWork />
+        <Footer />
       </main>
     </>
   );
