@@ -1,5 +1,6 @@
 "use client";
 
+import { useBoards } from "@/providers/BoardsProvider";
 import { Button, Group, Text } from "@mantine/core";
 import { IconBrandTrello, IconShare, IconTable } from "@tabler/icons-react";
 import { useParams } from "next/navigation";
@@ -7,10 +8,13 @@ import AvatarsContainer from "../core/AvatarsContainer";
 import FilterIcon from "../core/FilterIcon";
 
 const SecondaryHeader = () => {
-  const { workSpacesSlug } = useParams<{
+  const { workSpacesSlug, boardsSlug } = useParams<{
     workSpacesSlug: string;
     boardsSlug: string;
   }>();
+
+  const { data: boards } = useBoards();
+  const selectedBoard = boards?.find((b) => b.slug === boardsSlug);
 
   return (
     // TODO: make this responsive
@@ -23,7 +27,7 @@ const SecondaryHeader = () => {
       px={"md"}
     >
       <Group justify="space-between">
-        <Text>My board 1</Text>
+        <Text>{selectedBoard?.name}</Text>
 
         <Group gap={"sm"} ml={"xl"}>
           <Button variant="subtle" leftSection={<IconBrandTrello size={18} />}>

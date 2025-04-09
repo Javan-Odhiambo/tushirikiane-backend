@@ -1,4 +1,4 @@
-import { IconEdit, IconPlus, IconTrash } from "@tabler/icons-react";
+import { IconEdit, IconPlus, IconSend, IconTrash } from "@tabler/icons-react";
 
 interface IconProps {
   size?: number;
@@ -6,7 +6,7 @@ interface IconProps {
   color?: string;
 }
 
-export const IconLibrary = {
+export const IconCollection = {
   Delete: ({ size = 24, stroke = 1.5, color = "currentColor" }: IconProps) => (
     <IconTrash size={size} stroke={stroke} color={color} />
   ),
@@ -15,5 +15,8 @@ export const IconLibrary = {
   ),
   Edit: ({ size = 24, stroke = 1.5, color = "currentColor" }: IconProps) => (
     <IconEdit size={size} stroke={stroke} color={color} />
+  ),
+  Invite: ({ size = 24, stroke = 1.5, color = "currentColor" }: IconProps) => (
+    <IconSend size={size} stroke={stroke} color={color} />
   ),
 };

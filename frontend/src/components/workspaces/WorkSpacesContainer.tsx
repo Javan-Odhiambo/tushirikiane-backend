@@ -56,9 +56,9 @@ const WorkSpacesContainer = () => {
 };
 
 
-const WorkSpaceCard: React.FC<WorkSpaceCardProps> = ({ slug, name }) => {
+const WorkSpaceCard: React.FC<WorkSpaceCardProps> = ({ id, name }) => {
   return (
-    <Anchor component={Link} href={URLS.workspacesSlug(slug)} underline="never">
+    <Anchor component={Link} href={URLS.workspacesSlug(id)} underline="never">
       <Card
         shadow="lg"
         p="lg"
@@ -72,7 +72,7 @@ const WorkSpaceCard: React.FC<WorkSpaceCardProps> = ({ slug, name }) => {
           <Text size="lg" fw={700}>
             {name}
           </Text>
-          <AvatarsContainer workSpaceSlug={slug} />
+          <AvatarsContainer workSpaceSlug={id} />
         </Stack>
       </Card>
     </Anchor>

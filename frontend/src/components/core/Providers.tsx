@@ -1,15 +1,16 @@
 "use client";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { useState } from "react";
-import { NuqsAdapter } from "nuqs/adapters/next/app";
-import { Toaster } from "sonner";
+import { WorkSpacesProvider } from "@/providers/WorkSpacesProvider";
 import {
-  MantineColorsTuple,
   createTheme,
+  MantineColorsTuple,
   MantineProvider,
 } from "@mantine/core";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { SessionProvider } from "next-auth/react";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
+import { useState } from "react";
+import { Toaster } from "sonner";
 
 const skyBlue: MantineColorsTuple = [
   "#e1f8ff",
@@ -48,8 +49,10 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         <QueryClientProvider client={queryClient}>
           <NuqsAdapter>
             <Toaster richColors />
-            {children}
-            <ReactQueryDevtools initialIsOpen={false} />
+            <WorkSpacesProvider>
+              {children}
+              <ReactQueryDevtools initialIsOpen={false} />
+            </WorkSpacesProvider>
           </NuqsAdapter>
         </QueryClientProvider>
       </SessionProvider>

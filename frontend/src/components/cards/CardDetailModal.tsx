@@ -14,7 +14,7 @@ import {
 } from "@mantine/core";
 import { useParams } from "next/navigation";
 import AvatarsContainer from "../core/AvatarsContainer";
-import { IconLibrary } from "../core/IconsLibrary";
+import { IconCollection } from "../core/IconCollection";
 import StatusCheckBox from "../core/StatusCheckBox";
 
 const CardDetailModal = () => {
@@ -58,7 +58,7 @@ const CardDetailModal = () => {
             <Group align="center">
               <Text>Labels</Text>
               <ActionIcon onClick={handleOnCreateLabel} variant="subtle">
-                <IconLibrary.Create />
+                <IconCollection.Create />
               </ActionIcon>
             </Group>
             <Group>
@@ -92,7 +92,7 @@ const CardDetailModal = () => {
                   variant="subtle"
                   color="red"
                 >
-                  <IconLibrary.Delete />
+                  <IconCollection.Delete />
                 </ActionIcon>
               </Group>
             ))}

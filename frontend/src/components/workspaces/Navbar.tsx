@@ -17,6 +17,7 @@ import { useParams, usePathname } from "next/navigation";
 import CreateBoardButton from "../boards/CreateBoardButton";
 import DeleteWorkSpaceButton from "./DeleteWorkSpaceButton";
 import DeleteBoardButton from "../boards/DeleteBoardButton";
+import InviteToWorkSpaceButton from "./InviteToWorkSpaceButton";
 
 const mainMenuItems = [
   { icon: <IconHome size={18} />, label: "Home", href: URLS.workspaces },
@@ -78,7 +79,7 @@ const WorkSpacesMenu = () => {
   }>();
 
   const activeWorkSpace = workSpaces?.find(
-    (workSpace) => workSpace?.slug === workSpacesSlug
+    (workSpace) => workSpace?.id === workSpacesSlug
   );
 
   return (
@@ -123,6 +124,7 @@ const WorkSpacesMenu = () => {
             })}
       </Menu.Dropdown>
       <DeleteWorkSpaceButton />
+      <InviteToWorkSpaceButton />
     </Menu>
   );
 };
@@ -163,7 +165,7 @@ const WorkspaceBoards = () => {
                 <Button
                   key={board.slug}
                   component={Link}
-                  href={URLS.boardsSlug(workSpacesSlug, board?.slug)}
+                  href={URLS.boardsSlug(workSpacesSlug, board?.id)}
                   variant={isActive ? "filled" : "light"}
                   fullWidth
                   justify="start"
@@ -171,7 +173,7 @@ const WorkspaceBoards = () => {
                 >
                   <Text fw={isActive ? 700 : 400}>{board.name}</Text>
                 </Button>
-                <DeleteBoardButton boardSlug={board.slug} />
+                <DeleteBoardButton boardSlug={board.id} />
               </>
             );
           })}

@@ -3,7 +3,7 @@
 import { ActionIcon } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import CreateWorkSpaceFormModal from "./CreateWorkSpaceFormModal";
-import { IconLibrary } from "../core/IconsLibrary";
+import { IconCollection } from "../core/IconCollection";
 
 const CreateWorkSpaceButton = () => {
   const [opened, { open, close }] = useDisclosure(false);
@@ -12,7 +12,7 @@ const CreateWorkSpaceButton = () => {
     // TODO: __k make this more descriptive in the /workspaces
     <>
       <ActionIcon variant="subtle" onClick={open}>
-        <IconLibrary.Create />
+        <IconCollection.Create />
       </ActionIcon>
 
       <CreateWorkSpaceFormModal opened={opened} close={close} />

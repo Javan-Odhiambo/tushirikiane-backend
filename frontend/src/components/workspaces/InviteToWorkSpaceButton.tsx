@@ -2,21 +2,21 @@
 
 import { ActionIcon } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import CreateBoardFormModal from "./CreateBoardFormModal";
 import { IconCollection } from "../core/IconCollection";
+import InviteToWorkSpaceFormModal from "./InviteToWorkSpaceFormModal";
 
-const CreateBoardButton = () => {
+const InviteToWorkSpaceButton = () => {
   const [opened, { open, close }] = useDisclosure(false);
 
   return (
     <>
       <ActionIcon variant="subtle" onClick={open}>
-        <IconCollection.Create />
+        <IconCollection.Invite />
       </ActionIcon>
 
-      <CreateBoardFormModal opened={opened} close={close} />
+      <InviteToWorkSpaceFormModal opened={opened} close={close} />
     </>
   );
 };
 
-export default CreateBoardButton;
+export default InviteToWorkSpaceButton;
