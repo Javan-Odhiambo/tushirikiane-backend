@@ -2,27 +2,29 @@ from uuid import UUID
 
 from django.contrib.auth.base_user import BaseUserManager
 from django.core.exceptions import ObjectDoesNotExist, ValidationError as DjangoValidationError
-from django.db import models
+from django.db import models, transaction
 from rest_framework import response, status, viewsets
 from rest_framework.decorators import action, api_view
 from rest_framework.exceptions import NotFound, PermissionDenied, ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from accounts.models import CustomUser
 from project_management.emails import BoardInviteEmail, WorkspaceInviteEmail
 from .mixin import PositionReorderMixin
-from .models import Board, BoardInvite, BoardMember, Task, TaskList, Workspace, WorkspaceInvite, WorkspaceMember
+from .models import Board, BoardInvite, BoardMember, Task, TaskAssignee, TaskList, Workspace, WorkspaceInvite, \
+	WorkspaceMember
 from .permissions import IsMemberReadOrOwnerFull, IsTaskListOwnerOrBoardMember, IsWorkspaceOwnerOrBoardMember
 from .serializers import BoardMemberSerializer, BoardSerializer, EmailInviteSerializer, InviteSerializer, \
 	InviteTokenSerializer, \
-	TaskListSerializer, TaskSerializer, \
+	TaskAssigneeSerializer, TaskListSerializer, TaskSerializer, \
 	WorkspaceMemberSerializer, \
 	WorkspaceSerializer
 
 
 class WorkspaceViewSet(viewsets.ModelViewSet):
 	serializer_class = WorkspaceSerializer
-	# permission_classes = [IsMemberReadOrOwnerFull, IsAuthenticated]
+	permission_classes = [IsAuthenticated, IsMemberReadOrOwnerFull]
 	lookup_field = "pk_slug"
 
 	def get_queryset(self):
@@ -75,7 +77,7 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
 			}
 			# Check if the user is already a member of the workspace or invite already exists
 			if WorkspaceMember.objects.filter(workspace=workspace,
-											  member__email=email).exists() or WorkspaceInvite.objects.filter(
+			                                  member__email=email).exists() or WorkspaceInvite.objects.filter(
 				workspace=workspace, recipient_email=email).exists():
 				continue
 
@@ -254,9 +256,89 @@ def accept_board_invite(request, *args, **kwargs):
 
 class TaskViewSet(viewsets.ModelViewSet):
 	serializer_class = TaskSerializer
-	queryset = Task.objects.all()
-	permission_classes = (IsWorkspaceOwnerOrBoardMember, IsAuthenticated)
+	permission_classes = (IsAuthenticated, IsWorkspaceOwnerOrBoardMember)
 
+	# def get_permissions(self):
+	# 	if self.action in ["update", "partial_update", "destroy"]:
+	# 		# TODO: Add permission here
+	# 		return [IsAuthenticated(), ]
+	# 	return super().get_permissions()
+
+	def get_queryset(self):
+		task_list_pk = self.kwargs["tasklist_pk"]
+
+		if not task_list_pk:
+			raise ValueError("Missing task_list_pk parameter")
+
+		try:
+			task_list = TaskList.objects.get(pk=task_list_pk)
+		except ObjectDoesNotExist:
+			return Task.objects.none()
+
+		return Task.objects.filter(task_list=task_list)
+
+	@action(detail=True, methods=["post"])
+	def assign(self, request, *args, **kwargs):
+
+		member_ids = request.data.get("member_ids", None)
+
+		if not member_ids:
+			return response.Response("Please provide the member", status=400)
+
+		if not isinstance(member_ids, list):
+			member_ids = [member_ids]
+
+		task = self.get_object()
+		board = task.task_list.board
+
+		board_member_ids = set(list(map(str, board.members.values_list("member__id", flat=True))))
+		invalid_ids = [uid for uid in member_ids if uid not in board_member_ids]
+
+		if invalid_ids:
+			return Response({
+					"error": "Some users are not members of this board.",
+					"invalid_ids": invalid_ids
+			}, status=400)
+
+		members = CustomUser.objects.filter(id__in=member_ids)
+		with transaction.atomic():
+			for member in members:
+				TaskAssignee.objects.get_or_create(task=task, assignee=member)
+
+		return Response({"message": "Members assigned to task"}, status=status.HTTP_200_OK)
+
+	@action(detail=True, methods=["post"])
+	def unassign(self, request, *args, **kwargs):
+		member_ids = self.request.data.get("member_ids", None)
+
+		if not member_ids:
+			return Response({"error": "Please provide member_ids"}, status=400)
+
+		if not isinstance(member_ids, list):
+			member_ids = [member_ids]
+
+		task = self.get_object()
+		board = task.task_list.board
+
+		board_member_ids = set(list(map(str, board.members.values_list("member__id", flat=True))))
+		invalid_ids = [uid for uid in member_ids if uid not in board_member_ids]
+
+		if invalid_ids:
+			return Response({
+					"error": "Some users are not members of this board.",
+					"invalid_ids": invalid_ids
+			}, status=400)
+
+		TaskAssignee.objects.filter(task=task, assignee_id__in=member_ids).delete()
+
+		return Response({"message": "Members unassigned from task"}, status=status.HTTP_200_OK)
+
+	@action(detail=True, methods=["post"])
+	def assignees(self, request, *args, **kwargs):
+		task = self.get_object()
+		assignees = task.assignees.all()
+		serializer = TaskAssigneeSerializer(assignees, many=True)
+		return Response(serializer.data)
 
 class TaskListViewSet(viewsets.ModelViewSet, PositionReorderMixin):
 	serializer_class = TaskListSerializer
@@ -284,8 +366,7 @@ class TaskListViewSet(viewsets.ModelViewSet, PositionReorderMixin):
 		board_id = self.kwargs["board_pk_slug"]
 		board = Board.objects.get_by_id_or_slug_or_404(board_id)
 
-		max_position = TaskList.objects.filter(board=board).aggregate(models.Max("position"))["position__max"] or 0
-		serializer.save(board=board, position=max_position + 1)
+		serializer.save(board=board)
 
 		return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -318,12 +399,6 @@ class TaskListViewSet(viewsets.ModelViewSet, PositionReorderMixin):
 
 		self.reorder_queryset(task_lists, ordered_ids)
 		return Response({"status": "reordered"}, status=status.HTTP_200_OK)
-
-
-# TaskAssigneeViewSet,
-class TaskAssigneeViewSet(viewsets.ModelViewSet):
-	serializer_class = TaskSerializer
-	queryset = Task.objects.all()
 
 
 # CheckListItemViewSet,
