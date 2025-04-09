@@ -1,5 +1,6 @@
 import { Flex, Title, TitleOrder } from "@mantine/core";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 interface SiteLogoProps {
@@ -13,13 +14,15 @@ const SiteLogo: React.FC<SiteLogoProps> = ({
 }) => {
   return (
     <Flex gap={"sm"}>
-      <Image
-        src={"/core/logo.svg"}
-        alt="Site logo"
-        width={logoDimensions}
-        height={logoDimensions}
-      />
-      <Title order={titleOrder}>Tushirikiane</Title>
+      <Link href={"/"}>
+        <Image
+          src={"/core/logo.svg"}
+          alt="Site logo"
+          width={logoDimensions}
+          height={logoDimensions}
+        />
+      </Link>
+        <Title order={titleOrder}>Tushirikiane</Title>
     </Flex>
   );
 };

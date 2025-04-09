@@ -4,6 +4,8 @@ import React from "react";
 import { BoldWord } from "./hero";
 import Image from "next/image";
 import { useMediaQuery } from "@mantine/hooks";
+import BlackButton from "../core/Button";
+import { URLS } from "@/lib/urls";
 
 const ReadytoWork = () => {
   const isMobile = useMediaQuery("(max-width: 720px)");
@@ -38,7 +40,7 @@ const ReadytoWork = () => {
         It&apos;s time to say goodbye to expensive subscriptions and hello to
         seamless, affordable collaboration.
       </Text>
-      <Button className="mt-4">Get Started Now</Button>
+      <BlackButton href={URLS.signUp} text={"Get Started Now"} size="md" />
     </div>
   );
 };
