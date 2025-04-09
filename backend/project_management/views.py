@@ -106,8 +106,9 @@ def accept_workspace_invite(request, *args, **kwargs):
 	except ObjectDoesNotExist:
 		return response.Response("Invalid token", status=400)
 
-	if invite.recipient_email != request.user.email:
-		return response.Response("Invalid token", status=400)
+	# TODO: Remove check
+	# if invite.recipient_email != request.user.email:
+	# 	return response.Response("Invalid token", status=400)
 
 	membership = WorkspaceMember.objects.create(workspace=workspace, member=request.user)
 	invite.delete()
