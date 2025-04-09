@@ -140,6 +140,17 @@ class TaskList(BaseModel):
 		"""
 		return self.name
 
+	def save(self, *args, **kwargs):
+		if self._state.adding and self.position is None:
+			last_position = (
+					TaskList.objects.filter(board=self.board)
+					.aggregate(models.Max("position"))
+					.get("position__max")
+			)
+			self.position = 1 if last_position is None else last_position + 1
+
+		super().save(*args, **kwargs)
+
 
 class Task(BaseModel):
 	"""
@@ -168,6 +179,18 @@ class Task(BaseModel):
 			str: The name of the task.
 		"""
 		return self.name
+
+	def save(self, *args, **kwargs):
+		if self._state.adding and self.position is None:
+			# Assign the next position within the same task list
+			last_position = (
+					Task.objects.filter(task_list=self.task_list)
+					.aggregate(models.Max("position"))
+					.get("position__max")
+			)
+			self.position = 1 if last_position is None else last_position + 1
+
+		super().save(*args, **kwargs)
 
 
 class TaskAssignee(BaseModel):

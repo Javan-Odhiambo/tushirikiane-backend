@@ -2,15 +2,14 @@ from rest_framework import serializers
 
 from accounts.models import CustomUser
 from .models import (Board, CheckListItem, Label, Task, TaskAssignee, TaskLabel, TaskList, Workspace, WorkspaceInvite,
-					 WorkspaceMember)
+                     WorkspaceMember)
 
 
 # Create serializers for all the models
-
 class MemberSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = CustomUser
-		fields = ["id", "first_name", "middle_name", "last_name", "email"]
+		fields = ["id", "first_name", "middle_name", "last_name"]
 
 
 # Drf model serializer for Workspace
@@ -81,9 +80,7 @@ class TaskSerializer(serializers.ModelSerializer):
 # DRF TaskAssignee model serializer
 class TaskAssigneeSerializer(serializers.ModelSerializer):
 	task = serializers.PrimaryKeyRelatedField(queryset=Task.objects.all())
-	assignee = serializers.PrimaryKeyRelatedField(
-		queryset=WorkspaceMember.objects.all()
-	)
+	assignee = MemberSerializer(read_only=True)
 
 	class Meta:
 		model = TaskAssignee
