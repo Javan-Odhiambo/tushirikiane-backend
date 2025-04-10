@@ -9,7 +9,7 @@ const OrganizeTasksPrioritizeGoalsAndGetThingsDone = () => {
     const isMobile = useMediaQuery("(max-width: 720px)")
 
     return (
-        <section className="container mt-20 md:mt-40">
+        <section id="features" className="container mt-20 md:mt-40">
             <Title order={2} fw={550} size={rem(isMobile?22:38)} mb={isMobile?10:16} lh={1.2}>Organize tasks, prioritize <br/>goals
                 and <BoldWord word={"get things done"}/> </Title>
             <Text c="dimmed">
