@@ -30,12 +30,12 @@ const CardContainer: React.FC<CardContainerProps> = ({ listId }) => {
   );
 
   return (
-    <ScrollArea h={300} type="always" scrollbarSize={6} offsetScrollbars>
+    <ScrollArea mah={300} type="always" scrollbarSize={6} offsetScrollbars>
       <Box pr="sm" style={{ minHeight: "100%" }}>
         {isPending ? (
           <CardSkeletonContainer />
         ) : cards && cards.length > 0 ? (
-          cards.map((card, index) => <Card key={card.id || index} {...card} />)
+          cards.map((card, index) => <Card key={index} {...card} />)
         ) : (
           <Text c="dimmed" ta="center" py="lg">
             No cards available
