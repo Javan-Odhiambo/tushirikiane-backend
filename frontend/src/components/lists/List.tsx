@@ -1,9 +1,9 @@
-import { I_GetListResponse as ListProps } from "@/lib/interfaces";
+import { I_GetListResponse as ListProps } from "@/lib/interfaces/responses";
 import { ActionIcon, Card, Group, Text } from "@mantine/core";
 import { IconDotsVertical } from "@tabler/icons-react";
 import React from "react";
-import AddCard from "../cards/AddCard";
 import CardContainer from "../cards/CardContainer";
+import CreateCardButton from "../cards/CreateCardButton";
 
 const List: React.FC<ListProps> = ({ id, name }) => {
   return (
@@ -17,7 +17,7 @@ const List: React.FC<ListProps> = ({ id, name }) => {
         </ActionIcon>
       </Group>
       <CardContainer listId={id} />
-      <AddCard />
+      <CreateCardButton listId={id} />
     </Card>
   );
 };

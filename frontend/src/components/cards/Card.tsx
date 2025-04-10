@@ -1,8 +1,8 @@
-import { I_GetCardRespone as CardProps } from "@/lib/interfaces";
 import { ActionIcon, Group, Card as MantineCard, Text } from "@mantine/core";
 import React from "react";
 import AvatarsContainer from "../core/AvatarsContainer";
 import { IconCollection } from "../core/IconCollection";
+import { I_GetCardRespone as CardProps } from "@/lib/interfaces/responses";
 
 const Card: React.FC<CardProps> = ({ name, description }) => {
   return (

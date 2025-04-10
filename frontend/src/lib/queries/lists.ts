@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { I_GetListResponse } from "../interfaces";
 import { protectedApi } from "../kyInstance";
 import { QUERY_KEYS } from "../queryKeys";
 import { URLS } from "../urls";
+import { I_GetListResponse } from "../interfaces/responses";
 
 export const useGetLists = (workSpaceId: string, boardId: string) => {
   return useQuery({

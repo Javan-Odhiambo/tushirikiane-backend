@@ -1,17 +1,20 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import {
-  I_AcceptBoardInviteInput,
-  I_AcceptBoardInviteResponse,
-  I_CreateBoardInput,
-  I_CreateBoardResponse,
-  I_GetBoardResponse,
-  I_InviteToBoardInput,
-  I_InviteToBoardResponse,
-} from "../interfaces";
+
 import { protectedApi } from "../kyInstance";
 import { QUERY_KEYS } from "../queryKeys";
 import { URLS } from "../urls";
+import {
+  I_CreateBoardInput,
+  I_InviteToBoardInput,
+  I_AcceptBoardInviteInput,
+} from "../interfaces/inputs";
+import {
+  I_CreateBoardResponse,
+  I_GetBoardResponse,
+  I_InviteToBoardResponse,
+  I_AcceptBoardInviteResponse,
+} from "../interfaces/responses";
 
 export const useCreateBoard = (
   workSpaceSlug: string,

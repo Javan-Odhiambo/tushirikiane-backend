@@ -44,9 +44,9 @@ export const URLS = {
 
   // lists
   apiLists: (workSpaceId: string, boardId: string) =>
-    `workspaces/${workSpaceId}/boards/${boardId}/task-lists`,
+    `workspaces/${workSpaceId}/boards/${boardId}/task-lists/`,
 
   // cards
   apiCards: (workSpaceId: string, boardId: string, listId: string) =>
-    `workspaces/${workSpaceId}/boards/${boardId}/task-lists/${listId}/tasks`,
+    `workspaces/${workSpaceId}/boards/${boardId}/task-lists/${listId}/tasks/`,
 };

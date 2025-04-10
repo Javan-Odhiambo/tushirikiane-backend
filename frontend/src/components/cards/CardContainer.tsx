@@ -1,7 +1,14 @@
 "use client";
 
 import { useGetCards } from "@/lib/queries/cards";
-import { Group, Card as MantineCard, Skeleton } from "@mantine/core";
+import {
+  Box,
+  Group,
+  Card as MantineCard,
+  ScrollArea,
+  Skeleton,
+  Text,
+} from "@mantine/core";
 import { useParams } from "next/navigation";
 import React from "react";
 import Card from "./Card";
@@ -22,16 +29,20 @@ const CardContainer: React.FC<CardContainerProps> = ({ listId }) => {
     listId
   );
 
-  console.log(cards);
-
   return (
-    <>
-      {isPending ? (
-        <CardSkeletonContainer />
-      ) : (
-        cards?.map((card, index) => <Card key={index} {...card} />)
-      )}
-    </>
+    <ScrollArea h={300} type="always" scrollbarSize={6} offsetScrollbars>
+      <Box pr="sm" style={{ minHeight: "100%" }}>
+        {isPending ? (
+          <CardSkeletonContainer />
+        ) : cards && cards.length > 0 ? (
+          cards.map((card, index) => <Card key={card.id || index} {...card} />)
+        ) : (
+          <Text c="dimmed" ta="center" py="lg">
+            No cards available
+          </Text>
+        )}
+      </Box>
+    </ScrollArea>
   );
 };
 

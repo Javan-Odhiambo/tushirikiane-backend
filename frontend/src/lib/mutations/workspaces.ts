@@ -1,14 +1,17 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+
 import {
   I_AcceptWorkSpaceInviteInput,
-  I_AcceptWorkSpaceInviteResponse,
   I_CreateWorkSpaceInput,
+  I_InviteToWorkSpaceInput,
+} from "../interfaces/inputs";
+import {
+  I_AcceptWorkSpaceInviteResponse,
   I_CreateWorkSpaceResponse,
   I_GetWorkspaceResponse,
-  I_InviteToWorkSpaceInput,
   I_InviteToWorkSpaceResponse,
-} from "../interfaces";
+} from "../interfaces/responses";
 import { protectedApi } from "../kyInstance";
 import { QUERY_KEYS } from "../queryKeys";
 import { URLS } from "../urls";

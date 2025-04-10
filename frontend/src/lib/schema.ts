@@ -61,3 +61,10 @@ export const createWorkSpaceSchema = z
   })
   .merge(Z_EmailsSchema);
 export type T_CreateWorkSpaceSchema = z.infer<typeof createWorkSpaceSchema>;
+
+export const createCardSchema = z.object({
+  name: z.string().min(1, { message: "Card name is required" }).trim(),
+  description: z.string(),
+});
+
+export type T_CreateCardSchema = z.infer<typeof createCardSchema>;
