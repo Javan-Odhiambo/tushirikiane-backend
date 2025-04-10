@@ -30,9 +30,25 @@ export const URLS = {
   apiWorkSpaces: "workspaces/",
   apiWorkSpacesDetail: (workspaceSlug: string) =>
     `workspaces/${workspaceSlug}/`,
+  apiInviteToWorkSpace: (workSpaceId: string) =>
+    `workspaces/${workSpaceId}/invite/`,
+  apiAcceptWorkSpaceInvite: "workspaces/accept/",
 
   // boards
-  apiBoards: (workSpaceSlug: string) => `workspaces/${workSpaceSlug}/boards/`,
+apiBoards: (workSpaceSlug: string) => `workspaces/${workSpaceSlug}/boards/`,
   apiBoardsDetail: (workSpaceSlug: string, boardSlug: string) =>
     `workspaces/${workSpaceSlug}/boards/${boardSlug}/`,
+  apiInviteToBoard: (workSpaceId: string, boardId: string) =>
+    `workspaces/${workSpaceId}/boards/${boardId}/invite/`,
+  apiAcceptBoardInvite: "boards/accept/",
+
+  // lists
+  apiLists: (workSpaceId: string, boardId: string) =>
+    `workspaces/${workSpaceId}/boards/${boardId}/task-lists/`,
+  apiListsDetail: (workSpaceId: string, boardId: string, listId: string) =>
+    `workspaces/${workSpaceId}/boards/${boardId}/task-lists/${listId}}/`,
+
+  // cards
+  apiCards: (workSpaceId: string, boardId: string, listId: string) =>
+    `workspaces/${workSpaceId}/boards/${boardId}/task-lists/${listId}/tasks/`,
 };

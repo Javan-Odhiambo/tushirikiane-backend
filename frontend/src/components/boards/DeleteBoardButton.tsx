@@ -1,11 +1,11 @@
 "use client";
 
-import { useDeleteBoard } from "@/lib/mutations";
 import { ActionIcon } from "@mantine/core";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import ConfirmActionModal from "../core/ConfirmActionModal";
-import { IconLibrary } from "../core/IconsLibrary";
+import { IconCollection } from "../core/IconCollection";
+import { useDeleteBoard } from "@/lib/mutations/boards";
 
 interface DeleteBoardButtonProps {
   boardSlug: string;
@@ -35,7 +35,7 @@ const DeleteBoardButton: React.FC<DeleteBoardButtonProps> = ({ boardSlug }) => {
         c="red"
         loading={isPending}
       >
-        <IconLibrary.Delete />
+        <IconCollection.Delete />
       </ActionIcon>
 
       <ConfirmActionModal

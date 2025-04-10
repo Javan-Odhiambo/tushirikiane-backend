@@ -1,15 +1,16 @@
 "use client";
+import BlackButton from "@/components/core/Button";
 import { URLS } from "@/lib/urls";
 import { Anchor, Button, rem, Text, Title } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import Image from "next/image";
 import Link from "next/link";
 
+
 export const BoldWord = ({ word }: { word: string }) => {
   const isMobile = useMediaQuery("(max-width: 720px)");
   return (
-    <Title
-      order={2}
+    <Text
       fw={550}
       size={rem(isMobile ? 22 : 38)}
       mb={isMobile ? 10 : 16}
@@ -18,7 +19,7 @@ export const BoldWord = ({ word }: { word: string }) => {
       className={"inline"}
     >
       {word}
-    </Title>
+    </Text>
   );
 };
 
@@ -49,16 +50,8 @@ const Hero = () => {
           lock-ins—just one-time access and full control over your workflow.
         </Text>
         <div>
+          <BlackButton href={URLS.signUp} text={"Get Started Now"} />
 
-          {/* TODO: convert this to a reusable component */}
-          <Anchor component={Link} href={URLS.signUp}>
-            <Button
-              size={isMobile ? "sm" : "xl"}
-              radius={"md"}
-            >
-              Get Started Now
-            </Button>
-          </Anchor>
         </div>
       </section>
     </section>

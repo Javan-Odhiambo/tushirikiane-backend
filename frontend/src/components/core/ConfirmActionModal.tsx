@@ -24,15 +24,15 @@ const ConfirmActionModal: React.FC<ConfirmActionModalProps> = ({
     >
       <Text>{message}</Text>
       <Group justify="right" mt="md">
-        <Button variant="outline" onClick={onCancel} disabled={isLoading}>
-          Cancel
-        </Button>
         <Button
+          variant="outline"
           color="red"
-          onClick={onConfirm}
-          loading={isLoading}
+          onClick={onCancel}
           disabled={isLoading}
         >
+          Cancel
+        </Button>
+        <Button onClick={onConfirm} loading={isLoading} disabled={isLoading}>
           Confirm
         </Button>
       </Group>

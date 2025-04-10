@@ -1,6 +1,6 @@
 "use client";
 
-import { useGetBoards } from "@/lib/queries";
+import { useGetBoards } from "@/lib/queries/boards";
 import { useParams } from "next/navigation";
 import React, { createContext, ReactNode, useContext } from "react";
 

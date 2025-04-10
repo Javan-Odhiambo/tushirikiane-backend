@@ -1,5 +1,6 @@
 "use client";
 
+import { I_GetCardRespone } from "@/lib/interfaces/responses";
 import { M_Tasks } from "@/lib/mockData";
 import {
   ActionIcon,
@@ -14,10 +15,20 @@ import {
 } from "@mantine/core";
 import { useParams } from "next/navigation";
 import AvatarsContainer from "../core/AvatarsContainer";
-import { IconLibrary } from "../core/IconsLibrary";
+import { IconCollection } from "../core/IconCollection";
+import RichTextEditor from "../core/RichTextEditor";
 import StatusCheckBox from "../core/StatusCheckBox";
 
-const CardDetailModal = () => {
+interface CardDetailModalProps extends I_GetCardRespone {
+  opened: boolean;
+  onClose: () => void;
+}
+
+const CardDetailModal: React.FC<CardDetailModalProps> = ({
+  opened,
+  onClose,
+  ...card
+}) => {
   const { workSpacesSlug } = useParams<{
     workSpacesSlug: string;
     boardsSlug: string;
@@ -38,14 +49,14 @@ const CardDetailModal = () => {
   const handleOnCreateLabel = () => {};
 
   return (
-    <Modal opened={true} onClose={() => {}} size={"xl"}>
+    <Modal opened={opened} onClose={onClose} size="xl">
       <Stack>
         <Group>
           <StatusCheckBox
             handleOnChange={() => handleOnCardStatusChange("")}
             isChecked
           />
-          <Title>Card Name in List name</Title>
+          <Title>{card.name}</Title>
         </Group>
 
         <Group justify="space-between" align="center">
@@ -58,21 +69,19 @@ const CardDetailModal = () => {
             <Group align="center">
               <Text>Labels</Text>
               <ActionIcon onClick={handleOnCreateLabel} variant="subtle">
-                <IconLibrary.Create />
+                <IconCollection.Create />
               </ActionIcon>
             </Group>
             <Group>
-              <Badge>Red</Badge>
-              <Badge>Orange</Badge>
-              <Badge>Yellow</Badge>
-              <Badge>Blue</Badge>
-              <Badge>Green</Badge>
+              {card.labels.map((l, index) => (
+                <Badge key={index}>{l}</Badge>
+              ))}
             </Group>
           </Stack>
         </Group>
 
         <Text>Notes</Text>
-        <Box p={200} bg={"gray"}></Box>
+        <RichTextEditor />
 
         <Stack>
           <Text>CheckList</Text>
@@ -92,7 +101,7 @@ const CardDetailModal = () => {
                   variant="subtle"
                   color="red"
                 >
-                  <IconLibrary.Delete />
+                  <IconCollection.Delete />
                 </ActionIcon>
               </Group>
             ))}

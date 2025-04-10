@@ -1,19 +1,12 @@
 "use client";
 
-import { useCreateWorkSpace } from "@/lib/mutations";
+import { useCreateWorkSpace } from "@/lib/mutations/workspaces";
 import { createWorkSpaceSchema, T_CreateWorkSpaceSchema } from "@/lib/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Button,
-  Modal,
-  Pill,
-  PillsInput,
-  Stack,
-  Text,
-  TextInput,
-} from "@mantine/core";
-import React, { useRef } from "react";
+import { Button, Modal, Stack, Text, TextInput } from "@mantine/core";
+import React from "react";
 import { useForm } from "react-hook-form";
+import EmailPillsMultiInput from "../core/EmailPillsMultiInput";
 
 interface CreateWorkSpaceFormModalProps {
   opened: boolean;
@@ -28,70 +21,23 @@ const CreateWorkSpaceFormModal: React.FC<CreateWorkSpaceFormModalProps> = ({
     resolver: zodResolver(createWorkSpaceSchema),
     defaultValues: {
       name: "",
-      inviteEmails: [],
+      emails: [],
     },
   });
-  const inputRef = useRef<HTMLInputElement>(null);
 
   const { mutate: createWorkSpace, isPending } = useCreateWorkSpace(() => {
     close();
     form.reset();
   });
 
-  const inviteEmails = form.watch("inviteEmails");
-
-  const addEmail = (email: string) => {
-    const trimmedEmail = email.trim().toLowerCase();
-    const currentEmails = form.getValues("inviteEmails");
-
-    if (!trimmedEmail) return;
-
-    try {
-      createWorkSpaceSchema.shape.inviteEmails.element.parse(trimmedEmail);
-      form.setValue("inviteEmails", [...currentEmails, trimmedEmail], {
-        shouldValidate: true,
-      });
-
-      if (inputRef.current) {
-        inputRef.current.value = "";
-      }
-    } catch (error) {
-      console.error(error);
-      form.setError("inviteEmails", {
-        type: "manual",
-        message: "Please enter a valid email address",
-      });
-    }
-  };
-
-  const removeEmail = (email: string) => {
-    form.setValue(
-      "inviteEmails",
-      inviteEmails.filter((e) => e !== email),
-      { shouldValidate: true }
-    );
-  };
-
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    const inputValue = event.currentTarget.value.trim();
-
-    if (event.key === "Enter" || event.key === ",") {
-      event.preventDefault();
-      addEmail(inputValue);
-    }
-
-    if (
-      event.key === "Backspace" &&
-      inputValue === "" &&
-      inviteEmails.length > 0
-    ) {
-      event.preventDefault();
-      removeEmail(inviteEmails[inviteEmails.length - 1]);
-    }
-  };
-
   const handleOnSubmit = (values: T_CreateWorkSpaceSchema) => {
     createWorkSpace(values);
+  };
+
+  const handleOnEmailsChange = (emails: string[]) => {
+    form.setValue("emails", emails, {
+      shouldValidate: true,
+    });
   };
 
   return (
@@ -110,25 +56,13 @@ const CreateWorkSpaceFormModal: React.FC<CreateWorkSpaceFormModalProps> = ({
             error={form.formState.errors.name?.message}
           />
 
-          <PillsInput
+          <EmailPillsMultiInput
             label="Invite Emails"
-            error={form.formState.errors.inviteEmails?.message}
-          >
-            {inviteEmails.map((email) => (
-              <Pill
-                key={email}
-                withRemoveButton
-                onRemove={() => removeEmail(email)}
-              >
-                {email}
-              </Pill>
-            ))}
-            <PillsInput.Field
-              ref={inputRef}
-              placeholder="Enter an email (Press Enter or , to add)"
-              onKeyDown={handleKeyDown}
-            />
-          </PillsInput>
+            emails={form.watch("emails")}
+            onChange={handleOnEmailsChange}
+            disabled={isPending}
+            error={form.formState.errors.emails?.message as string}
+          />
 
           <Text size="xs" c="gray">
             Press <b>Enter</b> or <b>,</b> to add an email. Press{" "}

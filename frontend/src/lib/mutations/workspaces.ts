@@ -1,47 +1,20 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+
 import {
-  I_CreateBoardInput,
-  I_CreateBoardResponse,
+  I_AcceptWorkSpaceInviteInput,
   I_CreateWorkSpaceInput,
+  I_InviteToWorkSpaceInput,
+} from "../interfaces/inputs";
+import {
+  I_AcceptWorkSpaceInviteResponse,
   I_CreateWorkSpaceResponse,
-  I_GetBoardResponse,
   I_GetWorkspaceResponse,
-} from "./interfaces";
-import { protectedApi } from "./kyInstance";
-import { QUERY_KEYS } from "./queryKeys";
-import { URLS } from "./urls";
-
-export const useCreateBoard = (
-  workSpaceSlug: string,
-  onSuccess?: () => void,
-  onError?: () => void
-) => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (
-      values: I_CreateBoardInput
-    ): Promise<I_CreateBoardResponse> => {
-      return await protectedApi
-        .post(URLS.apiBoards(workSpaceSlug), { json: values })
-        .json();
-    },
-    onSuccess: (newBoard) => {
-      queryClient.setQueryData<I_CreateBoardResponse[]>(
-        [QUERY_KEYS.boards(workSpaceSlug)],
-        (oldBoards = []) => [...oldBoards, newBoard]
-      );
-      toast.success("Board created successfully.");
-      onSuccess?.();
-    },
-    onError: (error) => {
-      console.error("Error creating board:", error);
-      toast.error("Failed to create board. Please try again");
-      onError?.();
-    },
-  });
-};
+  I_InviteToWorkSpaceResponse,
+} from "../interfaces/responses";
+import { protectedApi } from "../kyInstance";
+import { QUERY_KEYS } from "../queryKeys";
+import { URLS } from "../urls";
 
 export const useCreateWorkSpace = (
   onSuccess?: () => void,
@@ -102,30 +75,58 @@ export const useDeleteWorkSpace = (
   });
 };
 
-export const useDeleteBoard = (
-  workspaceSlug: string,
-  boardSlug: string,
+export const useInviteToWorkSpace = (
+  workspaceId: string,
   onSuccess?: () => void,
   onError?: () => void
 ) => {
-  const queryClient = useQueryClient();
-
   return useMutation({
-    mutationFn: async () => {
-      await protectedApi.delete(URLS.apiBoardsDetail(workspaceSlug, boardSlug));
+    mutationFn: async (
+      values: I_InviteToWorkSpaceInput
+    ): Promise<I_InviteToWorkSpaceResponse> => {
+      return await protectedApi
+        .post(URLS.apiInviteToWorkSpace(workspaceId), {
+          json: values,
+        })
+        .json();
     },
     onSuccess: () => {
-      queryClient.setQueryData<I_GetBoardResponse[]>(
-        [QUERY_KEYS.boards],
-        (oldBoards = []) => oldBoards.filter((b) => b.slug !== boardSlug)
-      );
-
-      toast.success("Board deleted successfully.");
+      toast.success("Workspace invites sent successfully.");
       onSuccess?.();
     },
-    onError: (error) => {
-      console.error("Delete failed:", error);
-      toast.error("Failed to delete board. Please try again.");
+    onError: (error: unknown) => {
+      console.error("Error sending workspace invites", error);
+      toast.error(
+        "Failed to invite emails to this workspace. Please try again."
+      );
+      onError?.();
+    },
+  });
+};
+
+export const useAcceptWorkSpaceInvite = (
+  onSuccess?: () => void,
+  onError?: () => void
+) => {
+  return useMutation({
+    mutationFn: async (
+      values: I_AcceptWorkSpaceInviteInput
+    ): Promise<I_AcceptWorkSpaceInviteResponse> => {
+      return await protectedApi
+        .post(URLS.apiAcceptWorkSpaceInvite, {
+          json: values,
+        })
+        .json();
+    },
+    onSuccess: () => {
+      toast.success("Workspace invite accepted successfully.");
+      onSuccess?.();
+    },
+    onError: (error: unknown) => {
+      console.error("Error accepting workspace invites", error);
+      toast.error(
+        "Failed to accept the invite to this workspace. Please try again."
+      );
       onError?.();
     },
   });

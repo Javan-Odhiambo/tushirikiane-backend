@@ -1,6 +1,6 @@
 "use client";
 
-import { useCreateBoard } from "@/lib/mutations";
+import { useCreateBoard } from "@/lib/mutations/boards";
 import { T_CreateBoardSchema } from "@/lib/schema";
 import {
   Button,

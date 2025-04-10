@@ -28,10 +28,27 @@ export interface I_GetBoardResponse {
   position: number;
 }
 
-export interface I_CreateBoardInput {
+export interface I_GetListResponse {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+  board: string;
+  position: number;
+  description: string;
+}
+
+export interface I_GetCardRespone {
+  id: string;
+  created_at: string;
+  updated_at: string;
   name: string;
   description: string;
-  workspace_id: string;
+  due_date: string;
+  task_list: string;
+  position: number;
+  is_completed: boolean;
+  labels: string[];
 }
 
 export interface I_CreateBoardResponse {
@@ -44,16 +61,24 @@ export interface I_CreateBoardResponse {
   position: number;
 }
 
-export interface I_CreateWorkSpaceInput {
-  name: string;
+export interface I_InviteToWorkSpaceResponse {
+  message: string;
+}
+
+export interface I_InviteToBoardResponse {
+  message: string;
+}
+
+export interface I_AcceptWorkSpaceInviteResponse {
+  message: string;
+}
+
+export interface I_AcceptBoardInviteResponse {
+  message: string;
 }
 
 export interface I_CreateWorkSpaceResponse {
   name: string;
-}
-
-export interface I_InviteEmailsInput {
-  emails: string[];
 }
 
 export interface I_InviteEmailsResponse {

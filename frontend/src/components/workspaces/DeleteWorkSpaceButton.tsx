@@ -1,12 +1,12 @@
 "use client";
 
-import { useDeleteWorkSpace } from "@/lib/mutations";
 import { URLS } from "@/lib/urls";
 import { ActionIcon } from "@mantine/core";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
-import { IconLibrary } from "../core/IconsLibrary";
+import { IconCollection } from "../core/IconCollection";
 import ConfirmActionModal from "../core/ConfirmActionModal";
+import { useDeleteWorkSpace } from "@/lib/mutations/workspaces";
 
 const DeleteWorkSpaceButton = () => {
   const router = useRouter();
@@ -30,7 +30,7 @@ const DeleteWorkSpaceButton = () => {
         c="red"
         loading={isPending}
       >
-        <IconLibrary.Delete />
+        <IconCollection.Delete />
       </ActionIcon>
 
       <ConfirmActionModal

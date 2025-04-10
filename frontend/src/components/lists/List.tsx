@@ -1,23 +1,23 @@
-import { IconDotsVertical } from "@tabler/icons-react";
+import { I_GetListResponse as ListProps } from "@/lib/interfaces/responses";
+import { Card, Group, Text } from "@mantine/core";
+import { } from "@tabler/icons-react";
 import React from "react";
-import { ActionIcon, Group, Text } from "@mantine/core";
-import { Card } from "@mantine/core";
-import CardList from "../cards/CardList";
-import AddCard from "../cards/AddCard";
+import CardContainer from "../cards/CardContainer";
+import CreateCardButton from "../cards/CreateCardButton";
+import ListActions from "./ListActions";
 
-const List = () => {
+const List: React.FC<ListProps> = ({ id, name }) => {
   return (
     <Card bg={"white"} maw={275} miw={275} shadow="none" h="fit-content">
       <Group justify="space-between">
         <Text fw={500} size="lg">
-          My List title
+          {name}
         </Text>
-        <ActionIcon variant="subtle" radius="xl" color="black">
-          <IconDotsVertical />
-        </ActionIcon>
+
+        <ListActions listId={id} />
       </Group>
-      <CardList />
-      <AddCard />
+      <CardContainer listId={id} />
+      <CreateCardButton listId={id} />
     </Card>
   );
 };

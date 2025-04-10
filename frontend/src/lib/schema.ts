@@ -1,5 +1,10 @@
 import { z } from "zod";
 
+const Z_EmailsSchema = z.object({
+  emails: z.array(z.string().email()).min(1, "At least one email is required."),
+});
+export type T_Z_EmailsSchema = z.infer<typeof Z_EmailsSchema>;
+
 export const signInSchema = z.object({
   email: z
     .string({ required_error: "Please enter your email." })
@@ -48,10 +53,22 @@ export const createBoardSchema = z.object({
 });
 export type T_CreateBoardSchema = z.infer<typeof createBoardSchema>;
 
-export const createWorkSpaceSchema = z.object({
-  name: z.string({
-    required_error: "Please provide the name for your workspace",
-  }),
-  inviteEmails: z.array(z.string().email()),
-});
+export const createWorkSpaceSchema = z
+  .object({
+    name: z.string({
+      required_error: "Please provide the name for your workspace",
+    }),
+  })
+  .merge(Z_EmailsSchema);
 export type T_CreateWorkSpaceSchema = z.infer<typeof createWorkSpaceSchema>;
+
+export const createCardSchema = z.object({
+  name: z.string().min(1, { message: "Card name is required" }).trim(),
+  description: z.string(),
+});
+export type T_CreateCardSchema = z.infer<typeof createCardSchema>;
+
+export const createListSchema = z.object({
+  name: z.string().min(1, { message: "List name is required" }).trim(),
+});
+export type T_CreateListSchema = z.infer<typeof createListSchema>;
