@@ -1,20 +1,20 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-import { protectedApi } from "../kyInstance";
-import { QUERY_KEYS } from "../queryKeys";
-import { URLS } from "../urls";
 import {
+  I_AcceptBoardInviteInput,
   I_CreateBoardInput,
   I_InviteToBoardInput,
-  I_AcceptBoardInviteInput,
 } from "../interfaces/inputs";
 import {
+  I_AcceptBoardInviteResponse,
   I_CreateBoardResponse,
   I_GetBoardResponse,
   I_InviteToBoardResponse,
-  I_AcceptBoardInviteResponse,
 } from "../interfaces/responses";
+import { protectedApi } from "../kyInstance";
+import { QUERY_KEYS } from "../queryKeys";
+import { URLS } from "../urls";
 
 export const useCreateBoard = (
   workSpaceSlug: string,
@@ -61,7 +61,7 @@ export const useDeleteBoard = (
     },
     onSuccess: () => {
       queryClient.setQueryData<I_GetBoardResponse[]>(
-        [QUERY_KEYS.boards],
+        [QUERY_KEYS.boards(workspaceSlug)],
         (oldBoards = []) => oldBoards.filter((b) => b.id !== boardSlug)
       );
 

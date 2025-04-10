@@ -1,4 +1,5 @@
 import {
+  IconDotsVertical,
   IconEdit,
   IconPlus,
   IconSend,
@@ -13,8 +14,8 @@ interface IconProps {
 }
 
 export const IconCollection = {
-  Delete: ({ size = 24, stroke = 1.5, color = "currentColor" }: IconProps) => (
-    <IconTrash size={size} stroke={stroke} color={color} />
+  Delete: ({ size = 24, stroke = 1.5 }: IconProps) => (
+    <IconTrash size={size} stroke={stroke} color={"red"} />
   ),
   Create: ({ size = 24, stroke = 1.5, color = "currentColor" }: IconProps) => (
     <IconPlus size={size} stroke={stroke} color={color} />
@@ -27,5 +28,8 @@ export const IconCollection = {
   ),
   Close: ({ size = 24, stroke = 1.5, color = "red" }: IconProps) => (
     <IconX size={size} stroke={stroke} color={color} />
+  ),
+  Actions: ({ size = 24, stroke = 1.5, color = "currentColor" }: IconProps) => (
+    <IconDotsVertical size={size} stroke={stroke} color={color} />
   ),
 };

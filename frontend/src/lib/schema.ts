@@ -66,5 +66,9 @@ export const createCardSchema = z.object({
   name: z.string().min(1, { message: "Card name is required" }).trim(),
   description: z.string(),
 });
-
 export type T_CreateCardSchema = z.infer<typeof createCardSchema>;
+
+export const createListSchema = z.object({
+  name: z.string().min(1, { message: "List name is required" }).trim(),
+});
+export type T_CreateListSchema = z.infer<typeof createListSchema>;

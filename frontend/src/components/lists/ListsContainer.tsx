@@ -1,9 +1,9 @@
 "use client";
 
-import AddList from "@/components/lists/AddList";
 import { useGetLists } from "@/lib/queries/lists";
 import { Card, Flex, Group, ScrollArea, Skeleton } from "@mantine/core";
 import { useParams } from "next/navigation";
+import CreateListButton from "./CreateListButton";
 import List from "./List";
 
 const ListsContainer = () => {
@@ -22,7 +22,7 @@ const ListsContainer = () => {
         ) : (
           lists?.map((l, index) => <List key={index} {...l} />)
         )}
-        <AddList />
+        <CreateListButton />
       </Flex>
     </ScrollArea>
   );
