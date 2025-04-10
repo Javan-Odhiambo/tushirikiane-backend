@@ -51,6 +51,23 @@ class BoardSerializer(serializers.ModelSerializer):
 		fields = ["id", "created_at", "updated_at", "name", "description", "workspace", "position", "slug"]
 
 
+# DRF TaskAssignee model serializer
+class TaskAssigneeSerializer(serializers.ModelSerializer):
+	task = serializers.PrimaryKeyRelatedField(queryset=Task.objects.all())
+	assignee = MemberSerializer(read_only=True)
+
+	class Meta:
+		model = TaskAssignee
+		fields = ["id", "created_at", "updated_at", "task", "assignee"]
+
+
+class TaskMemberSerializer(serializers.ModelSerializer):
+	assignee = MemberSerializer(read_only=True)
+
+	class Meta:
+		model = TaskAssignee
+		fields = ["assignee"]
+
 # DRF Task model serializer
 class TaskSerializer(serializers.ModelSerializer):
 	labels = serializers.PrimaryKeyRelatedField(
@@ -61,6 +78,7 @@ class TaskSerializer(serializers.ModelSerializer):
 		queryset=TaskList.objects.all(),
 		required=False
 	)
+	members = TaskMemberSerializer(read_only=True, many=True, source="assignees")
 
 	class Meta:
 		model = Task
@@ -77,17 +95,10 @@ class TaskSerializer(serializers.ModelSerializer):
 				"position",
 				"is_completed",
 				"labels",
+				"members",
 		]
 
 
-# DRF TaskAssignee model serializer
-class TaskAssigneeSerializer(serializers.ModelSerializer):
-	task = serializers.PrimaryKeyRelatedField(queryset=Task.objects.all())
-	assignee = MemberSerializer(read_only=True)
-
-	class Meta:
-		model = TaskAssignee
-		fields = ["id", "created_at", "updated_at", "task", "assignee"]
 
 
 # DRF TaskLabel model serializer

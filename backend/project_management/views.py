@@ -245,8 +245,8 @@ def accept_board_invite(request, *args, **kwargs):
 	except ObjectDoesNotExist:
 		return response.Response("Invalid token", status=400)
 
-	if invite.recipient_email != request.user.email:
-		return response.Response("Invalid token", status=400)
+	# if invite.recipient_email != request.user.email:
+	# 	return response.Response("Invalid token", status=400)
 
 	membership = BoardMember.objects.create(board=board, member=request.user)
 	invite.delete()
@@ -275,7 +275,7 @@ class TaskViewSet(viewsets.ModelViewSet):
 		except ObjectDoesNotExist:
 			return Task.objects.none()
 
-		return Task.objects.filter(task_list=task_list)
+		return Task.objects.filter(task_list=task_list).prefetch_related("assignees")
 
 	def create(self, request, *args, **kwargs):
 		task_list_pk = self.kwargs["tasklist_pk"]
@@ -356,12 +356,12 @@ class TaskViewSet(viewsets.ModelViewSet):
 
 		return Response({"message": "Members unassigned from task"}, status=status.HTTP_200_OK)
 
-	@action(detail=True, methods=["post"])
+	@action(detail=True, methods=["get"])
 	def assignees(self, request, *args, **kwargs):
 		task = self.get_object()
 		assignees = task.assignees.all()
 		serializer = TaskAssigneeSerializer(assignees, many=True)
-		return Response(serializer.data)
+		return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class TaskListViewSet(viewsets.ModelViewSet, PositionReorderMixin):

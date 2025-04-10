@@ -215,26 +215,26 @@ class TaskViewSetTestCase(APITestCase):
 
 	def test_get_assignees_returns_correct_users(self):
 		TaskAssignee.objects.create(task=self.task, assignee=self.user2)
-		response = self.client.post(self.assignees_url)
+		response = self.client.get(self.assignees_url)
 
 		self.assertEqual(response.status_code, status.HTTP_200_OK)
 		self.assertEqual(len(response.data), 1)
 		self.assertEqual(response.data[0]['assignee']["id"], str(self.user2.id))
 
 	def test_get_assignees_empty_when_none_assigned(self):
-		response = self.client.post(self.assignees_url)
+		response = self.client.get(self.assignees_url)
 
 		self.assertEqual(response.status_code, status.HTTP_200_OK)
 		self.assertEqual(response.data, [])
 
 	def test_get_assignees_unauthenticated(self):
 		self.client.logout()
-		response = self.client.post(self.assignees_url)
+		response = self.client.get(self.assignees_url)
 
 		self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
 	def test_get_assignees_forbidden_for_non_board_members(self):
 		self.client.force_authenticate(user=self.user3)  # Not in board
-		response = self.client.post(self.assignees_url)
+		response = self.client.get(self.assignees_url)
 
 		self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
