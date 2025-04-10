@@ -1,7 +1,7 @@
 import AcceptWorkSpaceInviteButton from "@/components/invites/AcceptWorkSpaceInviteButton";
 import { Paper, Stack, Text, Title } from "@mantine/core";
 
-const InvitesWorkspacesPage = () => {
+const InvitesBoardsPage = () => {
   return (
     <Paper
       shadow="md"
@@ -15,7 +15,7 @@ const InvitesWorkspacesPage = () => {
       <Stack align="center">
         <Title order={2}>You&apos;re Invited!</Title>
         <Text size="md" ta="center">
-          You&apos;ve been invited to join a workspace. Click the button below
+          You&apos;ve been invited to join a board. Click the button below
           to accept the invitation and start collaborating with your team.
         </Text>
         <AcceptWorkSpaceInviteButton />
@@ -24,4 +24,4 @@ const InvitesWorkspacesPage = () => {
   );
 };
 
-export default InvitesWorkspacesPage;
+export default InvitesBoardsPage;

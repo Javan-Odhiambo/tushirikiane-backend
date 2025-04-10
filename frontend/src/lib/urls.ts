@@ -38,4 +38,7 @@ export const URLS = {
   apiBoards: (workSpaceSlug: string) => `workspaces/${workSpaceSlug}/boards/`,
   apiBoardsDetail: (workSpaceSlug: string, boardSlug: string) =>
     `workspaces/${workSpaceSlug}/boards/${boardSlug}/`,
+  apiInviteToBoard: (workSpaceId: string, boardId: string) =>
+    `workspaces/${workSpaceId}/boards/${boardId}/invite/`,
+  apiAcceptBoardInvite: "boards/accept/",
 };

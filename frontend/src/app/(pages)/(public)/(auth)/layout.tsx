@@ -11,7 +11,7 @@ const AuthLayout = async ({
   const session = await auth();
 
   if (session) {
-    redirect(URLS.dashboard);
+    redirect(URLS.workspaces);
   }
 
   return <>{children}</>;

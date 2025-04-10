@@ -30,7 +30,7 @@ const EmailPillsMultiInput: React.FC<EmailPillsMultiInputProps> = ({
   const addEmail = (email: string) => {
     const trimmedEmail = email.trim().toLowerCase();
     if (!trimmedEmail) return;
-    
+
     try {
       emailSchema.parse(trimmedEmail);
       if (!emails.includes(trimmedEmail)) {
@@ -50,17 +50,13 @@ const EmailPillsMultiInput: React.FC<EmailPillsMultiInputProps> = ({
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     const inputValue = event.currentTarget.value.trim();
-    
+
     if (event.key === "Enter" || event.key === ",") {
       event.preventDefault();
       addEmail(inputValue);
     }
-    
-    if (
-      event.key === "Backspace" &&
-      inputValue === "" &&
-      emails.length > 0
-    ) {
+
+    if (event.key === "Backspace" && inputValue === "" && emails.length > 0) {
       event.preventDefault();
       removeEmail(emails[emails.length - 1]);
     }
@@ -68,11 +64,7 @@ const EmailPillsMultiInput: React.FC<EmailPillsMultiInputProps> = ({
 
   return (
     <>
-      <PillsInput
-        label={label}
-        error={error}
-        disabled={disabled}
-      >
+      <PillsInput label={label} error={error} disabled={disabled}>
         {emails.map((email) => (
           <Pill
             key={email}
@@ -90,8 +82,8 @@ const EmailPillsMultiInput: React.FC<EmailPillsMultiInputProps> = ({
       </PillsInput>
       {helperText && (
         <Text size="xs" c="gray">
-          Press <b>Enter</b> or <b>,</b> to add an email. Press{" "}
-          <b>Backspace</b> to remove the last email.
+          Press <b>Enter</b> or <b>,</b> to add an email. Press <b>Backspace</b>{" "}
+          to remove the last email.
         </Text>
       )}
     </>
@@ -99,5 +91,3 @@ const EmailPillsMultiInput: React.FC<EmailPillsMultiInputProps> = ({
 };
 
 export default EmailPillsMultiInput;
-
-

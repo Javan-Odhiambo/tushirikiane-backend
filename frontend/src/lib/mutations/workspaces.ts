@@ -102,7 +102,6 @@ export const useInviteToWorkSpace = (
 };
 
 export const useAcceptWorkSpaceInvite = (
-  workspaceId: string,
   onSuccess?: () => void,
   onError?: () => void
 ) => {
@@ -117,13 +116,13 @@ export const useAcceptWorkSpaceInvite = (
         .json();
     },
     onSuccess: () => {
-      toast.success("Workspace invites sent successfully.");
+      toast.success("Workspace invite accepted successfully.");
       onSuccess?.();
     },
     onError: (error: unknown) => {
-      console.error("Error sending workspace invites", error);
+      console.error("Error accepting workspace invites", error);
       toast.error(
-        "Failed to invite emails to this workspace. Please try again."
+        "Failed to accept the invite to this workspace. Please try again."
       );
       onError?.();
     },

@@ -56,11 +56,27 @@ export interface I_InviteToWorkSpaceResponse {
   message: string;
 }
 
+export interface I_InviteToBoardInput {
+  emails: string[];
+}
+
+export interface I_InviteToBoardResponse {
+  message: string;
+}
+
 export interface I_AcceptWorkSpaceInviteInput {
   token: string;
 }
 
 export interface I_AcceptWorkSpaceInviteResponse {
+  message: string;
+}
+
+export interface I_AcceptBoardInviteInput {
+  token: string;
+}
+
+export interface I_AcceptBoardInviteResponse {
   message: string;
 }
 

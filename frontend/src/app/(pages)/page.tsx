@@ -14,7 +14,7 @@ import Footer from "@/components/www/footer";
 export default async function Home() {
   const session = await auth();
   if (session) {
-    redirect(URLS.dashboard);
+    redirect(URLS.workspaces);
   }
   return (
     <>

@@ -18,6 +18,7 @@ import CreateBoardButton from "../boards/CreateBoardButton";
 import DeleteWorkSpaceButton from "./DeleteWorkSpaceButton";
 import DeleteBoardButton from "../boards/DeleteBoardButton";
 import InviteToWorkSpaceButton from "./InviteToWorkSpaceButton";
+import InviteToBoardButtonButton from "../boards/InviteToBoardButton";
 
 const mainMenuItems = [
   { icon: <IconHome size={18} />, label: "Home", href: URLS.workspaces },
@@ -174,6 +175,7 @@ const WorkspaceBoards = () => {
                   <Text fw={isActive ? 700 : 400}>{board.name}</Text>
                 </Button>
                 <DeleteBoardButton boardSlug={board.id} />
+                <InviteToBoardButtonButton boardId={board.id} />
               </>
             );
           })}

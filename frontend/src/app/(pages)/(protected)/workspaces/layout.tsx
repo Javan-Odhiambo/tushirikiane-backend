@@ -1,6 +1,6 @@
 import { BoardsProvider } from "@/providers/BoardsProvider";
 
-export default async function ProtectedLayout({
+export default async function BoardsLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
