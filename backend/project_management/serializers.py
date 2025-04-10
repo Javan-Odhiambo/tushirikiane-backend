@@ -9,7 +9,7 @@ from .models import (Board, CheckListItem, Label, Task, TaskAssignee, TaskLabel,
 class MemberSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = CustomUser
-		fields = ["id", "first_name", "middle_name", "last_name"]
+		fields = ["id", "first_name", "middle_name", "last_name", "email"]
 
 
 # Drf model serializer for Workspace
