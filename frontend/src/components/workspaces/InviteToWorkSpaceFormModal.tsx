@@ -4,7 +4,7 @@ import { useInviteToWorkSpace } from "@/lib/mutations/workspaces";
 import { T_Z_EmailsSchema } from "@/lib/schema";
 import { Button, Group, Modal } from "@mantine/core";
 import { useParams } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import EmailPillsMultiInput from "../core/EmailPillsMultiInput";
 
 interface InviteToWorkSpaceFormModalProps {
@@ -40,12 +40,6 @@ const InviteToWorkSpaceFormModal: React.FC<InviteToWorkSpaceFormModalProps> = ({
     close();
   };
 
-  const handleOnEmailsChange = (emails: string[]) => {
-    form.setValue("emails", emails, {
-      shouldValidate: true,
-    });
-  };
-
   const handleOnSubmit = (values: T_Z_EmailsSchema) => {
     inviteToWorkSpace(values);
   };
@@ -58,12 +52,19 @@ const InviteToWorkSpaceFormModal: React.FC<InviteToWorkSpaceFormModalProps> = ({
       centered
     >
       <form onSubmit={form.handleSubmit(handleOnSubmit)}>
-        <EmailPillsMultiInput
-          disabled={isPending}
-          label="Invite Emails"
-          emails={form.watch("emails")}
-          onChange={handleOnEmailsChange}
-          error={form.formState.errors.emails?.message as string}
+        <Controller
+          name="emails"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <EmailPillsMultiInput
+              disabled={isPending}
+              label="Invite new members to this board"
+              value={field.value}
+              onChange={field.onChange}
+              error={fieldState.error?.message}
+              helperText
+            />
+          )}
         />
 
         <Group justify="right" mt="md">

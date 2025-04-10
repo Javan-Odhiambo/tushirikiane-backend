@@ -2,9 +2,9 @@ import {
   IconDotsVertical,
   IconEdit,
   IconPlus,
-  IconSend,
+  IconShare,
   IconTrash,
-  IconX,
+  IconX
 } from "@tabler/icons-react";
 
 interface IconProps {
@@ -23,13 +23,13 @@ export const IconCollection = {
   Edit: ({ size = 24, stroke = 1.5, color = "currentColor" }: IconProps) => (
     <IconEdit size={size} stroke={stroke} color={color} />
   ),
-  Invite: ({ size = 24, stroke = 1.5, color = "currentColor" }: IconProps) => (
-    <IconSend size={size} stroke={stroke} color={color} />
-  ),
   Close: ({ size = 24, stroke = 1.5, color = "red" }: IconProps) => (
     <IconX size={size} stroke={stroke} color={color} />
   ),
   Actions: ({ size = 24, stroke = 1.5, color = "currentColor" }: IconProps) => (
     <IconDotsVertical size={size} stroke={stroke} color={color} />
+  ),
+  Share: ({ size = 24, stroke = 1.5, color = "currentColor" }: IconProps) => (
+    <IconShare size={size} stroke={stroke} color={color} />
   ),
 };

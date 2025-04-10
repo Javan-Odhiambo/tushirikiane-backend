@@ -15,10 +15,10 @@ import {
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import CreateBoardButton from "../boards/CreateBoardButton";
-import DeleteWorkSpaceButton from "./DeleteWorkSpaceButton";
 import DeleteBoardButton from "../boards/DeleteBoardButton";
-import InviteToWorkSpaceButton from "./InviteToWorkSpaceButton";
 import InviteToBoardButtonButton from "../boards/InviteToBoardButton";
+import DeleteWorkSpaceButton from "./DeleteWorkSpaceButton";
+import InviteToWorkSpaceButton from "./InviteToWorkSpaceButton";
 
 const mainMenuItems = [
   { icon: <IconHome size={18} />, label: "Home", href: URLS.workspaces },
@@ -84,58 +84,61 @@ const WorkSpacesMenu = () => {
   );
 
   return (
-    <Menu shadow="md" width="target" disabled={isLoading}>
-      <Menu.Target>
-        <Button variant="light" w="100%" disabled={isLoading}>
-          <Group w="100%" justify="space-between">
-            <Text>
-              {workSpacesSlug && activeWorkSpace
-                ? activeWorkSpace.name
-                : "Workspaces"}
-            </Text>
-            <IconChevronDown size={16} />
-          </Group>
-        </Button>
-      </Menu.Target>
-      <Menu.Dropdown style={{ width: "100%" }}>
-        {isLoading
-          ? Array.from({ length: 5 }).map((_, index) => (
-              <Menu.Item key={index} style={{ width: "100%" }}>
-                <Skeleton height={20} radius="sm" />
-              </Menu.Item>
-            ))
-          : workSpaces?.map((workSpace) => {
-              const isActive = workSpacesSlug === workSpace?.id;
+    <Group align="center">
+      <Menu shadow="md" disabled={isLoading} withArrow>
+        <Menu.Target>
+          <Button
+            variant="light"
+            flex={1}
+            disabled={isLoading}
+            rightSection={<IconChevronDown size={16} />}
+          >
+            {workSpacesSlug && activeWorkSpace
+              ? activeWorkSpace.name
+              : "Workspaces"}
+          </Button>
+        </Menu.Target>
 
-              return (
-                <Menu.Item
-                  key={workSpace?.id}
-                  component={Link}
-                  href={URLS.workspacesSlug(workSpace.id)}
-                  style={{
-                    fontWeight: isActive ? "bold" : "normal",
-                    backgroundColor: isActive ? "#f5f5f5" : "transparent",
-                    width: "100%",
-                    display: "block",
-                  }}
-                >
-                  <Text>{workSpace.name}</Text>
+        <Menu.Dropdown p="xs">
+          {isLoading
+            ? Array.from({ length: 5 }).map((_, index) => (
+                <Menu.Item key={index}>
+                  <Skeleton height={20} radius="sm" />
                 </Menu.Item>
-              );
-            })}
-      </Menu.Dropdown>
+              ))
+            : workSpaces?.map((workSpace) => {
+                const isActive = workSpacesSlug === workSpace?.id;
+
+                return (
+                  <Menu.Item
+                    key={workSpace?.id}
+                    component={Link}
+                    href={URLS.workspacesSlug(workSpace.id)}
+                    style={{
+                      fontWeight: isActive ? 600 : 400,
+                      backgroundColor: isActive ? "#f1f3f5" : "transparent",
+                    }}
+                  >
+                    {workSpace.name}
+                  </Menu.Item>
+                );
+              })}
+        </Menu.Dropdown>
+      </Menu>
+
       <DeleteWorkSpaceButton />
       <InviteToWorkSpaceButton />
-    </Menu>
+    </Group>
   );
 };
 
 const WorkspaceBoards = () => {
-  const { data: boards, isLoading } = useBoards();
   const { workSpacesSlug, boardsSlug } = useParams<{
     workSpacesSlug: string;
     boardsSlug: string;
   }>();
+
+  const { data: boards, isLoading } = useBoards();
 
   return (
     <Stack>
@@ -143,7 +146,6 @@ const WorkspaceBoards = () => {
         <Text size="xs">BOARDS</Text>
         <CreateBoardButton />
       </Group>
-
       {isLoading
         ? Array.from({ length: 4 }).map((_, index) => (
             <Skeleton key={index} height={36} radius="sm">
@@ -162,21 +164,21 @@ const WorkspaceBoards = () => {
             const isActive = boardsSlug === board?.slug;
 
             return (
-              <>
+              <Group key={board.id} gap="xs">
                 <Button
-                  key={board.slug}
                   component={Link}
                   href={URLS.boardsSlug(workSpacesSlug, board?.id)}
                   variant={isActive ? "filled" : "light"}
                   fullWidth
                   justify="start"
                   leftSection={<IconLayout />}
+                  flex={1}
                 >
                   <Text fw={isActive ? 700 : 400}>{board.name}</Text>
                 </Button>
                 <DeleteBoardButton boardSlug={board.id} />
                 <InviteToBoardButtonButton boardId={board.id} />
-              </>
+              </Group>
             );
           })}
     </Stack>

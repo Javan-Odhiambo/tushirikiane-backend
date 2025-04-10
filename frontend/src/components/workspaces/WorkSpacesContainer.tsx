@@ -1,6 +1,7 @@
 "use client";
 
-import { I_GetWorkspaceResponse as WorkSpaceCardProps } from "@/lib/interfaces";
+import { I_GetWorkspaceResponse as WorkSpaceCardProps } from "@/lib/interfaces/responses";
+import { useGetWorkSpaceMembers } from "@/lib/queries/workspaces";
 import { URLS } from "@/lib/urls";
 import { useWorkSpaces } from "@/providers/WorkSpacesProvider";
 import {
@@ -8,11 +9,12 @@ import {
   AvatarGroup,
   Card,
   Center,
-  Group,
+  ScrollArea,
+  SimpleGrid,
   Skeleton,
   Stack,
   Text,
-  Title
+  Title,
 } from "@mantine/core";
 import Link from "next/link";
 import React from "react";
@@ -29,24 +31,27 @@ const WorkSpacesContainer = () => {
         <Text size="md" c="dimmed">
           Select a workspace below or create a new one to get started.
         </Text>
-
-        {isPending ? (
-          <Group gap="lg" justify="center" w="200%">
-            {Array.from({ length: 3 }).map((_, index) => (
-              <WorkSpaceCardSkeleton key={index} />
-            ))}
-          </Group>
-        ) : workSpaces?.length ? (
-          <Group gap="lg" justify="center">
-            {workSpaces.map((w) => (
-              <WorkSpaceCard key={w.id} {...w} />
-            ))}
-          </Group>
-        ) : (
-          <Text size="sm" c="dimmed">
-            You have no workspaces yet. Create one to start collaborating!
-          </Text>
-        )}
+        <ScrollArea mah={"32vh"} type="auto" offsetScrollbars>
+          <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }}>
+            {isPending ? (
+              <>
+                {Array.from({ length: 3 }).map((_, index) => (
+                  <WorkSpaceCardSkeleton key={index} />
+                ))}
+              </>
+            ) : workSpaces?.length ? (
+              <>
+                {workSpaces.map((w) => (
+                  <WorkSpaceCard key={w.id} {...w} />
+                ))}
+              </>
+            ) : (
+              <Text size="sm" c="dimmed">
+                You have no workspaces yet. Create one to start collaborating!
+              </Text>
+            )}
+          </SimpleGrid>
+        </ScrollArea>
 
         {/* Create Workspace Button */}
         <CreateWorkSpaceButton />
@@ -55,24 +60,20 @@ const WorkSpacesContainer = () => {
   );
 };
 
-
 const WorkSpaceCard: React.FC<WorkSpaceCardProps> = ({ id, name }) => {
+  const { data: workspaceMembers, isPending } = useGetWorkSpaceMembers(id);
+
   return (
     <Anchor component={Link} href={URLS.workspacesSlug(id)} underline="never">
-      <Card
-        shadow="lg"
-        p="lg"
-        radius="lg"
-        withBorder
-        maw={"250px"}
-        w={"100%"}
-        ta={"center"}
-      >
+      <Card shadow="lg" p="lg" radius="lg" withBorder h={"100%"}>
         <Stack gap="sm" align="center">
-          <Text size="lg" fw={700}>
+          <Text size="lg" fw={700} className="truncate w-full">
             {name}
           </Text>
-          <AvatarsContainer workSpaceSlug={id} />
+          <AvatarsContainer
+            workSpaceMembers={workspaceMembers}
+            isLoading={isPending}
+          />
         </Stack>
       </Card>
     </Anchor>

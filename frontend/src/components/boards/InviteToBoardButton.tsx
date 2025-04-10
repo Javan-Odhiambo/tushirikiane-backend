@@ -17,7 +17,7 @@ const InviteToBoardButtonButton: React.FC<InviteToBoardButtonButtonProps> = ({
   return (
     <>
       <ActionIcon variant="subtle" onClick={open}>
-        <IconCollection.Invite />
+        <IconCollection.Share />
       </ActionIcon>
 
       <InviteToBoardFormModal opened={opened} close={close} boardId={boardId} />

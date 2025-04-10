@@ -3,7 +3,7 @@
 import { useCreateWorkSpace } from "@/lib/mutations/workspaces";
 import { createWorkSpaceSchema, T_CreateWorkSpaceSchema } from "@/lib/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Modal, Stack, Text, TextInput } from "@mantine/core";
+import { Button, Modal, Stack, TextInput } from "@mantine/core";
 import React from "react";
 import { useForm } from "react-hook-form";
 import EmailPillsMultiInput from "../core/EmailPillsMultiInput";
@@ -63,11 +63,6 @@ const CreateWorkSpaceFormModal: React.FC<CreateWorkSpaceFormModalProps> = ({
             disabled={isPending}
             error={form.formState.errors.emails?.message as string}
           />
-
-          <Text size="xs" c="gray">
-            Press <b>Enter</b> or <b>,</b> to add an email. Press{" "}
-            <b>Backspace</b> to remove the last email.
-          </Text>
 
           <Button type="submit" loading={isPending}>
             Create Workspace

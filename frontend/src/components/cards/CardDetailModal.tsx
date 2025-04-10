@@ -73,9 +73,9 @@ const CardDetailModal: React.FC<CardDetailModalProps> = ({
               </ActionIcon>
             </Group>
             <Group>
-              {card.labels.map((l, index) => (
+              {/* {card.labels.map((l, index) => (
                 <Badge key={index}>{l}</Badge>
-              ))}
+              ))} */}
             </Group>
           </Stack>
         </Group>

@@ -84,3 +84,19 @@ export interface I_CreateWorkSpaceResponse {
 export interface I_InviteEmailsResponse {
   success: boolean;
 }
+
+export interface I_Member {
+  id: string;
+  first_name: string;
+  middle_name: string;
+  last_name: string;
+  email: string;
+}
+
+export interface I_GetWorkSpaceMemberResponse {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  workspace_id: string;
+  member: I_Member;
+}

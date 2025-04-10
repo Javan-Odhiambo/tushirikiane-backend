@@ -11,7 +11,7 @@ const InviteToWorkSpaceButton = () => {
   return (
     <>
       <ActionIcon variant="subtle" onClick={open}>
-        <IconCollection.Invite />
+        <IconCollection.Share />
       </ActionIcon>
 
       <InviteToWorkSpaceFormModal opened={opened} close={close} />

@@ -2,10 +2,11 @@
 
 import { useBoards } from "@/providers/BoardsProvider";
 import { Button, Group, Text } from "@mantine/core";
-import { IconBrandTrello, IconShare, IconTable } from "@tabler/icons-react";
+import { IconBrandTrello, IconTable } from "@tabler/icons-react";
 import { useParams } from "next/navigation";
 import AvatarsContainer from "../core/AvatarsContainer";
 import FilterIcon from "../core/FilterIcon";
+import InviteToBoardButtonButton from "./InviteToBoardButton";
 
 const SecondaryHeader = () => {
   const { workSpacesSlug, boardsSlug } = useParams<{
@@ -14,7 +15,11 @@ const SecondaryHeader = () => {
   }>();
 
   const { data: boards } = useBoards();
-  const selectedBoard = boards?.find((b) => b.slug === boardsSlug);
+  const selectedBoard = boards?.find((b) => b.id === boardsSlug);
+
+  if (!selectedBoard) {
+    return <>select a board to continue</>;
+  }
 
   return (
     // TODO: make this responsive
@@ -27,7 +32,7 @@ const SecondaryHeader = () => {
       px={"md"}
     >
       <Group justify="space-between">
-        <Text>{selectedBoard?.name}</Text>
+        <Text>{selectedBoard.name}</Text>
 
         <Group gap={"sm"} ml={"xl"}>
           <Button variant="subtle" leftSection={<IconBrandTrello size={18} />}>
@@ -44,9 +49,7 @@ const SecondaryHeader = () => {
         <FilterIcon />
         {/* TODO: fetch board people and pass here */}
         <AvatarsContainer workSpaceSlug={workSpacesSlug} />
-        <Button leftSection={<IconShare />} variant="subtle">
-          Invite
-        </Button>
+        <InviteToBoardButtonButton boardId={selectedBoard.id} />
       </Group>
     </Group>
   );

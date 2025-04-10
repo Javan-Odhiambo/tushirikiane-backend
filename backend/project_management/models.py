@@ -56,7 +56,7 @@ class WorkspaceMember(BaseModel):
 		Returns:
 			str: The name of the workspace member.
 		"""
-		return self.member
+		return self.member.email
 
 
 class Board(BaseModel):

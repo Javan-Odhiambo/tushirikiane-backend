@@ -1,10 +1,11 @@
 "use client";
 
 import { useInviteToBoard } from "@/lib/mutations/boards";
+import { useGetWorkSpaceMembers } from "@/lib/queries/workspaces";
 import { T_Z_EmailsSchema } from "@/lib/schema";
 import { Button, Group, Modal } from "@mantine/core";
 import { useParams } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import EmailPillsMultiInput from "../core/EmailPillsMultiInput";
 
 interface InviteToBoardFormModalProps {
@@ -29,6 +30,10 @@ const InviteToBoardFormModal: React.FC<InviteToBoardFormModalProps> = ({
     },
   });
 
+  const { data: workSpaceMembers } = useGetWorkSpaceMembers(workSpacesSlug);
+
+  const members = workSpaceMembers?.map((w) => w.member.email);
+
   const { mutate: inviteToBoard, isPending } = useInviteToBoard(
     workSpacesSlug,
     boardId,
@@ -43,12 +48,6 @@ const InviteToBoardFormModal: React.FC<InviteToBoardFormModalProps> = ({
     close();
   };
 
-  const handleOnEmailsChange = (emails: string[]) => {
-    form.setValue("emails", emails, {
-      shouldValidate: true,
-    });
-  };
-
   const handleOnSubmit = (values: T_Z_EmailsSchema) => {
     inviteToBoard(values);
   };
@@ -61,12 +60,20 @@ const InviteToBoardFormModal: React.FC<InviteToBoardFormModalProps> = ({
       centered
     >
       <form onSubmit={form.handleSubmit(handleOnSubmit)}>
-        <EmailPillsMultiInput
-          disabled={isPending}
-          label="Invite new members to this board"
-          emails={form.watch("emails")}
-          onChange={handleOnEmailsChange}
-          error={form.formState.errors.emails?.message as string}
+        <Controller
+          name="emails"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <EmailPillsMultiInput
+              disabled={isPending}
+              label="Invite new members to this board"
+              value={field.value}
+              onChange={field.onChange}
+              error={fieldState.error?.message}
+              helperText
+              data={members}
+            />
+          )}
         />
 
         <Group justify="right" mt="md">
