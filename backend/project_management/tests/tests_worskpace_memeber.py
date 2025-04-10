@@ -39,4 +39,4 @@ class WorkspaceMemberViewSetTestCase(APITestCase):
 
 		self.assertEqual(response.status_code, status.HTTP_200_OK)
 		self.assertEqual(len(response.data), 1)
-		self.assertEqual(response.data[0]['workspace'], self.workspace1.id)
+		self.assertEqual(response.data[0]['workspace_id'], self.workspace1.id)

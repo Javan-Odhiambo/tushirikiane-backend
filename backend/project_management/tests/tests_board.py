@@ -35,14 +35,14 @@ class BoardViewSetTestCase(APITestCase):
 
 		self.assertEqual(response1.status_code, status.HTTP_201_CREATED)
 		self.assertEqual(response1.data['name'], 'New Test Board')
-		self.assertEqual(response1.data['workspace'], self.workspace1.id)
+		self.assertEqual(response1.data['workspace_id'], self.workspace1.id)
 
 		response2 = self.client.post(f'/api/workspaces/{self.workspace1.slug}/boards/', format="json", data={
 				'name': 'New Test Board 2',
 		})
 		self.assertEqual(response2.status_code, status.HTTP_201_CREATED)
 		self.assertEqual(response2.data['name'], 'New Test Board 2')
-		self.assertEqual(response2.data['workspace'], self.workspace1.id)
+		self.assertEqual(response2.data['workspace_id'], self.workspace1.id)
 
 	def test_update_board(self):
 		board = Board.objects.create(workspace=self.workspace1, name="board1", position=0)

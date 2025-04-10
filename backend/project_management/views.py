@@ -161,12 +161,12 @@ class BoardViewSet(viewsets.ModelViewSet):
 		position = (last_position + 1) if last_position is not None else 0
 
 		board_data = request.data.copy()
+
 		board_data["position"] = position
-		board_data["workspace"] = workspace.id
 
 		serializer = self.get_serializer(data=board_data)
 		serializer.is_valid(raise_exception=True)
-		board = serializer.save()
+		board = serializer.save(workspace=workspace)
 
 		headers = self.get_success_headers(serializer.data)
 		return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
@@ -288,14 +288,10 @@ class TaskViewSet(viewsets.ModelViewSet):
 		except ObjectDoesNotExist:
 			return response.Response("Task list does not exist", status=400)
 
-		task_data = request.data.copy()
-		task_data["task_list"] = task_list.id
-
-		serializer = self.get_serializer(data=task_data)
-
+		serializer = self.get_serializer(data=request.data)
 		serializer.is_valid(raise_exception=True)
 
-		serializer.save()
+		serializer.save(task_list=task_list)
 
 		headers = self.get_success_headers(serializer.data)
 		return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)

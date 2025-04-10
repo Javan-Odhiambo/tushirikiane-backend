@@ -40,7 +40,7 @@ class TaskListViewSetTestCase(APITestCase):
 
 		self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 		self.assertEqual(response.data['name'], 'New Task List')
-		self.assertEqual(response.data['board'], self.board1.id)
+		self.assertEqual(response.data['board_id'], self.board1.id)
 
 	def test_create_task_list_unauthenticated(self):
 		"""

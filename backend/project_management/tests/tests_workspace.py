@@ -87,7 +87,7 @@ class WorkspaceTestCase(APITestCase):
 
 		self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 		# Verify fields are set correctly
-		self.assertEqual(response.data['owner'], self.user1.id)
+		self.assertEqual(response.data['owner_id'], self.user1.id)
 		self.assertEqual(response.data['name'], 'New Test Workspace')
 		# Verify, a slug is automatically set from the name
 		self.assertEqual(response.data["slug"], slugify(response.data["name"]))
