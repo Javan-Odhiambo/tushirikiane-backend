@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 export default auth((req) => {
   if (!req.auth) {
     const signInUrl = new URL(URLS.signIn, req.nextUrl.origin);
-    signInUrl.searchParams.set("nextUrl", req.nextUrl.pathname); 
+    signInUrl.searchParams.set("nextUrl", req.nextUrl.pathname);
     return NextResponse.redirect(signInUrl);
   }
 
@@ -13,5 +13,13 @@ export default auth((req) => {
 });
 
 export const config = {
-  matcher: ["/dashboard/:path*"],
+  matcher: [
+    "/dashboard/:path*",
+    "/invites/:path*",
+    "/boards/:path*",
+    "/workspaces/:path*",
+    "/calendar/:path*",
+    "/tasks/:path*",
+    "/team/:path*",
+  ],
 };

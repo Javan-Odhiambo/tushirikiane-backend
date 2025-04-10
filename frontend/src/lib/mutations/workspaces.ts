@@ -1,6 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
+  I_AcceptWorkSpaceInviteInput,
+  I_AcceptWorkSpaceInviteResponse,
   I_CreateWorkSpaceInput,
   I_CreateWorkSpaceResponse,
   I_GetWorkspaceResponse,
@@ -81,6 +83,35 @@ export const useInviteToWorkSpace = (
     ): Promise<I_InviteToWorkSpaceResponse> => {
       return await protectedApi
         .post(URLS.apiInviteToWorkSpace(workspaceId), {
+          json: values,
+        })
+        .json();
+    },
+    onSuccess: () => {
+      toast.success("Workspace invites sent successfully.");
+      onSuccess?.();
+    },
+    onError: (error: unknown) => {
+      console.error("Error sending workspace invites", error);
+      toast.error(
+        "Failed to invite emails to this workspace. Please try again."
+      );
+      onError?.();
+    },
+  });
+};
+
+export const useAcceptWorkSpaceInvite = (
+  workspaceId: string,
+  onSuccess?: () => void,
+  onError?: () => void
+) => {
+  return useMutation({
+    mutationFn: async (
+      values: I_AcceptWorkSpaceInviteInput
+    ): Promise<I_AcceptWorkSpaceInviteResponse> => {
+      return await protectedApi
+        .post(URLS.apiAcceptWorkSpaceInvite, {
           json: values,
         })
         .json();

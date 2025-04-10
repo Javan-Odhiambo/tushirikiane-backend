@@ -32,6 +32,7 @@ export const URLS = {
     `workspaces/${workspaceSlug}/`,
   apiInviteToWorkSpace: (workSpaceId: string) =>
     `workspaces/${workSpaceId}/invite/`,
+  apiAcceptWorkSpaceInvite: "workspaces/accept/",
 
   // boards
   apiBoards: (workSpaceSlug: string) => `workspaces/${workSpaceSlug}/boards/`,

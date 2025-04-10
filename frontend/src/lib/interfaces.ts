@@ -56,6 +56,14 @@ export interface I_InviteToWorkSpaceResponse {
   message: string;
 }
 
+export interface I_AcceptWorkSpaceInviteInput {
+  token: string;
+}
+
+export interface I_AcceptWorkSpaceInviteResponse {
+  message: string;
+}
+
 export interface I_CreateWorkSpaceResponse {
   name: string;
 }

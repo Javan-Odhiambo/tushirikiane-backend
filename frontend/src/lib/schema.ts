@@ -1,6 +1,8 @@
 import { z } from "zod";
 
-const Z_EmailsSchema = z.object({ emails: z.array(z.string().email()) });
+const Z_EmailsSchema = z.object({
+  emails: z.array(z.string().email()).min(1, "At least one email is required."),
+});
 export type T_Z_EmailsSchema = z.infer<typeof Z_EmailsSchema>;
 
 export const signInSchema = z.object({

@@ -1,32 +1,34 @@
 "use client";
 
-import { useMutation } from "@tanstack/react-query";
-import { signIn, useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { signInSchema } from "@/lib/schema";
+import { URLS } from "@/lib/urls";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  Button,
-  Stack,
-  TextInput,
-  PasswordInput,
   Anchor,
-  Text,
+  Button,
   Flex,
+  PasswordInput,
+  Stack,
+  Text,
+  TextInput,
 } from "@mantine/core";
+import { useMutation } from "@tanstack/react-query";
+import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
-import { URLS } from "@/lib/urls";
-import AuthFormWrapper from "./AuthFormWrapper";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { z } from "zod";
+import AuthFormWrapper from "./AuthFormWrapper";
 
 type T_SignInSchema = z.infer<typeof signInSchema>;
 
 const SignInForm = () => {
   const { update: updateSession } = useSession();
-
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const nextUrl = searchParams.get("nextUrl");
+
   const {
     register,
     handleSubmit,
@@ -52,7 +54,7 @@ const SignInForm = () => {
     onSuccess: async () => {
       toast.success("Successfully signed in");
       await updateSession();
-      router.push(URLS.workspaces);
+      router.push(nextUrl || URLS.workspaces);
     },
     onError: (error) => {
       console.error("Login failed", error);
