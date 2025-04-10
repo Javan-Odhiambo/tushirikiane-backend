@@ -90,6 +90,7 @@ class TaskSerializer(serializers.ModelSerializer):
 				"updated_at",
 				"name",
 				"description",
+				"notes",
 				"due_date",
 				"task_list_id",
 				"position",

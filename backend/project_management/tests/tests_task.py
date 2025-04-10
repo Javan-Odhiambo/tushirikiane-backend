@@ -28,11 +28,12 @@ class TaskViewSetTestCase(APITestCase):
 
 	def test_create_task_successfully(self):
 		url = f"/api/workspaces/{self.workspace.id}/boards/{self.board.id}/task-lists/{self.task_list.id}/tasks/"
-		response = self.client.post(url, data={"name": "New Task"}, format="json")
+		response = self.client.post(url, data={"name": "New Task", "notes": "Test Notes"}, format="json")
 
 		self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 		self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 		self.assertEqual(response.data["name"], "New Task")
+		self.assertEqual(response.data["notes"], "Test Notes")
 
 	def test_create_task_missing_name(self):
 		url = f"/api/workspaces/{self.workspace.id}/boards/{self.board.id}/task-lists/{self.task_list.id}/tasks/"
