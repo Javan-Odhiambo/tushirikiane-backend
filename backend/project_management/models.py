@@ -188,7 +188,7 @@ class Task(BaseModel):
 					.aggregate(models.Max("position"))
 					.get("position__max")
 			)
-			self.position = 1 if last_position is None else last_position + 1
+			self.position = (last_position or 0) + 1
 
 		super().save(*args, **kwargs)
 

@@ -225,7 +225,7 @@ DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL", default="your_email_address")
 # Custom settings
 PROJECT_MANAGEMENT = {
 		"URLS": {
-				"accept_board_invite": "board/accept-invite/{token}",
-				"accept_workspace_invite": "workspace/accept-invite/{token}",
+				"accept_board_invite": "invites/boards/{token}",
+				"accept_workspace_invite": "invites/workspaces/{token}",
 		}
 }

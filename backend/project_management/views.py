@@ -15,8 +15,7 @@ from .mixin import PositionReorderMixin
 from .models import Board, BoardInvite, BoardMember, Task, TaskAssignee, TaskList, Workspace, WorkspaceInvite, \
 	WorkspaceMember
 from .permissions import IsMemberReadOrOwnerFull, IsTaskListOwnerOrBoardMember, IsWorkspaceOwnerOrBoardMember
-from .serializers import BoardMemberSerializer, BoardSerializer, EmailInviteSerializer, InviteSerializer, \
-	InviteTokenSerializer, \
+from .serializers import BoardMemberSerializer, BoardSerializer, EmailInviteSerializer, InviteTokenSerializer, \
 	TaskAssigneeSerializer, TaskListSerializer, TaskSerializer, \
 	WorkspaceMemberSerializer, \
 	WorkspaceSerializer
@@ -107,8 +106,9 @@ def accept_workspace_invite(request, *args, **kwargs):
 	except ObjectDoesNotExist:
 		return response.Response("Invalid token", status=400)
 
-	if invite.recipient_email != request.user.email:
-		return response.Response("Invalid token", status=400)
+	# TODO: Remove check
+	# if invite.recipient_email != request.user.email:
+	# 	return response.Response("Invalid token", status=400)
 
 	membership = WorkspaceMember.objects.create(workspace=workspace, member=request.user)
 	invite.delete()
@@ -277,6 +277,29 @@ class TaskViewSet(viewsets.ModelViewSet):
 
 		return Task.objects.filter(task_list=task_list)
 
+	def create(self, request, *args, **kwargs):
+		task_list_pk = self.kwargs["tasklist_pk"]
+
+		if not task_list_pk:
+			return response.Response("Missing task_list_pk parameter", status=400)
+
+		try:
+			task_list = TaskList.objects.get(pk=task_list_pk)
+		except ObjectDoesNotExist:
+			return response.Response("Task list does not exist", status=400)
+
+		task_data = request.data.copy()
+		task_data["task_list"] = task_list.id
+
+		serializer = self.get_serializer(data=task_data)
+
+		serializer.is_valid(raise_exception=True)
+
+		serializer.save()
+
+		headers = self.get_success_headers(serializer.data)
+		return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
 	@action(detail=True, methods=["post"])
 	def assign(self, request, *args, **kwargs):
 
@@ -339,6 +362,7 @@ class TaskViewSet(viewsets.ModelViewSet):
 		assignees = task.assignees.all()
 		serializer = TaskAssigneeSerializer(assignees, many=True)
 		return Response(serializer.data)
+
 
 class TaskListViewSet(viewsets.ModelViewSet, PositionReorderMixin):
 	serializer_class = TaskListSerializer
@@ -417,12 +441,6 @@ class LabelViewSet(viewsets.ModelViewSet):
 class TaskLabelViewSet(viewsets.ModelViewSet):
 	serializer_class = TaskSerializer
 	queryset = Task.objects.all()
-
-
-# InviteViewSet,
-class InviteViewSet(viewsets.ModelViewSet):
-	serializer_class = InviteSerializer
-	queryset = WorkspaceInvite.objects.all()
 
 
 # WorkspaceMemberViewSet

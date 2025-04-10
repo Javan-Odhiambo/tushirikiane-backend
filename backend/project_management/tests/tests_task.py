@@ -26,6 +26,57 @@ class TaskViewSetTestCase(APITestCase):
 
 		self.client.force_authenticate(user=self.user)
 
+	def test_create_task_successfully(self):
+		url = f"/api/workspaces/{self.workspace.id}/boards/{self.board.id}/task-lists/{self.task_list.id}/tasks/"
+		response = self.client.post(url, data={"name": "New Task"}, format="json")
+
+		self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+		self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+		self.assertEqual(response.data["name"], "New Task")
+
+	def test_create_task_missing_name(self):
+		url = f"/api/workspaces/{self.workspace.id}/boards/{self.board.id}/task-lists/{self.task_list.id}/tasks/"
+		response = self.client.post(url, data={}, format="json")
+
+		self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+		self.assertIn("name", response.data)
+
+	def test_unauthenticated_user_cannot_create_task(self):
+		self.client.logout()
+		url = f"/api/workspaces/{self.workspace.id}/boards/{self.board.id}/task-lists/{self.task_list.id}/tasks/"
+		response = self.client.post(url, data={"name": "Test"}, format="json")
+
+		self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+	def test_non_board_member_cannot_create_task(self):
+		self.client.force_authenticate(user=self.user3)  # not a board member
+		url = f"/api/workspaces/{self.workspace.id}/boards/{self.board.id}/task-lists/{self.task_list.id}/tasks/"
+		response = self.client.post(url, data={"name": "Task"}, format="json")
+
+		self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+	def test_retrieve_task(self):
+		url = f"/api/workspaces/{self.workspace.id}/boards/{self.board.id}/task-lists/{self.task_list.id}/tasks/{self.task.id}/"
+		response = self.client.get(url)
+
+		self.assertEqual(response.status_code, status.HTTP_200_OK)
+		self.assertEqual(response.data["id"], str(self.task.id))
+
+	def test_update_task_name(self):
+		url = f"/api/workspaces/{self.workspace.id}/boards/{self.board.id}/task-lists/{self.task_list.id}/tasks/{self.task.id}/"
+		response = self.client.patch(url, data={"name": "Updated Task"}, format="json")
+
+		self.assertEqual(response.status_code, status.HTTP_200_OK)
+		self.task.refresh_from_db()
+		self.assertEqual(self.task.name, "Updated Task")
+
+	def test_delete_task(self):
+		url = f"/api/workspaces/{self.workspace.id}/boards/{self.board.id}/task-lists/{self.task_list.id}/tasks/{self.task.id}/"
+		response = self.client.delete(url)
+
+		self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+		self.assertFalse(Task.objects.filter(id=self.task.id).exists())
+
 	def test_assign_board_members_to_task(self):
 		"""
 		Test that board members can be assigned to a task

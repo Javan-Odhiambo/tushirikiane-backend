@@ -53,15 +53,19 @@ class BoardSerializer(serializers.ModelSerializer):
 
 # DRF Task model serializer
 class TaskSerializer(serializers.ModelSerializer):
-	assignees = serializers.PrimaryKeyRelatedField(
-		many=True, queryset=TaskAssignee.objects.all(), source="taskassignee_set"
-	)
 	labels = serializers.PrimaryKeyRelatedField(
-		many=True, queryset=TaskLabel.objects.all(), source="tasklabel_set"
+		many=True,
+		read_only=True
+	)
+	task_list = serializers.PrimaryKeyRelatedField(
+		queryset=TaskList.objects.all(),
+		required=False
 	)
 
 	class Meta:
 		model = Task
+		read_only_fields = ["id", "created_at", "updated_at", "position", "labels"]
+
 		fields = [
 				"id",
 				"created_at",
@@ -72,7 +76,6 @@ class TaskSerializer(serializers.ModelSerializer):
 				"task_list",
 				"position",
 				"is_completed",
-				"assignees",
 				"labels",
 		]
 
