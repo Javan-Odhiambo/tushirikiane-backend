@@ -1,20 +1,56 @@
+"use client";
+
 import AddList from "@/components/lists/AddList";
-import { Flex, ScrollArea } from "@mantine/core";
+import { useGetLists } from "@/lib/queries/lists";
+import { Card, Flex, Group, ScrollArea, Skeleton } from "@mantine/core";
+import { useParams } from "next/navigation";
 import List from "./List";
 
 const ListsContainer = () => {
+  const { workSpacesSlug, boardsSlug } = useParams<{
+    workSpacesSlug: string;
+    boardsSlug: string;
+  }>();
+
+  const { data: lists, isPending } = useGetLists(workSpacesSlug, boardsSlug);
+
   return (
     <ScrollArea scrollbars="x">
       <Flex bg="gray.1" h="calc(100vh - 60px)" p={16} gap="lg">
-        <List />
-        <List />
-        <List />
-        <List />
-        <List />
-        <List />
+        {isPending ? (
+          <ListSkeletonContainer />
+        ) : (
+          lists?.map((l, index) => <List key={index} {...l} />)
+        )}
         <AddList />
       </Flex>
     </ScrollArea>
+  );
+};
+
+const ListSkeletonContainer = () => {
+  return (
+    <>
+      {Array(3)
+        .fill(0)
+        .map((_, index) => (
+          <Card
+            key={index}
+            bg={"white"}
+            maw={275}
+            miw={275}
+            shadow="none"
+            h="fit-content"
+          >
+            <Group justify="space-between">
+              <Skeleton height={24} width="50%" />
+              <Skeleton height={24} width={30} circle />
+            </Group>
+            <Skeleton height={200} mt="md" />
+            <Skeleton height={40} mt="md" />
+          </Card>
+        ))}
+    </>
   );
 };
 

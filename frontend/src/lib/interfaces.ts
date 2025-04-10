@@ -28,6 +28,29 @@ export interface I_GetBoardResponse {
   position: number;
 }
 
+export interface I_GetListResponse {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+  board: string;
+  position: number;
+  description: string;
+}
+
+export interface I_GetCardRespone {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+  description: string;
+  due_date: string;
+  task_list: string;
+  position: number;
+  is_completed: boolean;
+  labels: string[];
+}
+
 export interface I_CreateBoardInput {
   name: string;
   description: string;
