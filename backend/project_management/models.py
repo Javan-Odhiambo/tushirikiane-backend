@@ -166,7 +166,7 @@ class Task(BaseModel):
 
 	name = models.CharField(max_length=255)
 	description = models.TextField(blank=True, default="")
-	notes = models.TextField(blank=True, null=True)
+	notes = models.TextField(blank=True, default="")
 	task_list = models.ForeignKey(TaskList, on_delete=models.CASCADE, related_name="tasks")
 	position = models.PositiveIntegerField()
 	due_date = models.DateField(null=True, blank=True)
