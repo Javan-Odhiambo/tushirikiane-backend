@@ -230,7 +230,8 @@ class CheckListItem(BaseModel):
 	is_completed = models.BooleanField(default=False)
 	task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="checklist_items")
 	due_at = models.DateTimeField(null=True, blank=True)
-	assignee = models.ForeignKey("accounts.CustomUser", on_delete=models.CASCADE, related_name="checklist_items")
+	assignee = models.ForeignKey("accounts.CustomUser", on_delete=models.CASCADE, related_name="checklist_items",
+	                             null=True, blank=True)
 
 	def __str__(self):
 		"""

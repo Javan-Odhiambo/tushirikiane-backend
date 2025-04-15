@@ -9,6 +9,7 @@ staticfiles/
 venv
 .vscode
 TushirikianeVenv/
+**/migrations/*
 
 
 # Next.js

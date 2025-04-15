@@ -54,7 +54,7 @@ tasklist_task_router.register(r'tasks', TaskViewSet, basename='tasklist-task')
 
 # Nested router for Task -> Checklist Items
 task_checklist_router = NestedSimpleRouter(tasklist_task_router, r'tasks', lookup='task')
-task_checklist_router.register(r'checklist-items', CheckListItemViewSet, basename='task-checklist')
+task_checklist_router.register(r'checklist', CheckListItemViewSet, basename='task-checklist')
 
 # Nested router for Task -> Labels
 task_label_router = NestedSimpleRouter(tasklist_task_router, r'tasks', lookup='task')

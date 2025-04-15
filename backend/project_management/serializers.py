@@ -150,16 +150,25 @@ class LabelSerializer(serializers.ModelSerializer):
 
 # DRF CheckListItem model serializer
 class CheckListItemSerializer(serializers.ModelSerializer):
+	task_id = serializers.PrimaryKeyRelatedField(source="task", read_only=True)
+	assignee_id = serializers.PrimaryKeyRelatedField(
+		source="assignee",
+		queryset=CustomUser.objects.all(),
+		required=False,
+		allow_null=True
+	)
+
 	class Meta:
 		model = CheckListItem
 		fields = [
 				"id",
 				"created_at",
 				"updated_at",
-				"task",
+				"task_id",
 				"name",
 				"is_completed",
 				"due_at",
+				"assignee_id",
 		]
 
 

@@ -15,7 +15,8 @@ from .mixin import PositionReorderMixin
 from .models import Board, BoardInvite, BoardMember, Task, TaskAssignee, TaskList, Workspace, WorkspaceInvite, \
 	WorkspaceMember
 from .permissions import IsMemberReadOrOwnerFull, IsTaskListOwnerOrBoardMember, IsWorkspaceOwnerOrBoardMember
-from .serializers import BoardMemberSerializer, BoardSerializer, EmailInviteSerializer, InviteTokenSerializer, \
+from .serializers import BoardMemberSerializer, BoardSerializer, CheckListItemSerializer, EmailInviteSerializer, \
+	InviteTokenSerializer, \
 	TaskAssigneeSerializer, TaskListSerializer, TaskSerializer, \
 	WorkspaceMemberSerializer, \
 	WorkspaceSerializer
@@ -423,8 +424,60 @@ class TaskListViewSet(viewsets.ModelViewSet, PositionReorderMixin):
 
 # CheckListItemViewSet,
 class CheckListItemViewSet(viewsets.ModelViewSet):
-	serializer_class = TaskSerializer
-	queryset = Task.objects.all()
+	serializer_class = CheckListItemSerializer
+	permission_classes = (IsAuthenticated, IsWorkspaceOwnerOrBoardMember)
+
+	def get_queryset(self):
+		task_pk = self.kwargs["task_pk"]
+		task = Task.objects.filter(pk=task_pk).prefetch_related("checklist_items").first()
+
+		if not task:
+			raise NotFound("Task does not exist")
+
+		return task.checklist_items.all()
+
+	def create(self, request, *args, **kwargs):
+		task_pk = self.kwargs["task_pk"]
+		task = Task.objects.filter(pk=task_pk).first()
+
+		if not task:
+			return response.Response("Task does not exist", status=400)
+
+		serializer = self.get_serializer(data=request.data)
+		serializer.is_valid(raise_exception=True)
+
+		checklist_item = serializer.save(task=task)
+
+		headers = self.get_success_headers(serializer.data)
+		return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+	@action(detail=True, methods=["post"])
+	def assign(self, request, *args, **kwargs):
+		checklist_item = self.get_object()
+		user_id = request.data.get("assignee_id")
+
+		if not user_id:
+			return Response({"detail": "Missing assignee_id"}, status=400)
+
+		try:
+			user = CustomUser.objects.get(pk=user_id)
+		except ObjectDoesNotExist:
+			return Response({"detail": "User not found"}, status=404)
+
+		checklist_item.assignee = user
+		checklist_item.save()
+
+		serializer = self.get_serializer(checklist_item)
+		return Response(serializer.data, status=200)
+
+	@action(detail=True, methods=["post"])
+	def unassign(self, request, *args, **kwargs):
+		checklist_item = self.get_object()
+		checklist_item.assignee = None
+		checklist_item.save()
+
+		serializer = self.get_serializer(checklist_item)
+		return Response(serializer.data, status=200)
 
 
 # LabelViewSet,
