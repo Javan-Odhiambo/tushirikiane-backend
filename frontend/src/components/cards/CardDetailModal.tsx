@@ -1,19 +1,22 @@
 "use client";
 
 import { I_GetCardRespone } from "@/lib/interfaces/responses";
-import { M_Tasks } from "@/lib/mockData";
+import { M_People } from "@/lib/mockData";
+import { useEditCard } from "@/lib/mutations/cards";
 import {
   ActionIcon,
-  Badge,
-  Box,
-  Divider,
   Group,
   Modal,
   Stack,
   Text,
+  TextInput,
+  Textarea,
   Title,
+  rem,
 } from "@mantine/core";
 import { useParams } from "next/navigation";
+import { useState } from "react";
+import ChecklistContainer from "../checklist/ChecklistContainer";
 import AvatarsContainer from "../core/AvatarsContainer";
 import { IconCollection } from "../core/IconCollection";
 import RichTextEditor from "../core/RichTextEditor";
@@ -29,40 +32,119 @@ const CardDetailModal: React.FC<CardDetailModalProps> = ({
   onClose,
   ...card
 }) => {
-  const { workSpacesSlug } = useParams<{
+  const { workSpacesSlug, boardsSlug } = useParams<{
     workSpacesSlug: string;
     boardsSlug: string;
   }>();
 
-  const handleOnTaskDelete = (taskId: string) => {
-    console.log(`Deleted task with ID ${taskId}`);
+  const { mutate: editCard } = useEditCard(
+    workSpacesSlug,
+    boardsSlug,
+    card.task_list_id,
+    card.id
+  );
+
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [name, setName] = useState(card.name);
+
+  const [isEditingDescription, setIsEditingDescription] = useState(false);
+  const [description, setDescription] = useState(card.description ?? "");
+
+  const handleOnCardStatusChange = () => {
+    editCard({ is_completed: !card.is_completed, name: card.name });
   };
 
-  const handleOnCardStatusChange = (cardId: string) => {
-    console.log(`Toggling status of card ${cardId}`);
+  const handleOnNotesSave = (notes: string) => {
+    editCard({ notes: notes, name: card.name });
   };
 
-  const handleOnTaskStatusChange = (taskId: string) => {
-    console.log(`Toggling status of task ${taskId}`);
+  const handleOnCreateLabel = () => {
+    console.log("Creating label");
   };
 
-  const handleOnCreateLabel = () => {};
+  const handleOnNameClick = () => {
+    setIsEditingName(true);
+  };
+
+  const handleOnDescriptionClick = () => {
+    setIsEditingDescription(true);
+  };
+
+  const handleOnNameBlur = () => {
+    setIsEditingName(false);
+    if (name !== card.name) {
+      editCard({ name });
+    }
+  };
+
+  const handleOnDescriptionBlur = () => {
+    setIsEditingDescription(false);
+    if (description !== card.description) {
+      editCard({ description, name: card.name });
+    }
+  };
 
   return (
     <Modal opened={opened} onClose={onClose} size="xl">
       <Stack>
-        <Group>
+        <Group align="center">
           <StatusCheckBox
-            handleOnChange={() => handleOnCardStatusChange("")}
-            isChecked
+            handleOnChange={handleOnCardStatusChange}
+            isChecked={card.is_completed}
           />
-          <Title>{card.name}</Title>
+          <Stack flex={1}>
+            {isEditingName ? (
+              <TextInput
+                autoFocus
+                value={name}
+                onChange={(e) => setName(e.currentTarget.value)}
+                onBlur={handleOnNameBlur}
+                size={rem(36)}
+                fw={700}
+                w={"100%"}
+              />
+            ) : (
+              <Title
+                onClick={handleOnNameClick}
+                style={{ cursor: "pointer", width: "100%" }}
+                size={rem(36)}
+              >
+                {name}
+              </Title>
+            )}
+          </Stack>
         </Group>
+
+        <div style={{ width: "100%" }}>
+          {isEditingDescription ? (
+            <Textarea
+              value={description}
+              onChange={(e) => setDescription(e.currentTarget.value)}
+              onBlur={handleOnDescriptionBlur}
+              autosize
+              minRows={2}
+              autoFocus
+              w={"100%"}
+              size={rem(16)}
+            />
+          ) : (
+            <Text
+              onClick={handleOnDescriptionClick}
+              style={{
+                cursor: "pointer",
+                whiteSpace: "pre-wrap",
+              }}
+              size={rem(16)}
+            >
+              {description || "Add a description..."}
+            </Text>
+          )}
+        </div>
 
         <Group justify="space-between" align="center">
           <Stack>
             <Text>Members</Text>
-            <AvatarsContainer workSpaceSlug={workSpacesSlug} />
+            <AvatarsContainer workSpaceMembers={M_People} isLoading={false} />
           </Stack>
 
           <Stack>
@@ -81,32 +163,12 @@ const CardDetailModal: React.FC<CardDetailModalProps> = ({
         </Group>
 
         <Text>Notes</Text>
-        <RichTextEditor />
+        <RichTextEditor
+          savedNotes={card.notes ?? ""}
+          handleOnSave={handleOnNotesSave}
+        />
 
-        <Stack>
-          <Text>CheckList</Text>
-          <Divider size={"lg"} />
-          <Box>
-            {M_Tasks.map((t) => (
-              <Group justify="space-between" key={t.id}>
-                <Group>
-                  <StatusCheckBox
-                    handleOnChange={() => handleOnTaskStatusChange("")}
-                    isChecked={t.isDone}
-                  />
-                  <Text>{t.title}</Text>
-                </Group>
-                <ActionIcon
-                  onClick={() => handleOnTaskDelete("")}
-                  variant="subtle"
-                  color="red"
-                >
-                  <IconCollection.Delete />
-                </ActionIcon>
-              </Group>
-            ))}
-          </Box>
-        </Stack>
+        <ChecklistContainer card={card} />
       </Stack>
     </Modal>
   );

@@ -61,6 +61,7 @@ const CreateCardForm = ({ listId, onClose }: CreateCardFormProps) => {
             error={form.formState.errors.name?.message}
             {...form.register("name")}
             disabled={isPending}
+            withAsterisk
           />
 
           <Textarea

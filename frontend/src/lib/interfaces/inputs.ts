@@ -5,10 +5,26 @@ export interface I_CreateBoardInput {
 }
 
 export interface I_CreatCardInput {
-    name: string;
-  }
+  name: string;
+}
 
-  
+export interface I_EditCardInput {
+  name?: string;
+  notes?: string;
+  description?: string;
+  due_date?: string;
+  position?: number;
+  is_completed?: boolean;
+  labels?: string[];
+}
+
+export interface I_EditChecklistInput {
+  name?: string;
+  is_completed?: boolean;
+  assignee_id?: string;
+  due_at?: string;
+}
+
 export interface I_InviteEmailsInput {
   emails: string[];
 }

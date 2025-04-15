@@ -12,8 +12,16 @@ import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { useState } from "react";
 
-const RichTextEditor = () => {
-  const [content, setContent] = useState("");
+interface RichTextEditorProps {
+  savedNotes: string;
+  handleOnSave: (notes: string) => void;
+}
+
+const RichTextEditor: React.FC<RichTextEditorProps> = ({
+  savedNotes,
+  handleOnSave,
+}) => {
+  const [content, setContent] = useState(savedNotes);
 
   const editor = useEditor({
     extensions: [
@@ -27,13 +35,19 @@ const RichTextEditor = () => {
       TextAlign.configure({ types: ["heading", "paragraph"] }),
     ],
     content,
+    editorProps: {
+      attributes: {
+        spellcheck: "false",
+      },
+    },
+    immediatelyRender: false,
   });
 
   const handleSave = () => {
     if (editor) {
       const html = editor.getHTML();
-      console.log("Saved content:", html);
       setContent(html);
+      handleOnSave(html);
     }
   };
 
