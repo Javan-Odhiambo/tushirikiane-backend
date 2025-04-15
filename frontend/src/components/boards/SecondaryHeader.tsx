@@ -7,9 +7,10 @@ import { useParams } from "next/navigation";
 import AvatarsContainer from "../core/AvatarsContainer";
 import FilterIcon from "../core/FilterIcon";
 import InviteToBoardButtonButton from "./InviteToBoardButton";
+import { M_People } from "@/lib/mockData";
 
 const SecondaryHeader = () => {
-  const { workSpacesSlug, boardsSlug } = useParams<{
+  const { boardsSlug } = useParams<{
     workSpacesSlug: string;
     boardsSlug: string;
   }>();
@@ -48,7 +49,7 @@ const SecondaryHeader = () => {
       <Group>
         <FilterIcon />
         {/* TODO: fetch board people and pass here */}
-        <AvatarsContainer workSpaceSlug={workSpacesSlug} />
+        <AvatarsContainer workSpaceMembers={M_People} isLoading={false} />
         <InviteToBoardButtonButton boardId={selectedBoard.id} />
       </Group>
     </Group>

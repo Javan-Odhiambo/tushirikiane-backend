@@ -1,5 +1,4 @@
 "use client";
-import { WorkSpacesProvider } from "@/providers/WorkSpacesProvider";
 import {
   createTheme,
   MantineColorsTuple,
@@ -49,10 +48,8 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         <QueryClientProvider client={queryClient}>
           <NuqsAdapter>
             <Toaster richColors />
-            <WorkSpacesProvider>
-              {children}
-              <ReactQueryDevtools initialIsOpen={false} />
-            </WorkSpacesProvider>
+            {children}
+            <ReactQueryDevtools initialIsOpen={false} />
           </NuqsAdapter>
         </QueryClientProvider>
       </SessionProvider>

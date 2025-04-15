@@ -46,7 +46,7 @@ const WorkSpacesContainer = () => {
                 ))}
               </>
             ) : (
-              <Text size="sm" c="dimmed">
+              <Text size="sm" c="dimmed" ta="center">
                 You have no workspaces yet. Create one to start collaborating!
               </Text>
             )}

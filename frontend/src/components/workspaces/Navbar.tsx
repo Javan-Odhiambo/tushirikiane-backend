@@ -28,22 +28,22 @@ const mainMenuItems = [
 ];
 
 const Navbar = () => {
-  const { workSpacesSlug } = useParams<{
-    workSpacesSlug: string;
-    boardsSlug: string;
-  }>();
+  const pathname = usePathname();
 
   return (
-    <BoardsProvider>
-      <Stack>
-        <WorkSpacesMenu />
-        <WorkspaceMainMenuCard />
-        {workSpacesSlug && <WorkspaceBoards />}
-      </Stack>
-    </BoardsProvider>
+    <Stack>
+      <WorkSpacesMenu />
+      {/* <WorkspaceMainMenuCard /> */}
+      {pathname.startsWith("/workspaces/") && (
+        <BoardsProvider>
+          <WorkspaceBoards />
+        </BoardsProvider>
+      )}
+    </Stack>
   );
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const WorkspaceMainMenuCard = () => {
   const pathname = usePathname();
 
