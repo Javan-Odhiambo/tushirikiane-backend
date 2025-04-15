@@ -6,6 +6,7 @@ import React, { useState } from "react";
 import AvatarsContainer from "../core/AvatarsContainer";
 import { IconCollection } from "../core/IconCollection";
 import CardDetailModal from "./CardDetailModal";
+import { M_People } from "@/lib/mockData";
 
 const Card: React.FC<CardProps> = (card) => {
   const { name, description } = card;
@@ -29,7 +30,7 @@ const Card: React.FC<CardProps> = (card) => {
         <Text size="xs" mb="xs">
           {description}
         </Text>
-        <AvatarsContainer workSpaceSlug="" />
+        <AvatarsContainer workSpaceMembers={M_People} isLoading={false} />
       </MantineCard>
 
       <CardDetailModal

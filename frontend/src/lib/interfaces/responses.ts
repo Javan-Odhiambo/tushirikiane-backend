@@ -33,7 +33,7 @@ export interface I_GetListResponse {
   created_at: string;
   updated_at: string;
   name: string;
-  board: string;
+  board_id: string;
   position: number;
   description: string;
 }
@@ -44,8 +44,9 @@ export interface I_GetCardRespone {
   updated_at: string;
   name: string;
   description: string;
+  notes: string;
   due_date: string;
-  task_list: string;
+  task_list_id: string;
   position: number;
   is_completed: boolean;
   labels: string[];
@@ -99,4 +100,29 @@ export interface I_GetWorkSpaceMemberResponse {
   updated_at: string;
   workspace_id: string;
   member: I_Member;
+}
+
+export interface I_EditCardResponse {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+  description: string;
+  notes: string;
+  due_date: string;
+  task_list_id: string;
+  position: number;
+  is_completed: boolean;
+  labels: string[];
+}
+
+export interface I_GetChecklistResponse {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  task_id: string;
+  name: string;
+  is_completed: boolean;
+  due_at: string;
+  assignee_id: string;
 }

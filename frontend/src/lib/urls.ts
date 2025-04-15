@@ -53,4 +53,28 @@ export const URLS = {
   // cards
   apiCards: (workSpaceId: string, boardId: string, listId: string) =>
     `workspaces/${workSpaceId}/boards/${boardId}/task-lists/${listId}/tasks/`,
+  apiCardsDetail: (
+    workSpaceId: string,
+    boardId: string,
+    listId: string,
+    cardId: string
+  ) =>
+    `workspaces/${workSpaceId}/boards/${boardId}/task-lists/${listId}}/tasks/${cardId}/`,
+
+  // checklists
+  apiChecklists: (
+    workSpaceId: string,
+    boardId: string,
+    listId: string,
+    cardId: string
+  ) =>
+    `workspaces/${workSpaceId}/boards/${boardId}/task-lists/${listId}/tasks/${cardId}/checklist/`,
+  apiChecklistsDetail: (
+    workSpaceId: string,
+    boardId: string,
+    listId: string,
+    cardId: string,
+    checklistId: string
+  ) =>
+    `workspaces/${workSpaceId}/boards/${boardId}/task-lists/${listId}}/tasks/${cardId}/checklist/${checklistId}`,
 };

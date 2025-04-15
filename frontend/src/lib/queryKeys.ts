@@ -6,4 +6,10 @@ export const QUERY_KEYS = {
     `${workSpaceId}-${boardId}-lists`,
   cards: (workSpaceId: string, boardId: string, listId: string) =>
     `${workSpaceId}-${boardId}-${listId}-cards`,
+  checklists: (
+    workSpaceId: string,
+    boardId: string,
+    listId: string,
+    cardId: string
+  ) => `${workSpaceId}-${boardId}-${listId}-${cardId}-checklists`,
 };
