@@ -1,9 +1,11 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { I_CreatCardInput } from "../interfaces/inputs";
+import { I_CreatCardInput, I_EditListInput } from "../interfaces/inputs";
 import {
   I_GetCardRespone as I_CreateCardResponse,
+  I_EditListResponse,
   I_GetCardRespone,
+  I_GetListResponse,
 } from "../interfaces/responses";
 import { protectedApi } from "../kyInstance";
 import { QUERY_KEYS } from "../queryKeys";
@@ -41,8 +43,47 @@ export const useCreateList = (
   });
 };
 
+export const useEditList = (
+  workSpaceId: string,
+  boardId: string,
+  listId: string,
+  onSuccess?: () => void,
+  onError?: () => void
+) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (
+      values: I_EditListInput
+    ): Promise<I_EditListResponse> => {
+      return await protectedApi
+        .put(URLS.apiListsDetail(workSpaceId, boardId, listId), {
+          json: values,
+        })
+        .json();
+    },
+    onSuccess: (editedList) => {
+      queryClient.setQueryData<I_GetListResponse[]>(
+        [QUERY_KEYS.lists(workSpaceId, boardId)],
+        (oldLists = []) =>
+          oldLists.map((list) =>
+            list.id === editedList.id ? editedList : list
+          )
+      );
+
+      toast.success("List updated successfully.");
+      onSuccess?.();
+    },
+    onError: (error) => {
+      console.error("Error updating list", error);
+      toast.error("Failed to update list. Please try again");
+      onError?.();
+    },
+  });
+};
+
 export const useDeleteList = (
-  workspaceId: string,
+  workSpaceId: string,
   boardId: string,
   listId: string,
   onSuccess?: () => void,
@@ -53,12 +94,12 @@ export const useDeleteList = (
   return useMutation({
     mutationFn: async () => {
       await protectedApi.delete(
-        URLS.apiListsDetail(workspaceId, boardId, listId)
+        URLS.apiListsDetail(workSpaceId, boardId, listId)
       );
     },
     onSuccess: () => {
       queryClient.setQueryData<I_GetCardRespone[]>(
-        [QUERY_KEYS.lists(workspaceId, boardId)],
+        [QUERY_KEYS.lists(workSpaceId, boardId)],
         (oldLists = []) => oldLists.filter((l) => l.id !== listId)
       );
 

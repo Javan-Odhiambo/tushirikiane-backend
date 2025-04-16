@@ -48,3 +48,9 @@ export interface I_InviteToWorkSpaceInput {
 export interface I_CreateWorkSpaceInput {
   name: string;
 }
+
+export interface I_EditListInput {
+  name?: string;
+  description?: string;
+  position?: number;
+}
