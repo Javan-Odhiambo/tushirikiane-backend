@@ -7,12 +7,12 @@ import React from "react";
 import MemberAvatar from "./MemberAvatar";
 
 export interface AvatarsContainerProps {
-  workSpaceMembers?: I_GetWorkSpaceMemberResponse[];
+  members?: I_GetWorkSpaceMemberResponse[];
   isLoading: boolean;
 }
 
 const AvatarsContainer: React.FC<AvatarsContainerProps> = ({
-  workSpaceMembers = [],
+  members = [],
   isLoading,
 }) => {
   return (
@@ -20,7 +20,7 @@ const AvatarsContainer: React.FC<AvatarsContainerProps> = ({
       {isLoading ? (
         <AvatarsSkeletonContainer />
       ) : (
-        workSpaceMembers.slice(0, CONSTANTS.avatarMaxSize).map((p, index) => {
+        members.slice(0, CONSTANTS.avatarMaxSize).map((p, index) => {
           return (
             <MemberAvatar
               key={index}
@@ -34,8 +34,8 @@ const AvatarsContainer: React.FC<AvatarsContainerProps> = ({
         })
       )}
 
-      {!isLoading && workSpaceMembers.length > CONSTANTS.avatarMaxSize && (
-        <Avatar>+{workSpaceMembers.length - CONSTANTS.avatarMaxSize}</Avatar>
+      {!isLoading && members.length > CONSTANTS.avatarMaxSize && (
+        <Avatar>+{members.length - CONSTANTS.avatarMaxSize}</Avatar>
       )}
     </Avatar.Group>
   );

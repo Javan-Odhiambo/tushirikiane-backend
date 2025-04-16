@@ -144,7 +144,7 @@ const CardDetailModal: React.FC<CardDetailModalProps> = ({
         <Group justify="space-between" align="center">
           <Stack>
             <Text>Members</Text>
-            <AvatarsContainer workSpaceMembers={M_People} isLoading={false} />
+            <AvatarsContainer members={M_People} isLoading={false} />
           </Stack>
 
           <Stack>

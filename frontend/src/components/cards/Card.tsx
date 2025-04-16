@@ -30,7 +30,7 @@ const Card: React.FC<CardProps> = (card) => {
         <Text size="xs" mb="xs">
           {description}
         </Text>
-        <AvatarsContainer workSpaceMembers={M_People} isLoading={false} />
+        <AvatarsContainer members={M_People} isLoading={false} />
       </MantineCard>
 
       <CardDetailModal

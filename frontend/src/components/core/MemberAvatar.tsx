@@ -11,7 +11,7 @@ interface MemberAvatarProps {
 const MemberAvatar: React.FC<MemberAvatarProps> = ({ fullName, initials }) => {
   return (
     <Tooltip label={fullName} withArrow openDelay={200}>
-      <Avatar>{initials}</Avatar>
+      <Avatar color="initials" name={initials} />
     </Tooltip>
   );
 };
