@@ -35,7 +35,7 @@ const ListActions: React.FC<ListActionsProps> = ({ listId }) => {
           </ActionIcon>
         </Menu.Target>
         <Menu.Dropdown>
-          <EditListMenuItem listId={listId} />
+          {/* <EditListMenuItem listId={listId} /> */}
           <Menu.Item
             leftSection={<IconCollection.Delete />}
             color="red"
@@ -55,6 +55,7 @@ const ListActions: React.FC<ListActionsProps> = ({ listId }) => {
   );
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const EditListMenuItem: React.FC<ListActionsProps> = ({ listId }) => {
   return <Menu.Item leftSection={<IconCollection.Edit />}>{listId}</Menu.Item>;
 };

@@ -126,3 +126,13 @@ export interface I_GetChecklistResponse {
   due_at: string;
   assignee_id: string;
 }
+
+export interface I_EditListResponse {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+  board_id: string;
+  position: number;
+  description: string;
+}
