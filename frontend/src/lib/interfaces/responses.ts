@@ -136,3 +136,14 @@ export interface I_EditListResponse {
   position: number;
   description: string;
 }
+
+export interface I_CreateChecklistItemResponse {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  task_id: string;
+  name: string;
+  is_completed: false;
+  due_at: string;
+  assignee_id: string;
+}

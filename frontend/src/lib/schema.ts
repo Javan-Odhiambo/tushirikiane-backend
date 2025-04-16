@@ -70,3 +70,10 @@ export const createListSchema = z.object({
   name: z.string().min(1, { message: "List name is required" }).trim(),
 });
 export type T_CreateListSchema = z.infer<typeof createListSchema>;
+
+export const createChecklistItemSchema = z.object({
+  name: z.string().min(1, { message: "Card name is required" }).trim(),
+});
+export type T_CreateChecklistItemSchema = z.infer<
+  typeof createChecklistItemSchema
+>;
