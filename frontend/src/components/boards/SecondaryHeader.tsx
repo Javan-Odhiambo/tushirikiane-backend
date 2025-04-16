@@ -1,19 +1,19 @@
 "use client";
 
+import { M_People } from "@/lib/mockData";
 import { useBoards } from "@/providers/BoardsProvider";
-import { Button, Group, Text } from "@mantine/core";
-import { IconBrandTrello, IconTable } from "@tabler/icons-react";
+import { Group, Text } from "@mantine/core";
 import { useParams } from "next/navigation";
 import AvatarsContainer from "../core/AvatarsContainer";
-import FilterIcon from "../core/FilterIcon";
 import InviteToBoardButtonButton from "./InviteToBoardButton";
-import { M_People } from "@/lib/mockData";
 
 const SecondaryHeader = () => {
   const { boardsSlug } = useParams<{
     workSpacesSlug: string;
     boardsSlug: string;
   }>();
+
+  // const { setListsView, isBoardView, isTableView } = useListsView();
 
   const { data: boards } = useBoards();
   const selectedBoard = boards?.find((b) => b.id === boardsSlug);
@@ -35,19 +35,28 @@ const SecondaryHeader = () => {
       <Group justify="space-between">
         <Text>{selectedBoard.name}</Text>
 
-        <Group gap={"sm"} ml={"xl"}>
-          <Button variant="subtle" leftSection={<IconBrandTrello size={18} />}>
+        {/* <Group gap="sm" ml="xl">
+          <Button
+            variant={isBoardView ? "light" : "subtle"}
+            leftSection={<IconBrandTrello size={18} />}
+            onClick={() => setListsView("board")}
+          >
             Board
           </Button>
 
-          <Button variant="subtle" leftSection={<IconTable size={18} />}>
+          <Button
+            variant={isTableView ? "light" : "subtle"}
+            leftSection={<IconTable size={18} />}
+            onClick={() => setListsView("table")}
+          >
             Table
           </Button>
         </Group>
+        */}
       </Group>
 
       <Group>
-        <FilterIcon />
+        {/* <FilterIcon /> */}
         {/* TODO: fetch board people and pass here */}
         <AvatarsContainer workSpaceMembers={M_People} isLoading={false} />
         <InviteToBoardButtonButton boardId={selectedBoard.id} />

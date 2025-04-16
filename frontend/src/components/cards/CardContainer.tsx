@@ -2,12 +2,12 @@
 
 import { useGetCards } from "@/lib/queries/cards";
 import {
-  Box,
   Group,
   Card as MantineCard,
   ScrollArea,
   Skeleton,
-  Text,
+  Stack,
+  Text
 } from "@mantine/core";
 import { useParams } from "next/navigation";
 import React from "react";
@@ -31,7 +31,7 @@ const CardContainer: React.FC<CardContainerProps> = ({ listId }) => {
 
   return (
     <ScrollArea mah={300} type="always" scrollbarSize={6} offsetScrollbars>
-      <Box pr="sm" style={{ minHeight: "100%" }}>
+      <Stack pr="sm">
         {isPending ? (
           <CardSkeletonContainer />
         ) : cards && cards.length > 0 ? (
@@ -41,7 +41,7 @@ const CardContainer: React.FC<CardContainerProps> = ({ listId }) => {
             No cards available
           </Text>
         )}
-      </Box>
+      </Stack>
     </ScrollArea>
   );
 };

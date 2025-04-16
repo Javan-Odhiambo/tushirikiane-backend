@@ -7,6 +7,7 @@ import CreateListButton from "./CreateListButton";
 import List from "./List";
 
 const ListsContainer = () => {
+  
   const { workSpacesSlug, boardsSlug } = useParams<{
     workSpacesSlug: string;
     boardsSlug: string;

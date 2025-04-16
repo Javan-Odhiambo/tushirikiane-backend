@@ -1,12 +1,11 @@
-import SecondaryHeader from "@/components/boards/SecondaryHeader";
-import ListsContainer from "@/components/lists/ListsContainer";
+import BoardsWrapper from "@/components/boards/BoardsWrapper";
+import { ListsViewProvider } from "@/providers/ListsViewProvider";
 
 const BoardsSlugPage = () => {
   return (
-    <>
-      <SecondaryHeader />
-      <ListsContainer />
-    </>
+    <ListsViewProvider>
+      <BoardsWrapper />
+    </ListsViewProvider>
   );
 };
 
