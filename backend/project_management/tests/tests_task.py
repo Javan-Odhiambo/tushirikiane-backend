@@ -26,7 +26,7 @@ class TaskViewSetTestCase(APITestCase):
 		BoardMember.objects.create(board=self.board, member=self.user2)
 		WorkspaceMember.objects.create(workspace=self.workspace, member=self.user2)
 
-		self.assignees_url = f"/api/workspaces/{self.workspace.id}/boards/{self.board.id}/task-lists/{self.task_list.id}/tasks/{self.task.id}/assignees/"
+		self.assignees_url = f"/api/workspaces/{self.workspace.id}/boards/{self.board.id}/task-lists/{self.task_list.id}/tasks/{self.task.id}/members/"
 
 		self.client.force_authenticate(user=self.user)
 
