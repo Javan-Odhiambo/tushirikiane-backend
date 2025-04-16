@@ -7,7 +7,7 @@ import {
 import {
   I_CreateChecklistItemResponse,
   I_EditCardResponse,
-  I_GetCardRespone
+  I_GetCardRespone,
 } from "../interfaces/responses";
 import { protectedApi } from "../kyInstance";
 import { QUERY_KEYS } from "../queryKeys";
@@ -69,12 +69,12 @@ export const useEditChecklists = (
         })
         .json();
     },
-    onSuccess: (editedCard) => {
+    onSuccess: (editedChecklist) => {
       queryClient.setQueryData<I_GetCardRespone[]>(
         [QUERY_KEYS.cards(workSpaceId, boardId, listId)],
-        (oldCards = []) =>
-          oldCards.map((card) =>
-            card.id === editedCard.id ? editedCard : card
+        (oldChecklists = []) =>
+          oldChecklists.map((checklist) =>
+            checklist.id === editedChecklist.id ? editedChecklist : checklist
           )
       );
 
@@ -84,6 +84,46 @@ export const useEditChecklists = (
     onError: (error) => {
       console.error("Error updating card", error);
       toast.error("Failed to update card. Please try again");
+      onError?.();
+    },
+  });
+};
+
+export const useDeleteChecklistItem = (
+  workSpaceId: string,
+  boardId: string,
+  listId: string,
+  cardId: string,
+  checklistId: string,
+  onSuccess?: () => void,
+  onError?: () => void
+) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async () => {
+      return await protectedApi.delete(
+        URLS.apiChecklistsDetail(
+          workSpaceId,
+          boardId,
+          listId,
+          cardId,
+          checklistId
+        )
+      );
+    },
+    onSuccess: () => {
+      // TODO: update this to not invalidate the entire cache
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.checklists(workSpaceId, boardId, listId, cardId)],
+      });
+
+      toast.success("Task deleted successfully.");
+      onSuccess?.();
+    },
+    onError: (error) => {
+      console.error("Error deleting task", error);
+      toast.error("Failed to delete task. Please try again");
       onError?.();
     },
   });
