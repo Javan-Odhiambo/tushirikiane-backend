@@ -146,41 +146,48 @@ const WorkspaceBoards = () => {
         <Text size="xs">BOARDS</Text>
         <CreateBoardButton />
       </Group>
-      {isLoading
-        ? Array.from({ length: 4 }).map((_, index) => (
-            <Skeleton key={index} height={36} radius="sm">
+
+      {isLoading ? (
+        Array.from({ length: 4 }).map((_, index) => (
+          <Skeleton key={index} height={36} radius="sm">
+            <Button
+              variant="light"
+              fullWidth
+              justify="start"
+              leftSection={<IconLayout />}
+              disabled
+            >
+              <Text>Loading...</Text>
+            </Button>
+          </Skeleton>
+        ))
+      ) : boards?.length === 0 ? (
+        <Text size="sm" ta="center" c="dimmed" mt="sm">
+          No boards found. Create one to get started.
+        </Text>
+      ) : (
+        boards?.map((board) => {
+          const isActive = boardsSlug === board?.slug;
+
+          return (
+            <Group key={board.id} gap="xs">
               <Button
-                variant="light"
+                component={Link}
+                href={URLS.boardsSlug(workSpacesSlug, board?.id)}
+                variant={isActive ? "filled" : "light"}
                 fullWidth
                 justify="start"
                 leftSection={<IconLayout />}
-                disabled
+                flex={1}
               >
-                <Text>Loading...</Text>
+                <Text fw={isActive ? 700 : 400}>{board.name}</Text>
               </Button>
-            </Skeleton>
-          ))
-        : boards?.map((board) => {
-            const isActive = boardsSlug === board?.slug;
-
-            return (
-              <Group key={board.id} gap="xs">
-                <Button
-                  component={Link}
-                  href={URLS.boardsSlug(workSpacesSlug, board?.id)}
-                  variant={isActive ? "filled" : "light"}
-                  fullWidth
-                  justify="start"
-                  leftSection={<IconLayout />}
-                  flex={1}
-                >
-                  <Text fw={isActive ? 700 : 400}>{board.name}</Text>
-                </Button>
-                <DeleteBoardButton boardSlug={board.id} />
-                <InviteToBoardButtonButton boardId={board.id} />
-              </Group>
-            );
-          })}
+              <DeleteBoardButton boardSlug={board.id} />
+              <InviteToBoardButtonButton boardId={board.id} />
+            </Group>
+          );
+        })
+      )}
     </Stack>
   );
 };
