@@ -34,9 +34,9 @@ const ChecklistContainer: React.FC<ChecklistContainerProps> = ({ card }) => {
       ) : (
         <Box>
           {checklists && checklists.length > 0 ? (
-            checklists.map((c, index) => (
+            checklists.map((ch, index) => (
               <div key={index}>
-                <Checklist {...c} />
+                <Checklist {...ch} listId={card.task_list_id} />
               </div>
             ))
           ) : (
