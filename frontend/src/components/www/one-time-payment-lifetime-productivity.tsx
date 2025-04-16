@@ -1,7 +1,7 @@
 'use client'
-import {Title, Text, rem} from "@mantine/core"
-import {BoldWord} from "@/components/www/hero";
-import {useMediaQuery} from "@mantine/hooks";
+import { BoldWord } from "@/components/www/hero";
+import { Text, Title, rem } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
 
 const OneTimePaymentLifetimeProductivity = () => {
     const isMobile = useMediaQuery("(max-width: 720px)")
@@ -10,12 +10,7 @@ const OneTimePaymentLifetimeProductivity = () => {
             <Title order={2} fw={550} size={rem(isMobile?22:38)} mb={isMobile?10:16} lh={1.2}>One time payment, <BoldWord word={"lifetime"}/>
                 <br/> productivity </Title>
             <Text c="dimmed">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus
-                ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent
-                mauris. Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla. Class
-                aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur sodales
-                ligula in libero. Sed dignissim lacinia nunc. Curabitur tortor. Pellentesque nibh. Aenean quam. In
-                scelerisque sem at dolor. Maecenas mattis. Sed convallis tristique sem.
+                Invest once and unlock a lifetime of enhanced productivity. Our comprehensive suite of tools and features is designed to streamline your workflow, boost efficiency, and help you achieve more in less time. With a single payment, you gain unlimited access to all current and future updates, ensuring your productivity tools always stay ahead of the curve. No subscriptions, no hidden fees - just pure value that grows with you over time.
             </Text>
         </section>
     )
