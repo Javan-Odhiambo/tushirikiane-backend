@@ -451,6 +451,19 @@ class CheckListItemViewSet(viewsets.ModelViewSet):
 		headers = self.get_success_headers(serializer.data)
 		return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
+	def destroy(self, request, *args, **kwargs):
+		checklist_item = self.get_object()
+
+		if not checklist_item:
+			return response.Response("Checklist item does not exist", status=400)
+
+		serializer = self.get_serializer(instance=checklist_item)
+		data = serializer.data
+		checklist_item.delete()
+
+		return response.Response(data=data, status=status.HTTP_204_NO_CONTENT)
+
+
 	@action(detail=True, methods=["post"])
 	def assign(self, request, *args, **kwargs):
 		checklist_item = self.get_object()
