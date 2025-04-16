@@ -1,9 +1,19 @@
 "use client";
 
 import { I_GetChecklistItemResponse } from "@/lib/interfaces/responses";
-import { useAssignChecklistItem } from "@/lib/mutations/checklists";
+import {
+  useAssignChecklistItem,
+  useUnassignChecklistItem,
+} from "@/lib/mutations/checklists";
 import { useGetBoardMembers } from "@/lib/queries/boards";
-import { ActionIcon, Group, Menu, ScrollArea, Text } from "@mantine/core";
+import {
+  ActionIcon,
+  Group,
+  Menu,
+  ScrollArea,
+  Stack,
+  Text,
+} from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useParams } from "next/navigation";
 import React from "react";
@@ -37,26 +47,42 @@ const AssignChecklistItem: React.FC<AssignChecklistItemProps> = ({
     id
   );
 
-  const handleOnMemberClick = (userId: string) => {
+  const {
+    mutate: unassignChecklistItem,
+    isPending: isPendingUnassignChecklistItem,
+  } = useUnassignChecklistItem(workSpacesSlug, boardsSlug, listId, task_id, id);
+
+  const handleOnAssignClick = (userId: string) => {
     assignChecklistItem({ assignee_id: userId });
+  };
+
+  const handleOnUnassignClick = () => {
+    unassignChecklistItem();
   };
 
   return (
     <Menu shadow="md" width={220} opened={opened} onClose={close}>
       <Menu.Target>
-        <ActionIcon onClick={open} loading={isPending}>
+        <ActionIcon
+          onClick={open}
+          loading={isPending || isPendingUnassignChecklistItem}
+        >
           <IconCollection.Assign />
         </ActionIcon>
       </Menu.Target>
 
       <Menu.Dropdown>
         <ScrollArea.Autosize mah={300} type="scroll">
+          
           {boardMembers?.map((p, index) => {
             return (
               <Menu.Item
                 key={index}
-                onClick={() => handleOnMemberClick(p.member.id)}
-                disabled={p.member.id === assignee_id}
+                onClick={
+                  p.member.id === assignee_id
+                    ? handleOnUnassignClick
+                    : () => handleOnAssignClick(p.member.id)
+                }
                 leftSection={
                   <Group align="center" justify="center">
                     {p.member.id === assignee_id && (
@@ -73,17 +99,11 @@ const AssignChecklistItem: React.FC<AssignChecklistItemProps> = ({
                       (p.member.last_name.charAt(0)?.toUpperCase() || "")
                     }
                   />
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      minWidth: 0,
-                    }}
-                  >
+                  <Stack>
                     <Text fw={500} size="sm" truncate>
                       {`${p.member.first_name} ${p.member.last_name}`}
                     </Text>
-                  </div>
+                  </Stack>
                 </Group>
               </Menu.Item>
             );

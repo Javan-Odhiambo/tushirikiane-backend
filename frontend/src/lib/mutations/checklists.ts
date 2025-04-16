@@ -10,6 +10,7 @@ import {
   I_CreateChecklistItemResponse,
   I_EditCardResponse,
   I_GetCardRespone,
+  I_AssignChecklistItemResponse as I_UnssignChecklistItemResponse,
 } from "../interfaces/responses";
 import { protectedApi } from "../kyInstance";
 import { QUERY_KEYS } from "../queryKeys";
@@ -171,6 +172,48 @@ export const useAssignChecklistItem = (
     onError: (error) => {
       console.error("Error assigning task", error);
       toast.error("Failed to assign task. Please try again");
+      onError?.();
+    },
+  });
+};
+
+export const useUnassignChecklistItem = (
+  workSpaceId: string,
+  boardId: string,
+  listId: string,
+  cardId: string,
+  checklistId: string,
+  onSuccess?: () => void,
+  onError?: () => void
+) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (): Promise<I_UnssignChecklistItemResponse> => {
+      return await protectedApi
+        .post(
+          URLS.apiChecklistsDetailUnassign(
+            workSpaceId,
+            boardId,
+            listId,
+            cardId,
+            checklistId
+          )
+        )
+        .json();
+    },
+    onSuccess: () => {
+      // TODO: update this to not invalidate the entire cache
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.checklists(workSpaceId, boardId, listId, cardId)],
+      });
+
+      toast.success("Task unassigned successfully.");
+      onSuccess?.();
+    },
+    onError: (error) => {
+      console.error("Error unassigning task", error);
+      toast.error("Failed to unassign task. Please try again");
       onError?.();
     },
   });
