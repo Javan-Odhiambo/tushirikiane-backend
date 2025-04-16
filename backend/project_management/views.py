@@ -356,7 +356,7 @@ class TaskViewSet(viewsets.ModelViewSet):
 		return Response({"message": "Members unassigned from task"}, status=status.HTTP_200_OK)
 
 	@action(detail=True, methods=["get"])
-	def assignees(self, request, *args, **kwargs):
+	def members(self, request, *args, **kwargs):
 		task = self.get_object()
 		assignees = task.assignees.all()
 		serializer = TaskAssigneeSerializer(assignees, many=True)
@@ -527,8 +527,6 @@ class TaskLabelViewSet(viewsets.ModelViewSet):
 		label.delete()
 
 		return Response(data=data, status=status.HTTP_204_NO_CONTENT)
-
-
 
 
 
