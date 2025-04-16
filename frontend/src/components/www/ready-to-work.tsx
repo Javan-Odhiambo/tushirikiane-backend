@@ -1,14 +1,30 @@
-'use client'
-import { Title, Text, Button, rem } from "@mantine/core";
-import React from "react";
-import { BoldWord } from "./hero";
-import Image from "next/image";
-import { useMediaQuery } from "@mantine/hooks";
-import BlackButton from "../core/Button";
+"use client";
 import { URLS } from "@/lib/urls";
+import { rem, Text, Title } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
+import Image from "next/image";
+import BlackButton from "../core/Button";
 
 const ReadytoWork = () => {
   const isMobile = useMediaQuery("(max-width: 720px)");
+
+  // Custom version of BoldWord without underline for this specific case
+  const BoldWordWithoutUnderline = ({ word }: { word: string }) => {
+    const isMobile = useMediaQuery("(max-width: 720px)");
+    return (
+      <Text
+        fw={550}
+        size={rem(isMobile ? 22 : 38)}
+        mb={isMobile ? 10 : 16}
+        lh={1.2}
+        c="skyBlue"
+        className={"inline"}
+      >
+        {word}
+      </Text>
+    );
+  };
+
   return (
     <div className="container md:mt-40 mt-20 mb-20 flex flex-col items-center justify-center">
       <Title
@@ -26,12 +42,13 @@ const ReadytoWork = () => {
           <Image
             src="/circle.svg"
             alt="circle"
-            fill
+            width={120}
+            height={120}
             className="absolute inset-0 w-full h-full pointer-events-none"
-            style={{ scale: 1.20 }}
+            style={{ scale: 1.2 }}
           />
           <span className="relative">
-            <BoldWord word="smarter" />
+            <BoldWordWithoutUnderline word="smarter" />
           </span>
         </span>
         &nbsp;?

@@ -1,8 +1,8 @@
 "use client";
-import { Group, rem, Text, Title } from "@mantine/core";
-import Image from "next/image";
 import { BoldWord } from "@/components/www/hero";
+import { Group, rem, Text, Title } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
+import Image from "next/image";
 
 const taskManagementFeature = [
   {
