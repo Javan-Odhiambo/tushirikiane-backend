@@ -266,3 +266,73 @@ class BoardViewSetTestCase(APITestCase):
 		}, format="json")
 
 		self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+	def test_can_create_label_for_board(self):
+		"""
+		Test creating a label under a board
+		"""
+		self.client.force_authenticate(user=self.user1)
+
+		data = {
+				"name": "Urgent",
+				"color": "#ff0000"
+		}
+
+		response = self.client.post(
+			f"/api/workspaces/{self.workspace1.id}/boards/{self.board1.id}/labels/",
+			data=data,
+			format="json"
+		)
+
+		self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+		self.assertEqual(response.data["name"], "Urgent")
+		self.assertEqual(response.data["color"], "#ff0000")
+
+	def test_can_delete_label_from_board(self):
+		"""
+		Test deleting a label from a board
+		"""
+		self.client.force_authenticate(user=self.user1)
+
+		# First create a label
+		create_response = self.client.post(
+			f"/api/workspaces/{self.workspace1.id}/boards/{self.board1.id}/labels/",
+			data={"name": "Bug", "color": "#000000"},
+			format="json"
+		)
+		self.assertEqual(create_response.status_code, status.HTTP_201_CREATED)
+		label_id = create_response.data["id"]
+
+		# Then delete it
+		delete_response = self.client.delete(
+			f"/api/workspaces/{self.workspace1.id}/boards/{self.board1.id}/labels/{label_id}/"
+		)
+
+		self.assertEqual(delete_response.status_code, status.HTTP_204_NO_CONTENT)
+		self.assertEqual(delete_response.data["name"], "Bug")
+
+	def test_can_update_label_on_board(self):
+		"""
+		Test updating a label on a board
+		"""
+		self.client.force_authenticate(user=self.user1)
+
+		# Create a label first
+		create_response = self.client.post(
+			f"/api/workspaces/{self.workspace1.id}/boards/{self.board1.id}/labels/",
+			data={"name": "Feature", "color": "#00ff00"},
+			format="json"
+		)
+		self.assertEqual(create_response.status_code, status.HTTP_201_CREATED)
+		label_id = create_response.data["id"]
+
+		# Update the label
+		update_response = self.client.put(
+			f"/api/workspaces/{self.workspace1.id}/boards/{self.board1.id}/labels/{label_id}/",
+			data={"name": "Enhancement", "color": "#0000ff"},
+			format="json"
+		)
+
+		self.assertEqual(update_response.status_code, status.HTTP_200_OK)
+		self.assertEqual(update_response.data["name"], "Enhancement")
+		self.assertEqual(update_response.data["color"], "#0000ff")

@@ -2,7 +2,7 @@ from django.urls import include, path
 from rest_framework import routers
 from rest_framework_nested.routers import NestedSimpleRouter
 
-from .views import BoardViewSet, CheckListItemViewSet, LabelViewSet, \
+from .views import BoardViewSet, CheckListItemViewSet, \
 	TaskLabelViewSet, TaskListViewSet, TaskViewSet, WorkspaceMemberViewSet, WorkspaceViewSet, accept_board_invite, \
 	accept_workspace_invite
 
@@ -19,11 +19,11 @@ Routes:
     - /workspaces/{workspace_pk_slug}/members/
     - /workspaces/{workspace_pk_slug}/boards/
     - /workspaces/{workspace_pk_slug}/invites/
+    - /workspaces/{workspace_pk_slug}/boards/{board_pk}/labels/
     - /workspaces/{workspace_pk_slug}/boards/{board_pk}/task-lists/
     - /workspaces/{workspace_pk_slug}/boards/{board_pk}/task-lists/{tasklist_pk}/tasks/
     - /workspaces/{workspace_pk_slug}/boards/{board_pk}/task-lists/{tasklist_pk}/tasks/{task_pk}/assignees/
     - /workspaces/{workspace_pk_slug}/boards/{board_pk}/task-lists/{tasklist_pk}/tasks/{task_pk}/checklist-items/
-    - /workspaces/{workspace_pk_slug}/boards/{board_pk}/task-lists/{tasklist_pk}/tasks/{task_pk}/labels/
 """
 
 app_name = "project_management"
@@ -31,7 +31,6 @@ app_name = "project_management"
 # Base router for top-level resources
 router = routers.DefaultRouter()
 router.register(r'workspaces', WorkspaceViewSet, basename='workspace')
-router.register(r'labels', LabelViewSet, basename='label')
 
 # Nested router for Workspace -> Members
 workspace_member_router = NestedSimpleRouter(router, r'workspaces', lookup='workspace')
@@ -45,20 +44,18 @@ workspace_board_router.register(r'boards', BoardViewSet, basename='workspace-boa
 board_tasklist_router = NestedSimpleRouter(workspace_board_router, r'boards', lookup='board')
 board_tasklist_router.register(r'task-lists', TaskListViewSet, basename='board-tasklist')
 
+# Nested router for Board -> Labels
+task_label_router = NestedSimpleRouter(workspace_board_router, r'boards', lookup='board')
+task_label_router.register(r'labels', TaskLabelViewSet, basename='board-label')
+
 # Nested router for TaskList -> Tasks
 tasklist_task_router = NestedSimpleRouter(board_tasklist_router, r'task-lists', lookup='tasklist')
 tasklist_task_router.register(r'tasks', TaskViewSet, basename='tasklist-task')
 
-# # Nested router for Task -> Assignees
-# task_assignee_router = NestedSimpleRouter(tasklist_task_router, r'tasks', lookup='task')
 
 # Nested router for Task -> Checklist Items
 task_checklist_router = NestedSimpleRouter(tasklist_task_router, r'tasks', lookup='task')
 task_checklist_router.register(r'checklist', CheckListItemViewSet, basename='task-checklist')
-
-# Nested router for Task -> Labels
-task_label_router = NestedSimpleRouter(tasklist_task_router, r'tasks', lookup='task')
-task_label_router.register(r'labels', TaskLabelViewSet, basename='task-label')
 
 urlpatterns = [
 		path('boards/accept/', accept_board_invite, name='board-accept'),

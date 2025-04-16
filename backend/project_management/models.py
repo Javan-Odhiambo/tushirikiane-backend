@@ -91,7 +91,7 @@ class Board(BaseModel):
 		return super().save(*args, **kwargs)
 
 	class Meta:
-		unique_together = [["workspace", "name"], ["workspace", "position"]]
+		unique_together = [["workspace", "position"]]
 
 
 # pre_save.connect(add_position_to_board, sender=Board, dispatch_uid="add_position_to_board")
@@ -152,6 +152,28 @@ class TaskList(BaseModel):
 		super().save(*args, **kwargs)
 
 
+class Label(BaseModel):
+	"""
+	Label model to represent a label for categorizing tasks.
+	Attributes:
+		board (ForeignKey): The board of the label.
+		name (CharField): The name of the label.
+		color (CharField): The color code for the label.
+	"""
+	board = models.ForeignKey(Board, on_delete=models.CASCADE, related_name="labels")
+	name = models.CharField(max_length=255)
+	color = models.CharField(max_length=7)
+
+	def __str__(self):
+		"""
+		Returns a string representation of the label.
+		Overrides the default __str__ method.
+		Returns:
+			str: The name of the label.
+		"""
+		return self.name
+
+
 class Task(BaseModel):
 	"""
 	Task model to represent a task or item in a list.
@@ -162,6 +184,7 @@ class Task(BaseModel):
 		position (PositiveIntegerField): The position of the task in the list.
 		due_date (DateField): The due date for the task.
 		is_completed (BooleanField): Indicates whether the task is completed.
+		label (ForeignKey): The label of the task.
 	"""
 
 	name = models.CharField(max_length=255)
@@ -171,6 +194,7 @@ class Task(BaseModel):
 	position = models.PositiveIntegerField()
 	due_date = models.DateField(null=True, blank=True)
 	is_completed = models.BooleanField(default=False)
+	label = models.ForeignKey(Label, on_delete=models.CASCADE, related_name="tasks", null=True, blank=True)
 
 	def __str__(self):
 		"""
@@ -242,47 +266,6 @@ class CheckListItem(BaseModel):
 		"""
 		return self.name
 
-
-class Label(BaseModel):
-	"""
-	Label model to represent a label for categorizing tasks.
-	Attributes:
-		name (CharField): The name of the label.
-		color (CharField): The color code for the label.
-	"""
-
-	name = models.CharField(max_length=255)
-	color = models.CharField(max_length=7)
-
-	def __str__(self):
-		"""
-		Returns a string representation of the label.
-		Overrides the default __str__ method.
-		Returns:
-			str: The name of the label.
-		"""
-		return self.name
-
-
-class TaskLabel(BaseModel):
-	"""
-	TaskLabel model to represent the assignment of a label to a task.
-	Attributes:
-		task (ForeignKey): The task to which the label is assigned.
-		label (ForeignKey): The label assigned to the task.
-	"""
-
-	task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="labels")
-	label = models.ForeignKey(Label, on_delete=models.CASCADE, related_name="tasks")
-
-	def __str__(self):
-		"""
-		Returns a string representation of the task label.
-		Overrides the default __str__ method.
-		Returns:
-			str: The name of the task label.
-		"""
-		return f"{self.label} assigned to {self.task}"
 
 
 # TODO: Combine WorkspaceInvite and BoardInvite into a single Invite model

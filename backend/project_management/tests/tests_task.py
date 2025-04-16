@@ -2,7 +2,8 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 from accounts.models import CustomUser
-from project_management.models import (Board, BoardMember, Task, TaskAssignee, TaskList, Workspace, WorkspaceMember)
+from project_management.models import (Board, BoardMember, Label, Task, TaskAssignee, TaskList, Workspace,
+                                       WorkspaceMember)
 
 
 class TaskViewSetTestCase(APITestCase):
@@ -18,6 +19,9 @@ class TaskViewSetTestCase(APITestCase):
 		self.board = Board.objects.create(name="Board", workspace=self.workspace, position=1)
 		self.task_list = TaskList.objects.create(board=self.board, name="Task List")
 		self.task = Task.objects.create(task_list=self.task_list, name="Test Task")
+
+		self.label1 = Label.objects.create(name="Urgent", board=self.board, color="#FF0000")
+		self.label2 = Label.objects.create(name="Low Priority", board=self.board, color="#00FF00")
 
 		BoardMember.objects.create(board=self.board, member=self.user2)
 		WorkspaceMember.objects.create(workspace=self.workspace, member=self.user2)
