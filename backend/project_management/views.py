@@ -12,12 +12,12 @@ from rest_framework.response import Response
 from accounts.models import CustomUser
 from project_management.emails import BoardInviteEmail, WorkspaceInviteEmail
 from .mixin import PositionReorderMixin
-from .models import Board, BoardInvite, BoardMember, Task, TaskAssignee, TaskList, Workspace, WorkspaceInvite, \
+from .models import Board, BoardInvite, BoardMember, Label, Task, TaskAssignee, TaskList, Workspace, WorkspaceInvite, \
 	WorkspaceMember
 from .permissions import IsMemberReadOrOwnerFull, IsTaskListOwnerOrBoardMember, IsWorkspaceOwnerOrBoardMember
 from .serializers import BoardMemberSerializer, BoardSerializer, CheckListItemSerializer, EmailInviteSerializer, \
 	InviteTokenSerializer, \
-	TaskAssigneeSerializer, TaskListSerializer, TaskSerializer, \
+	LabelSerializer, TaskAssigneeSerializer, TaskListSerializer, TaskSerializer, \
 	WorkspaceMemberSerializer, \
 	WorkspaceSerializer
 
@@ -51,9 +51,10 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
 			return response.Response("You can't delete this workspace", status=403)
 
 		serializer = self.get_serializer(instance=workspace)
+		data = serializer.data
 		workspace.delete()
 
-		return response.Response(data=serializer.data, status=status.HTTP_204_NO_CONTENT)
+		return response.Response(data=data, status=status.HTTP_204_NO_CONTENT)
 
 	@action(detail=True, methods=["post"])
 	def invite(self, request, *args, **kwargs):
@@ -189,9 +190,10 @@ class BoardViewSet(viewsets.ModelViewSet):
 			return response.Response("You can't delete this board", status=403)
 
 		serializer = self.get_serializer(instance=board)
+		data = serializer.data
 		board.delete()
 
-		return response.Response(data=serializer.data, status=status.HTTP_204_NO_CONTENT)
+		return response.Response(data=data, status=status.HTTP_204_NO_CONTENT)
 
 	@action(detail=True, methods=["post"])
 	def invite(self, request, *args, **kwargs):
@@ -493,16 +495,41 @@ class CheckListItemViewSet(viewsets.ModelViewSet):
 		return Response(serializer.data, status=200)
 
 
-# LabelViewSet,
-class LabelViewSet(viewsets.ModelViewSet):
-	serializer_class = TaskSerializer
-	queryset = Task.objects.all()
-
-
 # TaskLabelViewSet,
 class TaskLabelViewSet(viewsets.ModelViewSet):
-	serializer_class = TaskSerializer
-	queryset = Task.objects.all()
+	serializer_class = LabelSerializer
+	permission_classes = (IsAuthenticated, IsWorkspaceOwnerOrBoardMember)
+
+	def get_queryset(self):
+		board_pk = self.kwargs["board_pk_slug"]
+		board = Board.objects.get_by_id_or_slug_or_404(board_pk)
+
+		return Label.objects.filter(board=board).all()
+
+	def create(self, request, *args, **kwargs):
+		board_pk = self.kwargs["board_pk_slug"]
+		board = Board.objects.get_by_id_or_slug_or_404(board_pk)
+
+		serializer = self.get_serializer(data=request.data)
+		serializer.is_valid(raise_exception=True)
+
+		serializer.save(board=board)
+		return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+	def destroy(self, request, *args, **kwargs):
+		label = self.get_object()
+		if not label:
+			return Response({"detail": "Label does not exist"}, status=400)
+
+		label_serializer = self.get_serializer(instance=label)
+		data = label_serializer.data
+
+		label.delete()
+
+		return Response(data=data, status=status.HTTP_204_NO_CONTENT)
+
+
+
 
 
 # WorkspaceMemberViewSet
@@ -515,6 +542,6 @@ class WorkspaceMemberViewSet(viewsets.ReadOnlyModelViewSet):
 		try:
 			workspace = Workspace.objects.get_by_id_or_slug_or_404(pk=workspace_id)
 		except NotFound:
-			return response.Response("Workspace does not exist", status=400)
+			return Response("Workspace does not exist", status=400)
 
 		return WorkspaceMember.objects.filter(workspace=workspace)
