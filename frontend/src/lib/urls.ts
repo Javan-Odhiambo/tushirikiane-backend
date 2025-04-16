@@ -20,11 +20,13 @@ export const URLS = {
 
   // BACKEND
   // auth
-  // * DO NOT ADD 'auth/' PREFIX HERE, IT WILL BE DONE FOR YOU
+  // * DO NOT ADD 'auth/' PREFIX, IT WILL BE DONE FOR YOU
   apiSignIn: "jwt/create",
   apiLoggedInUser: "users/me",
   apiSignUp: "users/",
   apiRefreshToken: "jwt/refresh",
+  apiActivateAccount: "users/activation/",
+  apiResendActivationEmail: "users/resend_activation/",
 
   // workspaces
   apiWorkSpaces: "workspaces/",

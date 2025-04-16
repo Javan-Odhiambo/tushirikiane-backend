@@ -39,7 +39,7 @@ const WorkSpacesContainer = () => {
                   <WorkSpaceCardSkeleton key={index} />
                 ))}
               </>
-            ) : workSpaces?.length ? (
+            ) : workSpaces && workSpaces.length > 0 ? (
               <>
                 {workSpaces.map((w) => (
                   <WorkSpaceCard key={w.id} {...w} />

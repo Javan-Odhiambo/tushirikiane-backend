@@ -62,3 +62,12 @@ export interface I_CreateChecklistItemInput {
 export interface I_AssignChecklistItemInput {
   assignee_id: string;
 }
+
+export interface I_ActivateAccountInput {
+  uid: string;
+  token: string;
+}
+
+export interface I_ResendActivationEmail {
+  email: string;
+}
