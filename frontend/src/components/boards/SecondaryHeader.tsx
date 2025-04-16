@@ -1,6 +1,6 @@
 "use client";
 
-import { M_People } from "@/lib/mockData";
+import { useGetBoardMembers } from "@/lib/queries/boards";
 import { useBoards } from "@/providers/BoardsProvider";
 import { Group, Text } from "@mantine/core";
 import { useParams } from "next/navigation";
@@ -8,10 +8,15 @@ import AvatarsContainer from "../core/AvatarsContainer";
 import InviteToBoardButtonButton from "./InviteToBoardButton";
 
 const SecondaryHeader = () => {
-  const { boardsSlug } = useParams<{
+  const { workSpacesSlug, boardsSlug } = useParams<{
     workSpacesSlug: string;
     boardsSlug: string;
   }>();
+
+  const { data: boardMembers, isPending } = useGetBoardMembers(
+    workSpacesSlug,
+    boardsSlug
+  );
 
   // const { setListsView, isBoardView, isTableView } = useListsView();
 
@@ -58,7 +63,7 @@ const SecondaryHeader = () => {
       <Group>
         {/* <FilterIcon /> */}
         {/* TODO: fetch board people and pass here */}
-        <AvatarsContainer workSpaceMembers={M_People} isLoading={false} />
+        <AvatarsContainer members={boardMembers} isLoading={isPending} />
         <InviteToBoardButtonButton boardId={selectedBoard.id} />
       </Group>
     </Group>

@@ -114,7 +114,7 @@ class BoardMember(BaseModel):
 		Returns:
 			str: The name of the workspace member.
 		"""
-		return self.member
+		return self.member.email
 
 
 class TaskList(BaseModel):
