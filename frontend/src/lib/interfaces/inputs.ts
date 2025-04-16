@@ -54,3 +54,7 @@ export interface I_EditListInput {
   description?: string;
   position?: number;
 }
+
+export interface I_CreateChecklistItemInput {
+  name: string;
+}

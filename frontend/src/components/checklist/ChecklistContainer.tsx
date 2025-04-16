@@ -5,6 +5,7 @@ import { useGetChecklists } from "@/lib/queries/checklists";
 import { Box, Divider, Stack, Text } from "@mantine/core";
 import { useParams } from "next/navigation";
 import Checklist from "./Checklist";
+import CreateChecklistForm from "./CreateChecklistForm";
 
 interface ChecklistContainerProps {
   card: I_GetCardRespone;
@@ -43,6 +44,7 @@ const ChecklistContainer: React.FC<ChecklistContainerProps> = ({ card }) => {
           )}
         </Box>
       )}
+      <CreateChecklistForm {...card} />
     </Stack>
   );
 };
