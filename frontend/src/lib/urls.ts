@@ -89,4 +89,12 @@ export const URLS = {
     checklistId: string
   ) =>
     `workspaces/${workSpaceId}/boards/${boardId}/task-lists/${listId}}/tasks/${cardId}/checklist/${checklistId}/assign/`,
+  apiChecklistsDetailUnassign: (
+    workSpaceId: string,
+    boardId: string,
+    listId: string,
+    cardId: string,
+    checklistId: string
+  ) =>
+    `workspaces/${workSpaceId}/boards/${boardId}/task-lists/${listId}}/tasks/${cardId}/checklist/${checklistId}/unassign/`,
 };

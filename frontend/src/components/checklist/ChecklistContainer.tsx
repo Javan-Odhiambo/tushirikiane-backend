@@ -2,7 +2,7 @@
 
 import { I_GetCardRespone } from "@/lib/interfaces/responses";
 import { useGetChecklists } from "@/lib/queries/checklists";
-import { Box, Divider, Stack, Text } from "@mantine/core";
+import { Divider, Stack, Text } from "@mantine/core";
 import { useParams } from "next/navigation";
 import ChecklistItem from "./ChecklistItem";
 import CreateChecklistForm from "./CreateChecklistForm";
@@ -32,7 +32,7 @@ const ChecklistContainer: React.FC<ChecklistContainerProps> = ({ card }) => {
       {isPending ? (
         <>Loading...</>
       ) : (
-        <Box>
+        <Stack>
           {checklists && checklists.length > 0 ? (
             checklists.map((ch, index) => (
               <div key={index}>
@@ -42,7 +42,7 @@ const ChecklistContainer: React.FC<ChecklistContainerProps> = ({ card }) => {
           ) : (
             <Text c="dimmed">No checklists found.</Text>
           )}
-        </Box>
+        </Stack>
       )}
       <CreateChecklistForm {...card} />
     </Stack>
