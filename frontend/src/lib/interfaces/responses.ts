@@ -116,7 +116,7 @@ export interface I_EditCardResponse {
   labels: string[];
 }
 
-export interface I_GetChecklistResponse {
+export interface I_GetChecklistItemResponse {
   id: string;
   created_at: string;
   updated_at: string;
@@ -144,6 +144,17 @@ export interface I_CreateChecklistItemResponse {
   task_id: string;
   name: string;
   is_completed: false;
+  due_at: string;
+  assignee_id: string;
+}
+
+export interface I_AssignChecklistItemResponse {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  task_id: string;
+  name: string;
+  is_completed: boolean;
   due_at: string;
   assignee_id: string;
 }

@@ -19,7 +19,7 @@ const SecondaryHeader = () => {
   const selectedBoard = boards?.find((b) => b.id === boardsSlug);
 
   if (!selectedBoard) {
-    return <>select a board to continue</>;
+    return;
   }
 
   return (

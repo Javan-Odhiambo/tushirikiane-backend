@@ -4,7 +4,7 @@ import { I_GetCardRespone } from "@/lib/interfaces/responses";
 import { useGetChecklists } from "@/lib/queries/checklists";
 import { Box, Divider, Stack, Text } from "@mantine/core";
 import { useParams } from "next/navigation";
-import Checklist from "./Checklist";
+import ChecklistItem from "./ChecklistItem";
 import CreateChecklistForm from "./CreateChecklistForm";
 
 interface ChecklistContainerProps {
@@ -36,7 +36,7 @@ const ChecklistContainer: React.FC<ChecklistContainerProps> = ({ card }) => {
           {checklists && checklists.length > 0 ? (
             checklists.map((ch, index) => (
               <div key={index}>
-                <Checklist {...ch} listId={card.task_list_id} />
+                <ChecklistItem {...ch} listId={card.task_list_id} />
               </div>
             ))
           ) : (

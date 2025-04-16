@@ -1,21 +1,24 @@
 "use client";
 
-import React from "react";
-import { signOut, useSession } from "next-auth/react";
 import { URLS } from "@/lib/urls";
-import { Menu } from "@mantine/core";
-import { IconSettings, IconUserCog, IconLogout } from "@tabler/icons-react";
-import { Avatar } from "@mantine/core";
+import { Avatar, Menu, Skeleton } from "@mantine/core";
+import { IconLogout, IconSettings, IconUserCog } from "@tabler/icons-react";
+import { signOut, useSession } from "next-auth/react";
 import DisplayLoggedInUserInfo from "./DisplayLoggedInUserInfo";
 
 const ProfileDropdown = () => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+
+  if (status === "loading") {
+    return <Avatar>
+      <Skeleton circle />
+    </Avatar>;
+  }
 
   return (
     <Menu shadow="md" width={200}>
       <Menu.Target>
         <Avatar color="cyan" radius="xl">
-          {" "}
           {`${session?.user.firstName.slice(
             0,
             1

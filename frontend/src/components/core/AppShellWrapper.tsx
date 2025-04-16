@@ -1,8 +1,7 @@
 "use client";
 
-import { AppShell, Burger, Button, Group } from "@mantine/core";
+import { AppShell, Burger, Group } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconBell } from "@tabler/icons-react";
 import { usePathname } from "next/navigation";
 import React, { ReactNode } from "react";
 
@@ -74,9 +73,6 @@ const AppShellWrapper: React.FC<AppShellWrapperProps> = ({ children }) => {
             <SiteLogo />
           </Group>
           <Group>
-            <Button unstyled>
-              <IconBell />
-            </Button>
             <ProfileDropdown />
           </Group>
         </Group>

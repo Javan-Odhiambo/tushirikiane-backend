@@ -4,7 +4,8 @@ import {
   IconPlus,
   IconShare,
   IconTrash,
-  IconX
+  IconUsers,
+  IconX,
 } from "@tabler/icons-react";
 
 interface IconProps {
@@ -31,5 +32,8 @@ export const IconCollection = {
   ),
   Share: ({ size = 24, stroke = 1.5, color = "currentColor" }: IconProps) => (
     <IconShare size={size} stroke={stroke} color={color} />
+  ),
+  Assign: ({ size = 24, stroke = 1.5, color = "currentColor" }: IconProps) => (
+    <IconUsers size={size} stroke={stroke} color={color} />
   ),
 };

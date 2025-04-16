@@ -1,10 +1,12 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
+  I_AssignChecklistItemInput,
   I_CreateChecklistItemInput,
   I_EditChecklistInput,
 } from "../interfaces/inputs";
 import {
+  I_AssignChecklistItemResponse,
   I_CreateChecklistItemResponse,
   I_EditCardResponse,
   I_GetCardRespone,
@@ -78,12 +80,12 @@ export const useEditChecklists = (
           )
       );
 
-      toast.success("Card updated successfully.");
+      toast.success("Task updated successfully.");
       onSuccess?.();
     },
     onError: (error) => {
-      console.error("Error updating card", error);
-      toast.error("Failed to update card. Please try again");
+      console.error("Error updating checklist item", error);
+      toast.error("Failed to update task. Please try again");
       onError?.();
     },
   });
@@ -124,6 +126,51 @@ export const useDeleteChecklistItem = (
     onError: (error) => {
       console.error("Error deleting task", error);
       toast.error("Failed to delete task. Please try again");
+      onError?.();
+    },
+  });
+};
+
+export const useAssignChecklistItem = (
+  workSpaceId: string,
+  boardId: string,
+  listId: string,
+  cardId: string,
+  checklistId: string,
+  onSuccess?: () => void,
+  onError?: () => void
+) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (
+      values: I_AssignChecklistItemInput
+    ): Promise<I_AssignChecklistItemResponse> => {
+      return await protectedApi
+        .post(
+          URLS.apiChecklistsDetailAssign(
+            workSpaceId,
+            boardId,
+            listId,
+            cardId,
+            checklistId
+          ),
+          { json: values }
+        )
+        .json();
+    },
+    onSuccess: () => {
+      // TODO: update this to not invalidate the entire cache
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.checklists(workSpaceId, boardId, listId, cardId)],
+      });
+
+      toast.success("Task assigned successfully.");
+      onSuccess?.();
+    },
+    onError: (error) => {
+      console.error("Error assigning task", error);
+      toast.error("Failed to assign task. Please try again");
       onError?.();
     },
   });
