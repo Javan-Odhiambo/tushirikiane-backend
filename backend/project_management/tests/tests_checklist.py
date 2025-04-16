@@ -63,6 +63,8 @@ class CheckListItemViewSetTestCase(APITestCase):
 
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+        self.assertEqual(response.data["id"], str(item.id))
         self.assertFalse(CheckListItem.objects.filter(id=item.id).exists())
 
     def test_update_checklist_item(self):
