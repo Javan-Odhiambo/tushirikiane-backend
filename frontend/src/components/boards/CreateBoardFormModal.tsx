@@ -78,7 +78,6 @@ const CreateBoardFormModal: React.FC<CreateBoardFormModalProps> = ({
             description="Enter a name for the board."
           />
           <Textarea
-            withAsterisk
             label="Board Description"
             {...form.register("description")}
             error={form.formState.errors.description?.message}

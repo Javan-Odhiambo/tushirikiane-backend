@@ -3,7 +3,7 @@
 import { useDeleteList } from "@/lib/mutations/lists";
 import { ActionIcon, Menu } from "@mantine/core";
 import { useParams } from "next/navigation";
-import { useState } from "react";
+import { useDisclosure } from "@mantine/hooks";
 import ConfirmActionModal from "../core/ConfirmActionModal";
 import { IconCollection } from "../core/IconCollection";
 
@@ -12,12 +12,14 @@ interface ListActionsProps {
 }
 
 const ListActions: React.FC<ListActionsProps> = ({ listId }) => {
-  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [menuOpened, setMenuOpened] = useState(false);
+  const [modalOpened, { open: openModal, close: closeModal }] =
+    useDisclosure(false);
+  const [menuOpened, { open: openMenu, close: closeMenu }] =
+    useDisclosure(false);
 
   const handleDeleteClick = () => {
-    setDeleteModalOpen(true);
-    setMenuOpened(false);
+    openModal();
+    closeMenu();
   };
 
   return (
@@ -26,8 +28,9 @@ const ListActions: React.FC<ListActionsProps> = ({ listId }) => {
         shadow="md"
         width={200}
         opened={menuOpened}
-        onChange={setMenuOpened}
-        closeOnItemClick={true}
+        onOpen={openMenu}
+        onClose={closeMenu}
+        closeOnItemClick
       >
         <Menu.Target>
           <ActionIcon variant="subtle" radius="xl" color="black">
@@ -48,8 +51,8 @@ const ListActions: React.FC<ListActionsProps> = ({ listId }) => {
 
       <DeleteListConfirmModal
         listId={listId}
-        isOpen={isDeleteModalOpen}
-        onClose={() => setDeleteModalOpen(false)}
+        isOpen={modalOpened}
+        onClose={closeModal}
       />
     </>
   );

@@ -58,3 +58,7 @@ export interface I_EditListInput {
 export interface I_CreateChecklistItemInput {
   name: string;
 }
+
+export interface I_AssignChecklistItemInput {
+  assignee_id: string;
+}
