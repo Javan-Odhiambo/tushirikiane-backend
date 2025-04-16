@@ -2,17 +2,18 @@
 
 import { URLS } from "@/lib/urls";
 import { Avatar, Menu, Skeleton } from "@mantine/core";
-import { IconLogout, IconSettings, IconUserCog } from "@tabler/icons-react";
+import { IconLogout } from "@tabler/icons-react";
 import { signOut, useSession } from "next-auth/react";
-import DisplayLoggedInUserInfo from "./DisplayLoggedInUserInfo";
 
 const ProfileDropdown = () => {
   const { data: session, status } = useSession();
 
   if (status === "loading") {
-    return <Avatar>
-      <Skeleton circle />
-    </Avatar>;
+    return (
+      <Avatar>
+        <Skeleton circle />
+      </Avatar>
+    );
   }
 
   return (
@@ -27,7 +28,7 @@ const ProfileDropdown = () => {
       </Menu.Target>
 
       <Menu.Dropdown>
-        <Menu.Label>Account</Menu.Label>
+        {/* <Menu.Label>Account</Menu.Label>
         <Menu.Item component={DisplayLoggedInUserInfo}></Menu.Item>
         <Menu.Item leftSection={<IconUserCog size={14} />}>
           Manage Account
@@ -35,7 +36,7 @@ const ProfileDropdown = () => {
 
         <Menu.Divider />
         <Menu.Label>General</Menu.Label>
-        <Menu.Item leftSection={<IconSettings size={14} />}>Settings</Menu.Item>
+        <Menu.Item leftSection={<IconSettings size={14} />}>Settings</Menu.Item> */}
 
         <Menu.Item
           color="red"

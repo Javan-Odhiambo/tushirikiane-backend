@@ -2,7 +2,7 @@
 
 import { I_GetListResponse as ListProps } from "@/lib/interfaces/responses";
 import { useEditList } from "@/lib/mutations/lists";
-import { Card, Group, rem, Text, TextInput } from "@mantine/core";
+import { Card, Group, rem, ScrollArea, Text, TextInput } from "@mantine/core";
 import { useParams } from "next/navigation";
 import React, { useState } from "react";
 import CardContainer from "../cards/CardContainer";
@@ -30,29 +30,31 @@ const List: React.FC<ListProps> = ({ id, name }) => {
   };
 
   return (
-    <Card bg={"white"} maw={275} miw={275} shadow="none" h="fit-content">
-      <Group justify="space-between">
-        {isEditingName ? (
-          <TextInput
-            autoFocus
-            value={newName}
-            onChange={(e) => setNewName(e.currentTarget.value)}
-            onBlur={handleOnNameBlur}
-            size={rem(24)}
-            fw={500}
-            w={"80%"}
-          />
-        ) : (
-          <Text size={rem(24)} fw={500} onClick={handleOnNameClick}>
-            {name}
-          </Text>
-        )}
+    <ScrollArea h={380} offsetScrollbars scrollbarSize={6} type="auto">
+      <Card bg={"white"} w={275} shadow="none" h="fit-content">
+        <Group justify="space-between">
+          {isEditingName ? (
+            <TextInput
+              autoFocus
+              value={newName}
+              onChange={(e) => setNewName(e.currentTarget.value)}
+              onBlur={handleOnNameBlur}
+              size={rem(24)}
+              fw={500}
+              w={"80%"}
+            />
+          ) : (
+            <Text size={rem(24)} fw={500} onClick={handleOnNameClick}>
+              {name}
+            </Text>
+          )}
 
-        <ListActions listId={id} />
-      </Group>
-      <CardContainer listId={id} />
-      <CreateCardButton listId={id} />
-    </Card>
+          <ListActions listId={id} />
+        </Group>
+        <CardContainer listId={id} />
+        <CreateCardButton listId={id} />
+      </Card>
+    </ScrollArea>
   );
 };
 
