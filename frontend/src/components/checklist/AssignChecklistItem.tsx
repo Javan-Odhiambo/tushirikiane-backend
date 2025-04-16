@@ -1,8 +1,8 @@
 "use client";
 
 import { I_GetChecklistItemResponse } from "@/lib/interfaces/responses";
-import { M_People } from "@/lib/mockData";
 import { useAssignChecklistItem } from "@/lib/mutations/checklists";
+import { useGetBoardMembers } from "@/lib/queries/boards";
 import { ActionIcon, Group, Menu, ScrollArea, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useParams } from "next/navigation";
@@ -17,6 +17,7 @@ interface AssignChecklistItemProps extends I_GetChecklistItemResponse {
 const AssignChecklistItem: React.FC<AssignChecklistItemProps> = ({
   listId,
   task_id,
+  assignee_id,
   id,
 }) => {
   const { workSpacesSlug, boardsSlug } = useParams<{
@@ -25,6 +26,8 @@ const AssignChecklistItem: React.FC<AssignChecklistItemProps> = ({
   }>();
 
   const [opened, { open, close }] = useDisclosure(false);
+
+  const { data: boardMembers } = useGetBoardMembers(workSpacesSlug, boardsSlug);
 
   const { mutate: assignChecklistItem, isPending } = useAssignChecklistItem(
     workSpacesSlug,
@@ -48,23 +51,43 @@ const AssignChecklistItem: React.FC<AssignChecklistItemProps> = ({
 
       <Menu.Dropdown>
         <ScrollArea.Autosize mah={300} type="scroll">
-          {[...M_People, ...M_People, ...M_People].map((p, index) => (
-            <Menu.Item
-              key={index}
-              onClick={() => handleOnMemberClick(p.member.id)}
-            >
-              <Group>
-                <MemberAvatar
-                  fullName={`${p.member.first_name} ${p.member.last_name}`}
-                  initials={
-                    p.member.first_name.charAt(0).toUpperCase() +
-                    (p.member.last_name.charAt(0)?.toUpperCase() || "")
-                  }
-                />
-                <Text>{`${p.member.first_name} ${p.member.last_name}`}</Text>
-              </Group>
-            </Menu.Item>
-          ))}
+          {boardMembers?.map((p, index) => {
+            return (
+              <Menu.Item
+                key={index}
+                onClick={() => handleOnMemberClick(p.member.id)}
+                disabled={p.member.id === assignee_id}
+                leftSection={
+                  <Group align="center" justify="center">
+                    {p.member.id === assignee_id && (
+                      <IconCollection.Assigned size={16} color="blue" />
+                    )}
+                  </Group>
+                }
+              >
+                <Group align="center">
+                  <MemberAvatar
+                    fullName={`${p.member.first_name} ${p.member.last_name}`}
+                    initials={
+                      p.member.first_name.charAt(0).toUpperCase() +
+                      (p.member.last_name.charAt(0)?.toUpperCase() || "")
+                    }
+                  />
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      minWidth: 0,
+                    }}
+                  >
+                    <Text fw={500} size="sm" truncate>
+                      {`${p.member.first_name} ${p.member.last_name}`}
+                    </Text>
+                  </div>
+                </Group>
+              </Menu.Item>
+            );
+          })}
         </ScrollArea.Autosize>
       </Menu.Dropdown>
     </Menu>
