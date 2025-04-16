@@ -1,6 +1,7 @@
 import {
   IconDotsVertical,
   IconEdit,
+  IconPinnedFilled,
   IconPlus,
   IconShare,
   IconTrash,
@@ -35,5 +36,12 @@ export const IconCollection = {
   ),
   Assign: ({ size = 24, stroke = 1.5, color = "currentColor" }: IconProps) => (
     <IconUsers size={size} stroke={stroke} color={color} />
+  ),
+  Assigned: ({
+    size = 24,
+    stroke = 1.5,
+    color = "currentColor",
+  }: IconProps) => (
+    <IconPinnedFilled size={size} stroke={stroke} color={color} />
   ),
 };
