@@ -35,7 +35,7 @@ const Card: React.FC<CardProps> = (card) => {
         style={{ cursor: "pointer" }}
       >
         <Group justify="space-between" mt="xs" mb="xs">
-          <Text size="sm">{name}</Text>
+          <Text size="sm" truncate w={"84%"}>{name}</Text>
           <ActionIcon variant="subtle" size="sm" color="black">
             <IconCollection.Edit />
           </ActionIcon>

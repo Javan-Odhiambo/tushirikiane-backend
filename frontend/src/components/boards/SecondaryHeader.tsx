@@ -6,6 +6,7 @@ import { Group, Text } from "@mantine/core";
 import { useParams } from "next/navigation";
 import AvatarsContainer from "../core/AvatarsContainer";
 import InviteToBoardButtonButton from "./InviteToBoardButton";
+import DeleteBoardButton from "./DeleteBoardButton";
 
 const SecondaryHeader = () => {
   const { workSpacesSlug, boardsSlug } = useParams<{
@@ -68,6 +69,7 @@ const SecondaryHeader = () => {
           isLoading={isPending}
         />
         <InviteToBoardButtonButton boardId={selectedBoard.id} />
+        <DeleteBoardButton boardSlug={selectedBoard.id} />
       </Group>
     </Group>
   );

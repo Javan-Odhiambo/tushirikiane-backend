@@ -31,7 +31,7 @@ const List: React.FC<ListProps> = ({ id, name }) => {
 
   return (
     <ScrollArea h={560} offsetScrollbars scrollbarSize={6} type="auto">
-      <Card bg={"white"} w={240} shadow="none" h="fit-content">
+      <Card bg={"white"} w={320} shadow="none" h="fit-content">
         <Group justify="space-between" w={"full"}>
           {isEditingName ? (
             <TextInput
@@ -44,7 +44,7 @@ const List: React.FC<ListProps> = ({ id, name }) => {
               w={"80%"}
             />
           ) : (
-            <Text size={rem(24)} fw={500} onClick={handleOnNameClick} my="md">
+            <Text size={rem(24)} fw={500} onClick={handleOnNameClick} py={"xs"}  truncate w={"84%"}>
               {name}
             </Text>
           )}
