@@ -1,6 +1,6 @@
 "use client";
 
-import { ActionIcon } from "@mantine/core";
+import { Button, Group, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconCollection } from "../core/IconCollection";
 import InviteToBoardFormModal from "./InviteToBoardFormModal";
@@ -16,9 +16,12 @@ const InviteToBoardButtonButton: React.FC<InviteToBoardButtonButtonProps> = ({
 
   return (
     <>
-      <ActionIcon variant="subtle" onClick={open}>
-        <IconCollection.Share />
-      </ActionIcon>
+      <Button variant="light" onClick={open}>
+        <Group justify="space-between">
+          <IconCollection.Share />
+          <Text>Invite</Text>
+        </Group>
+      </Button>
 
       <InviteToBoardFormModal opened={opened} close={close} boardId={boardId} />
     </>

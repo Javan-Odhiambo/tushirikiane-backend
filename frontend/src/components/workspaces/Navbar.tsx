@@ -15,8 +15,6 @@ import {
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import CreateBoardButton from "../boards/CreateBoardButton";
-import DeleteBoardButton from "../boards/DeleteBoardButton";
-import InviteToBoardButtonButton from "../boards/InviteToBoardButton";
 import DeleteWorkSpaceButton from "./DeleteWorkSpaceButton";
 import InviteToWorkSpaceButton from "./InviteToWorkSpaceButton";
 
@@ -182,8 +180,6 @@ const WorkspaceBoards = () => {
               >
                 <Text fw={isActive ? 700 : 400}>{board.name}</Text>
               </Button>
-              <DeleteBoardButton boardSlug={board.id} />
-              <InviteToBoardButtonButton boardId={board.id} />
             </Group>
           );
         })
