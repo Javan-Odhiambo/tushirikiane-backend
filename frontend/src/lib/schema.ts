@@ -77,3 +77,16 @@ export const createChecklistItemSchema = z.object({
 export type T_CreateChecklistItemSchema = z.infer<
   typeof createChecklistItemSchema
 >;
+
+export const createLabelSchema = z.object({
+  name: z.string().min(1, "Label name is required"),
+  color: z.string().min(1),
+});
+export type T_CreateLabelSchema = z.infer<typeof createLabelSchema>;
+
+export const resendActivationEmailSchema = z.object({
+  email: z.string().email({ message: "Please enter a valid email address" }),
+});
+export type T_ResendActivationEmailSchema = z.infer<
+  typeof resendActivationEmailSchema
+>;

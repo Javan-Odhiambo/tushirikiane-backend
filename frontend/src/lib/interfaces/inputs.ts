@@ -68,6 +68,11 @@ export interface I_ActivateAccountInput {
   token: string;
 }
 
-export interface I_ResendActivationEmail {
+export interface I_ResendActivationEmailInput {
   email: string;
+}
+
+export interface I_CreateLabelInput {
+  name: string;
+  color: string;
 }

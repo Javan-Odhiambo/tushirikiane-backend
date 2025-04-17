@@ -158,3 +158,12 @@ export interface I_AssignChecklistItemResponse {
   due_at: string;
   assignee_id: string;
 }
+
+export interface I_GetLabelResponse {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+  color: string;
+  board_id: string;
+}

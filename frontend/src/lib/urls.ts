@@ -97,4 +97,10 @@ export const URLS = {
     checklistId: string
   ) =>
     `workspaces/${workSpaceId}/boards/${boardId}/task-lists/${listId}}/tasks/${cardId}/checklist/${checklistId}/unassign/`,
+
+  // labels
+  apiLabels: (workSpaceId: string, boardId: string) =>
+    `workspaces/${workSpaceId}/boards/${boardId}/labels/`,
+  apiLabelsDetail: (workSpaceId: string, boardId: string, labelId: string) =>
+    `workspaces/${workSpaceId}/boards/${boardId}/labels/${labelId}}/`,
 };

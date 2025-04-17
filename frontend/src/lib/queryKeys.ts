@@ -4,6 +4,8 @@ export const QUERY_KEYS = {
   boards: (workSpaceSlug: string) => `${workSpaceSlug}-boards`,
   boardMembers: (workSpaceId: string, boardId: string) =>
     `${workSpaceId}-${boardId}-boardMembers`,
+  labels: (workSpaceId: string, boardId: string) =>
+    `${workSpaceId}-${boardId}-labels`,
   lists: (workSpaceId: string, boardId: string) =>
     `${workSpaceId}-${boardId}-lists`,
   cards: (workSpaceId: string, boardId: string, listId: string) =>
