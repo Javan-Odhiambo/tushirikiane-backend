@@ -5,7 +5,7 @@ import { createWorkSpaceSchema, T_CreateWorkSpaceSchema } from "@/lib/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Modal, Stack, TextInput } from "@mantine/core";
 import React from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import EmailPillsMultiInput from "../core/EmailPillsMultiInput";
 
 interface CreateWorkSpaceFormModalProps {
@@ -56,12 +56,19 @@ const CreateWorkSpaceFormModal: React.FC<CreateWorkSpaceFormModalProps> = ({
             error={form.formState.errors.name?.message}
           />
 
-          <EmailPillsMultiInput
-            label="Invite Emails"
-            emails={form.watch("emails")}
-            onChange={handleOnEmailsChange}
-            disabled={isPending}
-            error={form.formState.errors.emails?.message as string}
+          <Controller
+            name="emails"
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <EmailPillsMultiInput
+                disabled={isPending}
+                label="Invite new members to this board"
+                value={field.value}
+                onChange={handleOnEmailsChange}
+                error={fieldState.error?.message}
+                helperText
+              />
+            )}
           />
 
           <Button type="submit" loading={isPending}>
