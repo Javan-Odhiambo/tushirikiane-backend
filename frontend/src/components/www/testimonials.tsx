@@ -43,6 +43,7 @@ const Testimonials = () => {
 
         <Image
           src={"/group-vector.svg"}
+          fill
           alt="Background pattern"
           className="w-full h-full object-cover opacity-30"
         />
