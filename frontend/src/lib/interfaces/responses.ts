@@ -167,3 +167,7 @@ export interface I_GetLabelResponse {
   color: string;
   board_id: string;
 }
+
+export interface I_GetCardMemberResponse {
+  member: I_Member
+}

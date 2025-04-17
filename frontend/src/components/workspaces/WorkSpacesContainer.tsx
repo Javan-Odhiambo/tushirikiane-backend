@@ -71,7 +71,7 @@ const WorkSpaceCard: React.FC<WorkSpaceCardProps> = ({ id, name }) => {
             {name}
           </Text>
           <AvatarsContainer
-            members={workspaceMembers}
+            members={workspaceMembers?.map((w) => w.member)}
             isLoading={isPending}
           />
         </Stack>

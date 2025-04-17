@@ -12,12 +12,12 @@ from rest_framework.response import Response
 from accounts.models import CustomUser
 from project_management.emails import BoardInviteEmail, WorkspaceInviteEmail
 from .mixin import PositionReorderMixin
-from .models import Board, BoardInvite, BoardMember, Label, Task, TaskAssignee, TaskList, Workspace, WorkspaceInvite, \
+from .models import Board, BoardInvite, BoardMember, Label, Task, TaskMember, TaskList, Workspace, WorkspaceInvite, \
 	WorkspaceMember
 from .permissions import IsMemberReadOrOwnerFull, IsTaskListOwnerOrBoardMember, IsWorkspaceOwnerOrBoardMember
 from .serializers import BoardMemberSerializer, BoardSerializer, CheckListItemSerializer, EmailInviteSerializer, \
 	InviteTokenSerializer, \
-	LabelSerializer, TaskAssigneeSerializer, TaskListSerializer, TaskSerializer, \
+	LabelSerializer, TaskMemberSerializer, TaskListSerializer, TaskSerializer, \
 	WorkspaceMemberSerializer, \
 	WorkspaceSerializer
 
@@ -278,7 +278,7 @@ class TaskViewSet(viewsets.ModelViewSet):
 		except ObjectDoesNotExist:
 			return Task.objects.none()
 
-		return Task.objects.filter(task_list=task_list).prefetch_related("assignees")
+		return Task.objects.filter(task_list=task_list).prefetch_related("members")
 
 	def create(self, request, *args, **kwargs):
 		task_list_pk = self.kwargs["tasklist_pk"]
@@ -325,7 +325,7 @@ class TaskViewSet(viewsets.ModelViewSet):
 		members = CustomUser.objects.filter(id__in=member_ids)
 		with transaction.atomic():
 			for member in members:
-				TaskAssignee.objects.get_or_create(task=task, assignee=member)
+				TaskMember.objects.get_or_create(task=task, assignee=member)
 
 		return Response({"message": "Members assigned to task"}, status=status.HTTP_200_OK)
 
@@ -351,15 +351,15 @@ class TaskViewSet(viewsets.ModelViewSet):
 					"invalid_ids": invalid_ids
 			}, status=400)
 
-		TaskAssignee.objects.filter(task=task, assignee_id__in=member_ids).delete()
+		TaskMember.objects.filter(task=task, assignee_id__in=member_ids).delete()
 
 		return Response({"message": "Members unassigned from task"}, status=status.HTTP_200_OK)
 
 	@action(detail=True, methods=["get"])
 	def members(self, request, *args, **kwargs):
 		task = self.get_object()
-		assignees = task.assignees.all()
-		serializer = TaskAssigneeSerializer(assignees, many=True)
+		members = task.members.all()
+		serializer = TaskMemberSerializer(members, many=True)
 		return Response(serializer.data, status=status.HTTP_200_OK)
 
 

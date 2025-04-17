@@ -63,7 +63,10 @@ const SecondaryHeader = () => {
       <Group>
         {/* <FilterIcon /> */}
         {/* TODO: fetch board people and pass here */}
-        <AvatarsContainer members={boardMembers} isLoading={isPending} />
+        <AvatarsContainer
+          members={boardMembers?.map((b) => b.member)}
+          isLoading={isPending}
+        />
         <InviteToBoardButtonButton boardId={selectedBoard.id} />
       </Group>
     </Group>

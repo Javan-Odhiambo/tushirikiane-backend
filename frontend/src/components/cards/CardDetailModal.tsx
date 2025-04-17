@@ -1,8 +1,8 @@
 "use client";
 
 import { I_GetCardRespone } from "@/lib/interfaces/responses";
-import { M_People } from "@/lib/mockData";
 import { useEditCard } from "@/lib/mutations/cards";
+import { useGetCardMembers } from "@/lib/queries/cards";
 import {
   Group,
   Modal,
@@ -11,7 +11,7 @@ import {
   TextInput,
   Textarea,
   Title,
-  rem
+  rem,
 } from "@mantine/core";
 import { useParams } from "next/navigation";
 import { useState } from "react";
@@ -43,6 +43,13 @@ const CardDetailModal: React.FC<CardDetailModalProps> = ({
     card.id
   );
 
+  const { data: cardMembers, isPending } = useGetCardMembers(
+    workSpacesSlug,
+    boardsSlug,
+    card.task_list_id,
+    card.id
+  );
+
   const [isEditingName, setIsEditingName] = useState(false);
   const [name, setName] = useState(card.name);
 
@@ -56,8 +63,6 @@ const CardDetailModal: React.FC<CardDetailModalProps> = ({
   const handleOnNotesSave = (notes: string) => {
     editCard({ notes: notes, name: card.name });
   };
-
-
 
   const handleOnNameClick = () => {
     setIsEditingName(true);
@@ -141,10 +146,13 @@ const CardDetailModal: React.FC<CardDetailModalProps> = ({
         <Group justify="space-between" align="center">
           <Stack>
             <Text>Members</Text>
-            <AvatarsContainer members={M_People} isLoading={false} />
+            <AvatarsContainer
+              members={cardMembers?.map((c) => c.member)}
+              isLoading={isPending}
+            />
           </Stack>
 
-       <LabelsContainer />
+          <LabelsContainer />
         </Group>
 
         <Text>Notes</Text>

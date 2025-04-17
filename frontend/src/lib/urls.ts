@@ -64,6 +64,13 @@ export const URLS = {
     cardId: string
   ) =>
     `workspaces/${workSpaceId}/boards/${boardId}/task-lists/${listId}}/tasks/${cardId}/`,
+  apiCardsDetailMembers: (
+    workSpaceId: string,
+    boardId: string,
+    listId: string,
+    cardId: string
+  ) =>
+    `workspaces/${workSpaceId}/boards/${boardId}/task-lists/${listId}}/tasks/${cardId}/members/`,
 
   // checklists
   apiChecklists: (
