@@ -1,0 +1,29 @@
+{% load i18n %}
+
+{% block subject %}
+    {% blocktrans %}{{ site_name }} - You have been assigned a task!{% endblocktrans %}
+{% endblock %}
+
+{% block text_body %}
+    {% trans "You have been assigned a new task!" %}
+
+
+    {% trans "Please go to the following page to see the task:" %}
+    {{ protocol }}://{{ domain }}/{{ url|safe }}
+
+    {% trans "Thanks for using our site!" %}
+
+    {% blocktrans %}The {{ site_name }} team{% endblocktrans %}
+{% endblock text_body %}
+
+{% block html_body %}
+    <p>{% trans "You have been assigned a new task!" %}</p>
+
+    <p>{% trans "Please go to the following page to see the task:" %}</p>
+    <p><a href="{{ protocol }}://{{ domain }}/{{ url|safe }}">{{ protocol }}://{{ domain }}/{{ url|safe }}</a></p>
+
+    <p>{% trans "Thanks for using our site!" %}</p>
+
+
+    <p>{% blocktrans %}The {{ site_name }} team{% endblocktrans %}</p>
+{% endblock html_body %}

@@ -24,3 +24,18 @@ class WorkspaceInviteEmail(BaseEmailMessage):
 		context["token"] = context.get("token")
 		context["url"] = settings.PROJECT_MANAGEMENT.get("URLS").get("accept_workspace_invite").format(**context)
 		return context
+
+
+class TaskAssignmentEmail(BaseEmailMessage):
+	template_name="emails_templates/task_assignment.html"
+
+	def get_context_data(self):
+		context = super().get_context_data()
+		user = context.get("user")
+		context["task"] = context.get("task")
+		url_context = {"": }
+		context["url"] = settings.PROJECT_MANAGEMENT.get("URLS").get("task_assignment").format()
+
+		return context
+	
+	

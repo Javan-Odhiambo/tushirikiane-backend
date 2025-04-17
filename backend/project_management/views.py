@@ -10,7 +10,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from accounts.models import CustomUser
-from project_management.emails import BoardInviteEmail, WorkspaceInviteEmail
+from project_management.emails import BoardInviteEmail, TaskAssignmentEmail, WorkspaceInviteEmail
 from .mixin import PositionReorderMixin
 from .models import Board, BoardInvite, BoardMember, Label, Task, TaskMember, TaskList, Workspace, WorkspaceInvite, \
 	WorkspaceMember
@@ -327,6 +327,8 @@ class TaskViewSet(viewsets.ModelViewSet):
 		with transaction.atomic():
 			for member in members:
 				TaskMember.objects.get_or_create(task=task, assignee=member)
+				TaskAssignmentEmail(request=request, context={"task": task, "board": board}).send(to=[member.email])
+
 
 		return Response({"message": "Members assigned to task"}, status=status.HTTP_200_OK)
 
