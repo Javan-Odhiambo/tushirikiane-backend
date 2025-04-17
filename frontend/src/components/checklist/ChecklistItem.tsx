@@ -1,7 +1,10 @@
 "use client";
 
 import { I_GetChecklistItemResponse } from "@/lib/interfaces/responses";
-import { useDeleteChecklistItem } from "@/lib/mutations/checklists";
+import {
+  useDeleteChecklistItem,
+  useEditChecklistItem,
+} from "@/lib/mutations/checklists";
 import { ActionIcon, Group, Text } from "@mantine/core";
 import { useParams } from "next/navigation";
 import React from "react";
@@ -18,7 +21,15 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ ...checklistItem }) => {
     workSpacesSlug: string;
     boardsSlug: string;
   }>();
-  const { mutate: deleteChecklistItem } = useDeleteChecklistItem(
+  const { mutate: deleteChecklistItem, isPending } = useDeleteChecklistItem(
+    workSpacesSlug,
+    boardsSlug,
+    checklistItem.listId,
+    checklistItem.task_id,
+    checklistItem.id
+  );
+
+  const { mutate: editChecklistItem } = useEditChecklistItem(
     workSpacesSlug,
     boardsSlug,
     checklistItem.listId,
@@ -31,8 +42,13 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ ...checklistItem }) => {
   };
 
   const handleOnChecklistItemStatusChangeClick = () => {
-    console.log(`Toggling status of task`);
+    editChecklistItem({
+      is_completed: !checklistItem.is_completed,
+      assignee_id: checklistItem.assignee_id,
+      name: checklistItem.name,
+    });
   };
+
   return (
     <Group justify="space-between" key={checklistItem.id}>
       <Group>
@@ -47,6 +63,7 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({ ...checklistItem }) => {
           onClick={handleOnDeleteChecklistItemClick}
           variant="subtle"
           color="red"
+          loading={isPending}
         >
           <IconCollection.Delete />
         </ActionIcon>

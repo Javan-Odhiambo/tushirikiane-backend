@@ -8,8 +8,7 @@ import {
 import {
   I_AssignChecklistItemResponse,
   I_CreateChecklistItemResponse,
-  I_EditCardResponse,
-  I_GetCardRespone,
+  I_CreateChecklistItemResponse as I_EditChecklistItemResponse,
   I_AssignChecklistItemResponse as I_UnssignChecklistItemResponse,
 } from "../interfaces/responses";
 import { protectedApi } from "../kyInstance";
@@ -52,11 +51,12 @@ export const useCreateChecklistItem = (
   });
 };
 
-export const useEditChecklists = (
+export const useEditChecklistItem = (
   workSpaceId: string,
   boardId: string,
   listId: string,
   cardId: string,
+  checklistId: string,
   onSuccess?: () => void,
   onError?: () => void
 ) => {
@@ -65,16 +65,25 @@ export const useEditChecklists = (
   return useMutation({
     mutationFn: async (
       values: I_EditChecklistInput
-    ): Promise<I_EditCardResponse> => {
+    ): Promise<I_EditChecklistItemResponse> => {
       return await protectedApi
-        .put(URLS.apiCardsDetail(workSpaceId, boardId, listId, cardId), {
-          json: values,
-        })
+        .put(
+          URLS.apiChecklistsDetail(
+            workSpaceId,
+            boardId,
+            listId,
+            cardId,
+            checklistId
+          ),
+          {
+            json: values,
+          }
+        )
         .json();
     },
     onSuccess: (editedChecklist) => {
-      queryClient.setQueryData<I_GetCardRespone[]>(
-        [QUERY_KEYS.cards(workSpaceId, boardId, listId)],
+      queryClient.setQueryData<I_EditChecklistItemResponse[]>(
+        [QUERY_KEYS.checklists(workSpaceId, boardId, listId, cardId)],
         (oldChecklists = []) =>
           oldChecklists.map((checklist) =>
             checklist.id === editedChecklist.id ? editedChecklist : checklist
