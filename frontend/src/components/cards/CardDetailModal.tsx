@@ -4,7 +4,6 @@ import { I_GetCardRespone } from "@/lib/interfaces/responses";
 import { M_People } from "@/lib/mockData";
 import { useEditCard } from "@/lib/mutations/cards";
 import {
-  ActionIcon,
   Group,
   Modal,
   Stack,
@@ -12,15 +11,15 @@ import {
   TextInput,
   Textarea,
   Title,
-  rem,
+  rem
 } from "@mantine/core";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import ChecklistContainer from "../checklist/ChecklistContainer";
 import AvatarsContainer from "../core/AvatarsContainer";
-import { IconCollection } from "../core/IconCollection";
 import RichTextEditor from "../core/RichTextEditor";
 import StatusCheckBox from "../core/StatusCheckBox";
+import LabelsContainer from "./LabelsContainer";
 
 interface CardDetailModalProps extends I_GetCardRespone {
   opened: boolean;
@@ -58,9 +57,7 @@ const CardDetailModal: React.FC<CardDetailModalProps> = ({
     editCard({ notes: notes, name: card.name });
   };
 
-  const handleOnCreateLabel = () => {
-    console.log("Creating label");
-  };
+
 
   const handleOnNameClick = () => {
     setIsEditingName(true);
@@ -147,19 +144,7 @@ const CardDetailModal: React.FC<CardDetailModalProps> = ({
             <AvatarsContainer members={M_People} isLoading={false} />
           </Stack>
 
-          <Stack>
-            <Group align="center">
-              <Text>Labels</Text>
-              <ActionIcon onClick={handleOnCreateLabel} variant="subtle">
-                <IconCollection.Create />
-              </ActionIcon>
-            </Group>
-            <Group>
-              {/* {card.labels.map((l, index) => (
-                <Badge key={index}>{l}</Badge>
-              ))} */}
-            </Group>
-          </Stack>
+       <LabelsContainer />
         </Group>
 
         <Text>Notes</Text>

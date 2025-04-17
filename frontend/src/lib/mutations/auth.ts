@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import {
   I_ActivateAccountInput,
-  I_ResendActivationEmail,
+  I_ResendActivationEmailInput,
 } from "../interfaces/inputs";
 import { authApi } from "../kyInstance";
 import { URLS } from "../urls";
@@ -35,7 +35,7 @@ export const useResendActivationEmail = (
   onError?: () => void
 ) => {
   return useMutation({
-    mutationFn: async (values: I_ResendActivationEmail) => {
+    mutationFn: async (values: I_ResendActivationEmailInput) => {
       return await authApi.post(URLS.apiResendActivationEmail, {
         json: values,
       });

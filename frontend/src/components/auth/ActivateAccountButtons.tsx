@@ -1,18 +1,15 @@
 "use client";
+
 import {
   useActivateAccount,
   useResendActivationEmail,
 } from "@/lib/mutations/auth";
+import { resendActivationEmailSchema } from "@/lib/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Stack, Text, TextInput } from "@mantine/core";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
-
-const schema = z.object({
-  email: z.string().email({ message: "Please enter a valid email address" }),
-});
 
 const ActivateAccountButtons = () => {
   const { uid, token } = useParams<{ uid: string; token: string }>();
@@ -22,7 +19,7 @@ const ActivateAccountButtons = () => {
     useResendActivationEmail();
 
   const form = useForm({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(resendActivationEmailSchema),
     defaultValues: { email: "" },
   });
 
@@ -30,10 +27,10 @@ const ActivateAccountButtons = () => {
     activateAccount({ uid, token });
   };
 
-  const handleResendClick = (data: { email: string }) => {
+  const handleResendClick = (values: { email: string }) => {
     if (!form.formState.isValid) return;
     resendActivationEmail(
-      { email: data.email },
+      { email: values.email },
       { onSuccess: () => setResendSuccess(true) }
     );
   };
