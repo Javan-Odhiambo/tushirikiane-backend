@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 from accounts.models import CustomUser
-from project_management.models import (Board, BoardMember, Label, Task, TaskAssignee, TaskList, Workspace,
+from project_management.models import (Board, BoardMember, Label, Task, TaskMember, TaskList, Workspace,
                                        WorkspaceMember)
 
 
@@ -90,7 +90,7 @@ class TaskViewSetTestCase(APITestCase):
 
 		response = self.client.post(url, data={"member_ids": [self.user2.id]}, format="json")
 		self.assertEqual(response.status_code, status.HTTP_200_OK)
-		self.assertTrue(TaskAssignee.objects.filter(task=self.task, assignee=self.user2).exists())
+		self.assertTrue(TaskMember.objects.filter(task=self.task, assignee=self.user2).exists())
 
 	def test_assign_task_rejects_non_board_members(self):
 		"""
@@ -102,7 +102,7 @@ class TaskViewSetTestCase(APITestCase):
 
 		self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 		self.assertIn("invalid_ids", response.data)
-		self.assertFalse(TaskAssignee.objects.filter(task=self.task, assignee=self.user3).exists())
+		self.assertFalse(TaskMember.objects.filter(task=self.task, assignee=self.user3).exists())
 
 	def test_assign_task_with_no_member_ids(self):
 		"""
@@ -117,43 +117,43 @@ class TaskViewSetTestCase(APITestCase):
 		"""
 		Test that board members can be unassigned from a task
 		"""
-		TaskAssignee.objects.create(task=self.task, assignee=self.user2)
+		TaskMember.objects.create(task=self.task, assignee=self.user2)
 
 		url = f"/api/workspaces/{self.workspace.id}/boards/{self.board.id}/task-lists/{self.task_list.id}/tasks/{self.task.id}/unassign/"
 
 		response = self.client.post(url, data={"member_ids": [self.user2.id]}, format="json")
 
 		self.assertEqual(response.status_code, status.HTTP_200_OK)
-		self.assertFalse(TaskAssignee.objects.filter(task=self.task, assignee=self.user2).exists())
+		self.assertFalse(TaskMember.objects.filter(task=self.task, assignee=self.user2).exists())
 
 	def test_unassign_task_with_invalid_members(self):
 		"""
 		Test that trying to unassign users who aren't board members fails
 		"""
-		TaskAssignee.objects.create(task=self.task, assignee=self.user3)
+		TaskMember.objects.create(task=self.task, assignee=self.user3)
 
 		url = f"/api/workspaces/{self.workspace.id}/boards/{self.board.id}/task-lists/{self.task_list.id}/tasks/{self.task.id}/unassign/"
 
 		response = self.client.post(url, data={"member_ids": [self.user3.id]}, format="json")
 
 		self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-		self.assertTrue(TaskAssignee.objects.filter(task=self.task, assignee=self.user3).exists())
+		self.assertTrue(TaskMember.objects.filter(task=self.task, assignee=self.user3).exists())
 
 	def test_assign_same_member_twice_does_not_duplicate(self):
-		TaskAssignee.objects.create(task=self.task, assignee=self.user2)
+		TaskMember.objects.create(task=self.task, assignee=self.user2)
 
 		url = f"/api/workspaces/{self.workspace.id}/boards/{self.board.id}/task-lists/{self.task_list.id}/tasks/{self.task.id}/assign/"
 		response = self.client.post(url, data={"member_ids": [self.user2.id]}, format="json")
 
 		self.assertEqual(response.status_code, status.HTTP_200_OK)
-		self.assertEqual(TaskAssignee.objects.filter(task=self.task, assignee=self.user2).count(), 1)
+		self.assertEqual(TaskMember.objects.filter(task=self.task, assignee=self.user2).count(), 1)
 
 	def test_assign_task_mixed_valid_and_invalid_ids(self):
 		url = f"/api/workspaces/{self.workspace.id}/boards/{self.board.id}/task-lists/{self.task_list.id}/tasks/{self.task.id}/assign/"
 		response = self.client.post(url, data={"member_ids": [self.user2.id, self.user3.id]}, format="json")
 
 		self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-		self.assertFalse(TaskAssignee.objects.filter(task=self.task, assignee=self.user2).exists())
+		self.assertFalse(TaskMember.objects.filter(task=self.task, assignee=self.user2).exists())
 
 	def test_unauthenticated_user_cannot_assign_task(self):
 		self.client.logout()
@@ -164,7 +164,7 @@ class TaskViewSetTestCase(APITestCase):
 		self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
 	def test_unauthenticated_user_cannot_unassign_task(self):
-		TaskAssignee.objects.create(task=self.task, assignee=self.user2)
+		TaskMember.objects.create(task=self.task, assignee=self.user2)
 		self.client.logout()
 
 		url = f"/api/workspaces/{self.workspace.id}/boards/{self.board.id}/task-lists/{self.task_list.id}/tasks/{self.task.id}/unassign/"
@@ -186,7 +186,7 @@ class TaskViewSetTestCase(APITestCase):
 		response = self.client.post(url, data={"member_ids": [self.user3.id]}, format="json")
 
 		self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-		self.assertFalse(TaskAssignee.objects.filter(task=self.task, assignee=self.user3).exists())
+		self.assertFalse(TaskMember.objects.filter(task=self.task, assignee=self.user3).exists())
 
 	def test_assign_fails_if_task_does_not_belong_to_board(self):
 		other_board = Board.objects.create(name="Other Board", workspace=self.workspace, position=2)
@@ -203,10 +203,10 @@ class TaskViewSetTestCase(APITestCase):
 		response = self.client.post(url, data={"member_ids": [self.user2.id]}, format="json")
 
 		self.assertEqual(response.status_code, status.HTTP_200_OK)
-		self.assertFalse(TaskAssignee.objects.filter(task=self.task, assignee=self.user2).exists())
+		self.assertFalse(TaskMember.objects.filter(task=self.task, assignee=self.user2).exists())
 
 	def test_assign_additional_member_preserves_existing_assignees(self):
-		TaskAssignee.objects.create(task=self.task, assignee=self.user2)
+		TaskMember.objects.create(task=self.task, assignee=self.user2)
 		new_member = CustomUser.objects.create_user(email="user4@test.com", password="testpass123")
 		WorkspaceMember.objects.create(workspace=self.workspace, member=new_member)
 		BoardMember.objects.create(board=self.board, member=new_member)
@@ -215,11 +215,11 @@ class TaskViewSetTestCase(APITestCase):
 		response = self.client.post(url, data={"member_ids": [new_member.id]}, format="json")
 
 		self.assertEqual(response.status_code, status.HTTP_200_OK)
-		self.assertTrue(TaskAssignee.objects.filter(task=self.task, assignee=self.user2).exists())
-		self.assertTrue(TaskAssignee.objects.filter(task=self.task, assignee=new_member).exists())
+		self.assertTrue(TaskMember.objects.filter(task=self.task, assignee=self.user2).exists())
+		self.assertTrue(TaskMember.objects.filter(task=self.task, assignee=new_member).exists())
 
 	def test_get_assignees_returns_correct_users(self):
-		TaskAssignee.objects.create(task=self.task, assignee=self.user2)
+		TaskMember.objects.create(task=self.task, assignee=self.user2)
 		response = self.client.get(self.assignees_url)
 
 		self.assertEqual(response.status_code, status.HTTP_200_OK)

@@ -1,16 +1,29 @@
 "use client";
 
 import { I_GetCardRespone as CardProps } from "@/lib/interfaces/responses";
+import { useGetCardMembers } from "@/lib/queries/cards";
 import { ActionIcon, Group, Card as MantineCard, Text } from "@mantine/core";
+import { useParams } from "next/navigation";
 import React, { useState } from "react";
 import AvatarsContainer from "../core/AvatarsContainer";
 import { IconCollection } from "../core/IconCollection";
 import CardDetailModal from "./CardDetailModal";
-import { M_People } from "@/lib/mockData";
 
 const Card: React.FC<CardProps> = (card) => {
+  const { workSpacesSlug, boardsSlug } = useParams<{
+    workSpacesSlug: string;
+    boardsSlug: string;
+  }>();
+
   const { name, description } = card;
   const [isOpen, setIsOpen] = useState(false);
+
+  const { data: cardMembers, isPending } = useGetCardMembers(
+    workSpacesSlug,
+    boardsSlug,
+    card.task_list_id,
+    card.id
+  );
 
   return (
     <>
@@ -30,7 +43,10 @@ const Card: React.FC<CardProps> = (card) => {
         <Text size="xs" mb="xs">
           {description}
         </Text>
-        <AvatarsContainer members={M_People} isLoading={false} />
+        <AvatarsContainer
+          members={cardMembers?.map((c) => c.member)}
+          isLoading={isPending}
+        />
       </MantineCard>
 
       <CardDetailModal

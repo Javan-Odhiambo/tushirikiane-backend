@@ -218,16 +218,16 @@ class Task(BaseModel):
 		super().save(*args, **kwargs)
 
 
-class TaskAssignee(BaseModel):
+class TaskMember(BaseModel):
 	"""
 	TaskAssignee model to represent the assignment of a user to a task.
 	Attributes:
 		task (ForeignKey): The task to which the assignee is assigned.
-		assignee (ForeignKey): The user who is assigned to the task.
+		member (ForeignKey): The user who is assigned to the task.
 	"""
 
-	task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="assignees")
-	assignee = models.ForeignKey("accounts.CustomUser", on_delete=models.CASCADE, related_name="assigned_tasks")
+	task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="members")
+	member = models.ForeignKey("accounts.CustomUser", on_delete=models.CASCADE, related_name="assigned_tasks")
 
 	def __str__(self):
 		"""
@@ -236,7 +236,7 @@ class TaskAssignee(BaseModel):
 		Returns:
 			str: The name of the task assignee.
 		"""
-		return f"{self.assignee} assigned to {self.task}"
+		return f"{self.member} assigned to {self.task}"
 
 
 class CheckListItem(BaseModel):

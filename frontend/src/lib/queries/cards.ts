@@ -1,8 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
+import {
+  I_GetCardMemberResponse,
+  I_GetCardRespone,
+} from "../interfaces/responses";
 import { protectedApi } from "../kyInstance";
 import { QUERY_KEYS } from "../queryKeys";
 import { URLS } from "../urls";
-import { I_GetCardRespone } from "../interfaces/responses";
 
 export const useGetCards = (
   workSpaceId: string,
@@ -18,5 +21,21 @@ export const useGetCards = (
     },
     staleTime: 60000,
     refetchOnWindowFocus: true,
+  });
+};
+
+export const useGetCardMembers = (
+  workSpaceId: string,
+  boardId: string,
+  listId: string,
+  cardId: string
+) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.cardMembers(workSpaceId, boardId, listId, cardId)],
+    queryFn: async (): Promise<I_GetCardMemberResponse[]> => {
+      return await protectedApi
+        .get(URLS.apiCardsDetailMembers(workSpaceId, boardId, listId, cardId))
+        .json();
+    },
   });
 };

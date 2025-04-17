@@ -1,13 +1,13 @@
 "use client";
 
 import { CONSTANTS } from "@/lib/constants";
-import { I_GetWorkSpaceMemberResponse } from "@/lib/interfaces/responses";
+import { I_Member } from "@/lib/interfaces/responses";
 import { Avatar, Skeleton } from "@mantine/core";
 import React from "react";
 import MemberAvatar from "./MemberAvatar";
 
 export interface AvatarsContainerProps {
-  members?: I_GetWorkSpaceMemberResponse[];
+  members?: I_Member[];
   isLoading: boolean;
 }
 
@@ -20,14 +20,14 @@ const AvatarsContainer: React.FC<AvatarsContainerProps> = ({
       {isLoading ? (
         <AvatarsSkeletonContainer />
       ) : (
-        members.slice(0, CONSTANTS.avatarMaxSize).map((p, index) => {
+        members.slice(0, CONSTANTS.avatarMaxSize).map((m, index) => {
           return (
             <MemberAvatar
               key={index}
-              fullName={`${p.member.first_name} ${p.member.last_name}`}
+              fullName={`${m.first_name} ${m.last_name}`}
               initials={
-                p.member.first_name.charAt(0).toUpperCase() +
-                (p.member.last_name.charAt(0)?.toUpperCase() || "")
+                m.first_name.charAt(0).toUpperCase() +
+                (m.last_name.charAt(0)?.toUpperCase() || "")
               }
             />
           );

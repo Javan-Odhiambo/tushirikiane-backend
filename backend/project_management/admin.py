@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from project_management.models import Board, BoardInvite, BoardMember, CheckListItem, Label, Task, TaskAssignee, \
+from project_management.models import Board, BoardInvite, BoardMember, CheckListItem, Label, Task, TaskMember, \
 	TaskList, Workspace, WorkspaceInvite, WorkspaceMember
 
 
@@ -37,7 +37,7 @@ class WorkspaceInviteAdmin(admin.ModelAdmin):
 class BoardInviteAdmin(admin.ModelAdmin):
 	pass
 
-@admin.register(TaskAssignee)
+@admin.register(TaskMember)
 class TaskAssigneeAdmin(admin.ModelAdmin):
 	pass
 
