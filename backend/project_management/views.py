@@ -106,6 +106,7 @@ def accept_workspace_invite(request, *args, **kwargs):
 		workspace = invite.workspace
 
 	except ObjectDoesNotExist:
+		print("Not found")
 		return response.Response("Invalid token", status=400)
 
 	# TODO: Remove check

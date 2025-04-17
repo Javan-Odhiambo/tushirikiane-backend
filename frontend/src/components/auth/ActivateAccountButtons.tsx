@@ -4,7 +4,7 @@ import {
   useActivateAccount,
   useResendActivationEmail,
 } from "@/lib/mutations/auth";
-import { resendActivationEmailSchema } from "@/lib/schema";
+import { resendActivationEmailSchema, T_ResendActivationEmailSchema } from "@/lib/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Stack, Text, TextInput } from "@mantine/core";
 import { useParams } from "next/navigation";
@@ -27,12 +27,8 @@ const ActivateAccountButtons = () => {
     activateAccount({ uid, token });
   };
 
-  const handleResendClick = (values: { email: string }) => {
-    if (!form.formState.isValid) return;
-    resendActivationEmail(
-      { email: values.email },
-      { onSuccess: () => setResendSuccess(true) }
-    );
+  const handleResendClick = (values: T_ResendActivationEmailSchema) => {
+    resendActivationEmail(values, { onSuccess: () => setResendSuccess(true) });
   };
 
   return (
