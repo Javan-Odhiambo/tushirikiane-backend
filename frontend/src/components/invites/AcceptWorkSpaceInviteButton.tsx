@@ -1,6 +1,6 @@
 "use client";
 
-import { useAcceptBoardInvite } from "@/lib/mutations/boards";
+import { useAcceptWorkSpaceInvite } from "@/lib/mutations/workspaces";
 import { URLS } from "@/lib/urls";
 import { Button, Group } from "@mantine/core";
 import Link from "next/link";
@@ -10,12 +10,12 @@ const AcceptWorkSpaceInviteButton = () => {
   const router = useRouter();
   const { token } = useParams<{ token: string }>();
 
-  const { mutate: acceptBoardInvite, isPending } = useAcceptBoardInvite(() => {
+  const { mutate: acceptWorkSpaceInvite, isPending } = useAcceptWorkSpaceInvite(() => {
     router.push(URLS.workspaces);
   });
 
   const handleOnAcceptInviteClick = () => {
-    acceptBoardInvite({ token: token });
+    acceptWorkSpaceInvite({ token: token });
   };
 
   return (
