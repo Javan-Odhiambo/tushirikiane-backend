@@ -30,9 +30,9 @@ const List: React.FC<ListProps> = ({ id, name }) => {
   };
 
   return (
-    <ScrollArea h={380} offsetScrollbars scrollbarSize={6} type="auto">
-      <Card bg={"white"} w={275} shadow="none" h="fit-content">
-        <Group justify="space-between">
+    <ScrollArea h={560} offsetScrollbars scrollbarSize={6} type="auto">
+      <Card bg={"white"} w={240} shadow="none" h="fit-content">
+        <Group justify="space-between" w={"full"}>
           {isEditingName ? (
             <TextInput
               autoFocus
@@ -44,7 +44,7 @@ const List: React.FC<ListProps> = ({ id, name }) => {
               w={"80%"}
             />
           ) : (
-            <Text size={rem(24)} fw={500} onClick={handleOnNameClick}>
+            <Text size={rem(24)} fw={500} onClick={handleOnNameClick} my="md">
               {name}
             </Text>
           )}

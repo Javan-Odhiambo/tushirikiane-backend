@@ -30,8 +30,8 @@ const CardContainer: React.FC<CardContainerProps> = ({ listId }) => {
   );
 
   return (
-    <ScrollArea mah={300} type="always" scrollbarSize={6} offsetScrollbars>
-      <Stack pr="sm">
+    <ScrollArea mah={"50%"} type="always" scrollbarSize={6} offsetScrollbars>
+      <Stack>
         {isPending ? (
           <CardSkeletonContainer />
         ) : cards && cards.length > 0 ? (
